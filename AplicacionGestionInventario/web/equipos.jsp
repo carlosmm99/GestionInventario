@@ -21,6 +21,10 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
     </head>
     <body>
+        <%
+            Integer ultimoNumEquipo = (Integer) request.getAttribute("ultimoNumEquipo");
+//            Integer cantidadEquipos = (Integer) request.getAttribute("cantidadEquipos");
+        %>
         <div class="container">
             <%@include file="template/menu.jsp" %>
             <div class="row align-items-start">
@@ -68,5 +72,9 @@
         <!-- Para los estilos en Excel -->
         <script src="https://cdn.jsdelivr.net/npm/datatables-buttons-excel-styles@1.1.1/js/buttons.html5.styles.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/datatables-buttons-excel-styles@1.1.1/js/buttons.html5.styles.templates.min.js"></script>
+        <script>
+            var ultimoNumEquipo = <%= ultimoNumEquipo %>;
+        </script>
+        <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginas.js"></script>
     </body>
 </html>
