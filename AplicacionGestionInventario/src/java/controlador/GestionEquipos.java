@@ -35,7 +35,7 @@ public class GestionEquipos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -63,8 +63,8 @@ public class GestionEquipos extends HttpServlet {
             throws ServletException, IOException {
         String btnAgregar = generarBotonHTML();
         request.setAttribute("btnAgregar", btnAgregar);
-//        String tablaEquipos = generarTablaHTML(request);
-//        request.setAttribute("tablaEquipos", tablaEquipos);
+        String tablaEquipos = generarTablaHTML(request);
+        request.setAttribute("tablaEquipos", tablaEquipos);
         String formEquipos = generarFormularioHTML(request);
         request.setAttribute("formEquipos", formEquipos);
         request.getRequestDispatcher("equipos.jsp").forward(request, response);
@@ -113,14 +113,14 @@ public class GestionEquipos extends HttpServlet {
             tablaHTML.append("<tbody>");
             for (Equipo equipo : equipos) {
                 tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
-                        .append("data-action=\"Consultar\"")
-                        .append("data-idEquipo=\"").append(equipo.getId()).append("\"")
-                        .append("data-numIdentificacion=\"").append(equipo.getNumIdentificacion()).append("\"")
-                        .append("data-nombre=\"").append(equipo.getNombre()).append("\"")
-                        .append("data-fechaCompraEquipo=\"").append(equipo.getFechaCompra()).append("\"")
-                        .append("data-fabricanteEquipo=\"").append(equipo.getFabricante()).append("\"")
-                        .append("data-fechaUltimaCalibracion=\"").append(equipo.getFechaUltimaCalibracion()).append("\"")
-                        .append("data-fechaProximaCalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\">");
+                        .append(" data-action=\"Consultar\"")
+                        .append(" data-idequipo=\"").append(equipo.getId()).append("\"")
+                        .append(" data-numidentificacion=\"").append(equipo.getNumIdentificacion()).append("\"")
+                        .append(" data-nombre=\"").append(equipo.getNombre()).append("\"")
+                        .append(" data-fechacompraequipo=\"").append(equipo.getFechaCompra()).append("\"")
+                        .append(" data-fabricanteequipo=\"").append(equipo.getFabricante()).append("\"")
+                        .append(" data-fechaultimacalibracion=\"").append(equipo.getFechaUltimaCalibracion()).append("\"")
+                        .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\">");
 
                 tablaHTML.append("<td>")
                         .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>")
@@ -169,22 +169,22 @@ public class GestionEquipos extends HttpServlet {
                 // Columna nº de identificación
                 .append("<div class=\"col-6\" id=\"columnaNumIdentificacion\">")
                 .append("<label>Número de identificación:</label>")
-                .append("<input type=\"text\" class=\"form-control\" name=\"txtNumIdentificacion\" id=\"txtNumIdentificacion\" required>")
+                .append("<input type=\"text\" class=\"form-control\" name=\"txtNumIdentificacion\" id=\"txtNumIdentificacion\" required placeholder=\"Número de identificación\">")
                 .append("</div>")
                 // Columna nombre
                 .append("<div class=\"col-6\" id=\"columnaNombre\">")
                 .append("<label>Nombre:</label>")
-                .append("<input type=\"text\" class=\"form-control\" name=\"txtNombre\" id=\"txtNombre\" required>")
+                .append("<input type=\"text\" class=\"form-control\" name=\"txtNombre\" id=\"txtNombre\" required placeholder=\"Nombre\">")
                 .append("</div>")
                 // Columna fecha de compra
-                .append("<div class=\"col-6\" id=\"columnaFechaCompra\">")
+                .append("<div class=\"col-6\" id=\"columnaFechaCompraEquipo\">")
                 .append("<label>Fecha de compra del equipo:</label>")
                 .append("<input type=\"date\" class=\"form-control\" name=\"txtFechaCompraEquipo\" id=\"txtFechaCompraEquipo\" required>")
                 .append("</div>")
                 // Columna fabricante
                 .append("<div class=\"col-6\" id=\"columnaFabricanteEquipo\">")
                 .append("<label>Fabricante del equipo:</label>")
-                .append("<input type=\"text\" class=\"form-control\" name=\"txtFabricanteEquipo\" id=\"txtFabricanteEquipo\" required>")
+                .append("<input type=\"text\" class=\"form-control\" name=\"txtFabricanteEquipo\" id=\"txtFabricanteEquipo\" required placeholder=\"Fabricante del equipo\">")
                 .append("</div>")
                 // Columna fecha última calibración
                 .append("<div class=\"col-6\" id=\"columnaFechaUltimaCalibracion\">")
@@ -216,8 +216,32 @@ public class GestionEquipos extends HttpServlet {
                     .append("</option>");
         }
         formHTML.append("</select>").append("</div>").append("</div>")
-                .append("<div>");
-        
+                .append("<div class=\"modal-footer\">")
+                .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-primary\">Aceptar</button>")
+                .append("<button type=\"submit\" name=\"btnEditar\" style=\"display: none;\" class=\"btn btn-primary\">Aceptar</button>")
+                .append("<button type=\"button\" name=\"btnCancelar\" class=\"btn btn-dark\" data-bs-dismiss=\"modal\">Cancelar</button>")
+                .append("</div>")
+                .append("<div class=\"modal\" tabindex=\"-1\" role=\"dialog\" id=\"confirmModal\">")
+                .append("<div class=\"modal-dialog\" role=\"document\">")
+                .append("<div class=\"modal-content\">")
+                .append("<div class=\"modal-header\">")
+                .append("<h5>Confirmar acción</h5>")
+                .append("<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">")
+                .append("<span aria-hidden=\"true\">&times;</span>")
+                .append("</button>")
+                .append("</div>")
+                .append("<div class=\"modal-body\">")
+                .append("<p></p>")
+                .append("</div>")
+                .append("<div class=\"modal-footer\">")
+                .append("<button type=\"submit\" class=\"btn btn-primary\" id=\"btnConfirmarModal\" name=\"btnConfirmarModal\">Confirmar</button>")
+                .append("<button type=\"button\" class=\"btn btn-secondary\" id=\"btnCancelarModal\" data-bs-dismiss=\"modal\">Cancelar</button>")
+                .append("</div>")
+                .append("</div>")
+                .append("</div>")
+                .append("</div>")
+                .append("</form>");
+
         return formHTML.toString();
     }
 
