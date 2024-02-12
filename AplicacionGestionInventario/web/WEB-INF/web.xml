@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <servlet>
+        <servlet-name>GestionEquipos</servlet-name>
+        <servlet-class>controlador.GestionEquipos</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GestionFungibles</servlet-name>
+        <servlet-class>controlador.GestionFungibles</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GestionHerramientas</servlet-name>
+        <servlet-class>controlador.GestionHerramientas</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GestionEquipos</servlet-name>
+        <url-pattern>/GestionEquipos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GestionFungibles</servlet-name>
+        <url-pattern>/GestionFungibles</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GestionHerramientas</servlet-name>
+        <url-pattern>/GestionHerramientas</url-pattern>
+    </servlet-mapping>
+</web-app>
