@@ -72,9 +72,15 @@
         <!-- Para los estilos en Excel -->
         <script src="https://cdn.jsdelivr.net/npm/datatables-buttons-excel-styles@1.1.1/js/buttons.html5.styles.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/datatables-buttons-excel-styles@1.1.1/js/buttons.html5.styles.templates.min.js"></script>
+        <% if (request.getAttribute("showDialog") != null) { %>
+        <script>
+            alert("<%= request.getAttribute("message") %>");
+            window.location.href = "<%= request.getContextPath() %>/GestionEquipos";
+        </script>
+        <% } %>
         <script>
             var ultimoNumEquipo = <%= ultimoNumEquipo %>;
         </script>
-        <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginas.js"></script>
+        <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginaEquipos.js"></script>
     </body>
 </html>
