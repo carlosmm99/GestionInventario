@@ -76,6 +76,8 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").val("");
             $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").val("");
             $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").val("");
+            $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").val("");
+            $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val("");
             $("#filasFormulario #columnaNumIdentificacion #txtNumIdentificacion").prop("readonly", false);
             $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", false);
             $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", false);
@@ -114,6 +116,8 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").val(fila.data("fabricanteequipo"));
             $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").val(fila.data("fechaultimacalibracion"));
             $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").val(fila.data("fechaproximacalibracion"));
+            $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").val(fila.data("fechaultimomantenimiento"));
+            $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val(fila.data("fechaproximomantenimiento"));
 
             if (accion === 'AsignarFungiblesAEquipo') {
                 // Cambiar el texto del título del modal
