@@ -4,9 +4,7 @@
  */
 package modelo;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -19,8 +17,6 @@ public class Herramienta {
     private String modelo;
     private String fabricante;
     private Date fechaCompra;
-    private List<Equipo> equipos;
-    private List<Fungible> fungibles;
 
     public Herramienta() {
     }
@@ -31,8 +27,6 @@ public class Herramienta {
         this.modelo = modelo;
         this.fabricante = fabricante;
         this.fechaCompra = fechaCompra;
-        this.equipos = new ArrayList<>();
-        this.fungibles = new ArrayList<>();
     }
 
     public int getId() {
@@ -73,21 +67,5 @@ public class Herramienta {
 
     public void setFechaCompra(Date fechaCompra) {
         this.fechaCompra = fechaCompra;
-    }
-
-    public List<Equipo> getEquipos() {
-        return equipos;
-    }
-
-    public void setEquipos(List<Equipo> equipos) {
-        this.equipos = equipos;
-    }
-
-    public List<Fungible> getFungibles() {
-        return fungibles;
-    }
-
-    public void setFungibles(List<Fungible> fungibles) {
-        this.fungibles = fungibles;
     }
 }

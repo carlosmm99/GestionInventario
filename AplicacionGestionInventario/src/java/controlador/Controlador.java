@@ -7,6 +7,8 @@ package controlador;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Equipo;
 import modelo.Fungible;
 import modelo.Herramienta;
@@ -100,24 +102,25 @@ public class Controlador {
             if (conn == null || conn.isClosed()) {
                 conn = this.conectar(false);
             }
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int numIdentificacion = resultSet.getInt("num_identificacion");
-                String nombre = resultSet.getString("nombre");
-                Date fechaCompra = resultSet.getDate("fecha_compra");
-                String fabricante = resultSet.getString("fabricante");
-                Date fechaUltimaCalibracion = resultSet.getDate("fecha_ultima_calibracion");
-                Date fechaProximaCalibracion = resultSet.getDate("fecha_proxima_calibracion");
-                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion));
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int numIdentificacion = rs.getInt("num_identificacion");
+                String nombre = rs.getString("nombre");
+                Date fechaCompra = rs.getDate("fecha_compra");
+                String fabricante = rs.getString("fabricante");
+                Date fechaUltimaCalibracion = rs.getDate("fecha_ultima_calibracion");
+                Date fechaProximaCalibracion = rs.getDate("fecha_proxima_calibracion");
+                Date fechaUltimoMantenimiento = rs.getDate("fecha_ultimo_mantenimiento");
+                Date fechaProximoMantenimiento = rs.getDate("fecha_proximo_mantenimiento");
+                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento));
             }
         } catch (SQLException ex) {
-            System.err.println("Error al leer los equipos: " + ex.getMessage());
+            return null;
         } finally {
             desconectar();
         }
-
         return equipos;
     }
 
@@ -129,14 +132,14 @@ public class Controlador {
             if (conn == null || conn.isClosed()) {
                 conn = this.conectar(false);
             }
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String marca = resultSet.getString("marca");
-                String modelo = resultSet.getString("modelo");
-                String tamanyo = resultSet.getString("tamanyo");
-                int cantidad = resultSet.getInt("cantidad");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String marca = rs.getString("marca");
+                String modelo = rs.getString("modelo");
+                String tamanyo = rs.getString("tamanyo");
+                int cantidad = rs.getInt("cantidad");
                 fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad));
             }
         } catch (SQLException ex) {
@@ -156,14 +159,14 @@ public class Controlador {
             if (conn == null || conn.isClosed()) {
                 conn = this.conectar(false);
             }
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String marca = resultSet.getString("marca");
-                String modelo = resultSet.getString("modelo");
-                String fabricante = resultSet.getString("fabricante");
-                Date fechaCompra = resultSet.getDate("fecha_compra");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String marca = rs.getString("marca");
+                String modelo = rs.getString("modelo");
+                String fabricante = rs.getString("fabricante");
+                Date fechaCompra = rs.getDate("fecha_compra");
                 herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra));
             }
         } catch (SQLException ex) {
@@ -173,5 +176,158 @@ public class Controlador {
         }
 
         return herramientas;
+    }
+
+    int insertarEquipo(Equipo e) {
+        int filasAfectadas;
+        String sql = "INSERT INTO equipos (num_identificacion, nombre, fecha_compra, fabricante, fecha_ultima_calibracion, fecha_proxima_calibracion)"
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, e.getNumIdentificacion());
+            ps.setString(2, e.getNombre());
+            ps.setDate(3, new Date(e.getFechaCompra().getTime()));
+            ps.setString(4, e.getFabricante());
+            ps.setDate(5, new Date(e.getFechaUltimaCalibracion().getTime()));
+            ps.setDate(6, new Date(e.getFechaProximaCalibracion().getTime()));
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    Fungible buscarFungible(int idFungible) {
+        String sql = "SELECT * FROM fungibles WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idFungible);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Fungible(idFungible, rs.getString("marca"), rs.getString("modelo"), rs.getString("tamanyo"), rs.getInt("cantidad"));
+            }
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
+
+        return null;
+    }
+
+    int asociarEquipoFungible(Equipo e, Fungible f) {
+        int filasAfectadas;
+        String sql = "INSERT INTO equipos_fungibles VALUES (?, ?)";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, e.getId());
+            ps.setInt(2, f.getId());
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    Herramienta buscarHerramientas(int idHerramienta) {
+        String sql = "SELECT * FROM herramientas WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idHerramienta);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Herramienta(idHerramienta, rs.getString("marca"), rs.getString("modelo"), rs.getString("fabricante"), rs.getDate("fecha_compra"));
+            }
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
+
+        return null;
+    }
+
+    int asociarEquipoHerramienta(Equipo e, Herramienta h) {
+        int filasAfectadas;
+        String sql = "INSERT INTO equipos_herramientas VALUES (?, ?)";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, e.getId());
+            ps.setInt(2, h.getId());
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    int modificarEquipo(Equipo e) {
+        int filasAfectadas;
+        String sql = "UPDATE equipos SET num_identificacion = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ? WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, e.getNumIdentificacion());
+            ps.setString(2, e.getNombre());
+            ps.setDate(3, new Date(e.getFechaCompra().getTime()));
+            ps.setString(4, e.getFabricante());
+            ps.setDate(5, new Date(e.getFechaUltimaCalibracion().getTime()));
+            ps.setDate(6, new Date(e.getFechaProximaCalibracion().getTime()));
+            ps.setInt(7, e.getId());
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    int borrarEquipo(Equipo e) {
+        int filasAfectadas;
+        String sql = "DELETE FROM equipos WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, e.getId());
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
     }
 }

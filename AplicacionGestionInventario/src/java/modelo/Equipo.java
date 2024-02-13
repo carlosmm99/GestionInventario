@@ -4,9 +4,7 @@
  */
 package modelo;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -21,13 +19,13 @@ public class Equipo {
     private String fabricante;
     private Date fechaUltimaCalibracion;
     private Date fechaProximaCalibracion;
-    private List<Fungible> fungibles;
-    private List<Herramienta> herramientas = new ArrayList<>();
+    private Date fechaUltimoMantenimiento;
+    private Date fechaProximoMantenimiento;
 
     public Equipo() {
     }
 
-    public Equipo(int id, int numIdentificacion, String nombre, Date fechaCompra, String fabricante, Date fechaUltimaCalibracion, Date fechaProximaCalibracion) {
+    public Equipo(int id, int numIdentificacion, String nombre, Date fechaCompra, String fabricante, Date fechaUltimaCalibracion, Date fechaProximaCalibracion, Date fechaUltimoMantenimiento, Date fechaProximoMantenimiento) {
         this.id = id;
         this.numIdentificacion = numIdentificacion;
         this.nombre = nombre;
@@ -35,8 +33,8 @@ public class Equipo {
         this.fabricante = fabricante;
         this.fechaUltimaCalibracion = fechaUltimaCalibracion;
         this.fechaProximaCalibracion = fechaProximaCalibracion;
-        this.fungibles = new ArrayList<>();
-        this.herramientas = new ArrayList<>();
+        this.fechaUltimoMantenimiento = fechaUltimoMantenimiento;
+        this.fechaProximoMantenimiento = fechaProximoMantenimiento;
     }
 
     public int getId() {
@@ -95,19 +93,19 @@ public class Equipo {
         this.fechaProximaCalibracion = fechaProximaCalibracion;
     }
 
-    public List<Fungible> getFungibles() {
-        return fungibles;
+    public Date getFechaUltimoMantenimiento() {
+        return fechaUltimoMantenimiento;
     }
 
-    public void setFungibles(List<Fungible> fungibles) {
-        this.fungibles = fungibles;
+    public void setFechaUltimoMantenimiento(Date fechaUltimoMantenimiento) {
+        this.fechaUltimoMantenimiento = fechaUltimoMantenimiento;
     }
 
-    public List<Herramienta> getHerramientas() {
-        return herramientas;
+    public Date getFechaProximoMantenimiento() {
+        return fechaProximoMantenimiento;
     }
 
-    public void setHerramientas(List<Herramienta> herramientas) {
-        this.herramientas = herramientas;
+    public void setFechaProximoMantenimiento(Date fechaProximoMantenimiento) {
+        this.fechaProximoMantenimiento = fechaProximoMantenimiento;
     }
 }
