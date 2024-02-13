@@ -194,7 +194,9 @@ public class GestionEquipos extends HttpServlet {
                         .append(" data-fechacompraequipo=\"").append(equipo.getFechaCompra()).append("\"")
                         .append(" data-fabricanteequipo=\"").append(equipo.getFabricante()).append("\"")
                         .append(" data-fechaultimacalibracion=\"").append(equipo.getFechaUltimaCalibracion()).append("\"")
-                        .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\">");
+                        .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\"")
+                        .append(" data-fechaultimomantenimiento=\"").append(equipo.getFechaUltimoMantenimiento()).append("\"")
+                        .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\">");
 
                 tablaHTML.append("<td>")
                         .append("<button type=\"button\" class=\"btn btn-primary btnFungiblesAEquipo\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"AsignarFungiblesAEquipo\" name=\"btnFungiblesAEquipo\">Fungibles</button>&nbsp;")
