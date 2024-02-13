@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-02-2024 a las 20:27:22
--- Versión del servidor: 10.4.21-MariaDB
--- Versión de PHP: 8.0.10
+-- Tiempo de generación: 13-02-2024 a las 14:55:41
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,16 +34,19 @@ CREATE TABLE `equipos` (
   `fecha_compra` date NOT NULL,
   `fabricante` varchar(255) NOT NULL,
   `fecha_ultima_calibracion` date NOT NULL,
-  `fecha_proxima_calibracion` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `fecha_proxima_calibracion` date NOT NULL,
+  `fecha_ultimo_mantenimiento` date NOT NULL,
+  `fecha_proximo_mantenimiento` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `equipos`
 --
 
-INSERT INTO `equipos` (`id`, `num_identificacion`, `nombre`, `fecha_compra`, `fabricante`, `fecha_ultima_calibracion`, `fecha_proxima_calibracion`) VALUES
-(1, 123456, 'Equipo1', '2023-01-01', 'Fabricante1', '2023-01-01', '2024-01-01'),
-(2, 789012, 'Equipo2', '2023-02-01', 'Fabricante2', '2023-02-01', '2024-02-01');
+INSERT INTO `equipos` (`id`, `num_identificacion`, `nombre`, `fecha_compra`, `fabricante`, `fecha_ultima_calibracion`, `fecha_proxima_calibracion`, `fecha_ultimo_mantenimiento`, `fecha_proximo_mantenimiento`) VALUES
+(1, 123456, 'Equipo1', '2023-01-01', 'Fabricante1', '2023-01-01', '2024-01-01', '2022-10-01', '2024-01-01'),
+(2, 789012, 'Equipo2', '2023-02-01', 'Fabricante2', '2023-02-01', '2024-02-01', '2022-11-01', '2024-02-01'),
+(3, 798124, 'Equipo3', '2024-02-13', 'HP', '2024-02-06', '2024-11-30', '2022-12-01', '2024-03-01');
 
 -- --------------------------------------------------------
 
@@ -54,7 +57,7 @@ INSERT INTO `equipos` (`id`, `num_identificacion`, `nombre`, `fecha_compra`, `fa
 CREATE TABLE `equipos_fungibles` (
   `equipo_id` int(11) NOT NULL,
   `fungible_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `equipos_fungibles`
@@ -63,7 +66,10 @@ CREATE TABLE `equipos_fungibles` (
 INSERT INTO `equipos_fungibles` (`equipo_id`, `fungible_id`) VALUES
 (1, 1),
 (1, 2),
-(2, 3);
+(2, 1),
+(2, 2),
+(2, 3),
+(3, 1);
 
 -- --------------------------------------------------------
 
@@ -74,7 +80,7 @@ INSERT INTO `equipos_fungibles` (`equipo_id`, `fungible_id`) VALUES
 CREATE TABLE `equipos_herramientas` (
   `equipo_id` int(11) NOT NULL,
   `herramienta_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `equipos_herramientas`
@@ -82,7 +88,11 @@ CREATE TABLE `equipos_herramientas` (
 
 INSERT INTO `equipos_herramientas` (`equipo_id`, `herramienta_id`) VALUES
 (1, 1),
-(2, 2);
+(1, 2),
+(1, 3),
+(2, 1),
+(2, 2),
+(2, 3);
 
 -- --------------------------------------------------------
 
@@ -96,7 +106,7 @@ CREATE TABLE `fungibles` (
   `modelo` varchar(255) NOT NULL,
   `tamanyo` varchar(255) NOT NULL,
   `cantidad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `fungibles`
@@ -116,7 +126,7 @@ INSERT INTO `fungibles` (`id`, `marca`, `modelo`, `tamanyo`, `cantidad`) VALUES
 CREATE TABLE `fungibles_herramientas` (
   `fungible_id` int(11) NOT NULL,
   `herramienta_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `fungibles_herramientas`
@@ -138,7 +148,7 @@ CREATE TABLE `herramientas` (
   `modelo` varchar(255) NOT NULL,
   `fabricante` varchar(255) NOT NULL,
   `fecha_compra` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `herramientas`
@@ -157,7 +167,8 @@ INSERT INTO `herramientas` (`id`, `marca`, `modelo`, `fabricante`, `fecha_compra
 -- Indices de la tabla `equipos`
 --
 ALTER TABLE `equipos`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `num_identificacion` (`num_identificacion`);
 
 --
 -- Indices de la tabla `equipos_fungibles`
@@ -203,7 +214,7 @@ ALTER TABLE `herramientas`
 -- AUTO_INCREMENT de la tabla `equipos`
 --
 ALTER TABLE `equipos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `fungibles`
