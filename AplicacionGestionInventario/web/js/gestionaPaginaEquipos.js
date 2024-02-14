@@ -90,7 +90,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").prop("readonly", false);
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", false);
             $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
-                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+            $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
 
             // Poner visibles los campos
             $("#filasFormulario").show();
@@ -108,6 +108,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").val(fila.data("fechaproximacalibracion"));
             $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").val(fila.data("fechaultimomantenimiento"));
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val(fila.data("fechaproximomantenimiento"));
+            $("#filasFormulario #columnaFungibles #selectFungibles").val(fila.data("numfungibles"));
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
