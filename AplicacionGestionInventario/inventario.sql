@@ -92,7 +92,8 @@ INSERT INTO `equipos_herramientas` (`equipo_id`, `herramienta_id`) VALUES
 (1, 3),
 (2, 1),
 (2, 2),
-(2, 3);
+(2, 3),
+(3, 1)
 
 -- --------------------------------------------------------
 
@@ -134,7 +135,11 @@ CREATE TABLE `fungibles_herramientas` (
 
 INSERT INTO `fungibles_herramientas` (`fungible_id`, `herramienta_id`) VALUES
 (1, 1),
-(2, 2);
+(1, 2),
+(1, 3)
+(2, 2),
+(2, 3),
+(3, 1);
 
 -- --------------------------------------------------------
 
