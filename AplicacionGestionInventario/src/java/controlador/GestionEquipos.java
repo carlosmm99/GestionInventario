@@ -98,6 +98,53 @@ public class GestionEquipos extends HttpServlet {
             Date fechaUltimoMantenimiento = dateFormat.parse(request.getParameter("txtFechaUltimoMantenimiento"));
             Date fechaProximoMantenimiento = dateFormat.parse(request.getParameter("txtFechaProximoMantenimiento"));
             Equipo e = new Equipo(id, numIdentificacion, nombre, fechaCompraEquipo, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento);
+            String[] opcionesFungibles = request.getParameterValues("selectFungibles");
+            for (String idFungible : opcionesFungibles) {
+                Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
+                boolean exists = false;
+                if (f != null) {
+                    for (Fungible fungible : e.getFungibles()) {
+                        if (fungible.getId() == f.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (Equipo equipo : f.getEquipos()) {
+                        if (equipo.getId() == e.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        e.getFungibles().add(f);
+                        f.getEquipos().add(e);
+                    }
+                }
+            }
+            String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
+            for (String idHerramienta : opcionesHerramientas) {
+                Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
+                boolean exists = false;
+                if (h != null) {
+                    for (Herramienta herramienta : e.getHerramientas()) {
+                        if (herramienta.getId() == h.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (Equipo equipo : h.getEquipos()) {
+                        if (equipo.getId() == h.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        e.getHerramientas().add(h);
+                        h.getEquipos().add(e);
+                    }
+                }
+            }
+
             int res = 0;
             String mensaje = "";
             if (request.getParameter("btnAgregar") != null) {
@@ -106,32 +153,6 @@ public class GestionEquipos extends HttpServlet {
                     mensaje = "Equipo con id " + e.getId() + " dado de alta correctamente";
                 } else {
                     mensaje = "Error al dar de alta el equipo con id " + e.getId();
-                }
-            } else if (request.getParameter("btnAsignarFungiblesAEquipo") != null) {
-                String[] opcionesFungibles = request.getParameterValues("selectFungibles");
-                for (String idFungible : opcionesFungibles) {
-                    Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
-                    if (f != null) {
-                        res = c.asociarEquipoFungible(e, f);
-                        if (res != 0) {
-                            mensaje = "Equipo y fungible asociados correctamente";
-                        } else {
-                            mensaje = "Error al asociar el equipo y el fungible";
-                        }
-                    }
-                }
-            } else if (request.getParameter("btnAsignarHerramientasAEquipo") != null) {
-                String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
-                for (String idHerramienta : opcionesHerramientas) {
-                    Herramienta h = c.buscarHerramientas(Integer.parseInt(idHerramienta));
-                    if (h != null) {
-                        res = c.asociarEquipoHerramienta(e, h);
-                        if (res != 0) {
-                            mensaje = "Equipo y herramienta asociados correctamente";
-                        } else {
-                            mensaje = "Error al asociar el equipo y la herramienta";
-                        }
-                    }
                 }
             } else if (request.getParameter("btnEditar") != null) {
                 res = c.modificarEquipo(e);
@@ -143,9 +164,9 @@ public class GestionEquipos extends HttpServlet {
             } else if (request.getParameter("btnEliminar") != null) {
                 res = c.borrarEquipo(e);
                 if (res != 0) {
-                    mensaje = "Equipo con id " + e.getId() + " borrado correctamente";
+                    mensaje = "Equipo con id " + e.getId() + " dado de baja correctamente";
                 } else {
-                    mensaje = "Error al borrar el equipo con id " + e.getId();
+                    mensaje = "Error al dar de baja el equipo con id " + e.getId();
                 }
             }
 
@@ -168,61 +189,6 @@ public class GestionEquipos extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private String generarTablaHTML(HttpServletRequest request) {
-        List<Equipo> equipos = c.leerEquipos();
-        StringBuilder tablaHTML = new StringBuilder();
-
-        if (equipos != null || !equipos.isEmpty()) {
-            tablaHTML.append("<table id=\"tablaEquipos\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
-                    .append("<thead><tr>");
-
-            tablaHTML.append("<th scope=\"col\">Acciones</th>");
-            tablaHTML.append("<th scope=\"col\" id=\"columnaNumEquipo\">Nº de equipo</th>")
-                    .append("<th scope=\"col\">Nº de identificación</th><th scope=\"col\">Nombre</th>")
-                    .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Fabricante</th>")
-                    .append("<th scope=\"col\">Fecha última calibración</th><th scope=\"col\">Fecha próxima calibración</th>");
-
-            tablaHTML.append("</tr></thead>");
-
-            tablaHTML.append("<tbody>");
-            for (Equipo equipo : equipos) {
-                tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
-                        .append(" data-action=\"Consultar\"")
-                        .append(" data-idequipo=\"").append(equipo.getId()).append("\"")
-                        .append(" data-numidentificacion=\"").append(equipo.getNumIdentificacion()).append("\"")
-                        .append(" data-nombre=\"").append(equipo.getNombre()).append("\"")
-                        .append(" data-fechacompraequipo=\"").append(equipo.getFechaCompra()).append("\"")
-                        .append(" data-fabricanteequipo=\"").append(equipo.getFabricante()).append("\"")
-                        .append(" data-fechaultimacalibracion=\"").append(equipo.getFechaUltimaCalibracion()).append("\"")
-                        .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\"")
-                        .append(" data-fechaultimomantenimiento=\"").append(equipo.getFechaUltimoMantenimiento()).append("\"")
-                        .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\">");
-
-                tablaHTML.append("<td>")
-                        .append("<button type=\"button\" class=\"btn btn-primary btnFungiblesAEquipo\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"AsignarFungiblesAEquipo\" name=\"btnFungiblesAEquipo\">Fungibles</button>&nbsp;")
-                        .append("<button type=\"button\" class=\"btn btn-secondary btnHerramientasAEquipo\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"AsignarHerramientasAEquipo\" name=\"btnHerramientasAEquipo\">Herramientas</button>&nbsp;")
-                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
-                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Eliminar\" name=\"btnEliminarTrabajo\">Eliminar</button>&nbsp;")
-                        .append("</td>");
-
-                tablaHTML.append("<td>").append(equipo.getId()).append("</td>")
-                        .append("<td>").append(equipo.getNumIdentificacion()).append("</td>")
-                        .append("<td>").append(equipo.getNombre()).append("</td>")
-                        .append("<td>").append(equipo.getFechaCompra()).append("</td>")
-                        .append("<td>").append(equipo.getFabricante()).append("</td>")
-                        .append("<td>").append(equipo.getFechaUltimaCalibracion()).append("</td>")
-                        .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>");
-
-                tablaHTML.append("</tr>");
-            }
-            tablaHTML.append("</tbody>");
-
-            tablaHTML.append("</table>");
-        }
-
-        return tablaHTML.toString();
-    }
-
     private String generarBotonHTML() {
         StringBuilder btnHTML = new StringBuilder();
         btnHTML.append("<button type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" id=\"btnAgregarEquipo\">Agregar</button>");
@@ -240,7 +206,7 @@ public class GestionEquipos extends HttpServlet {
                 .append("<div class=\"row\" id=\"filasFormulario\">")
                 // Columna nº de equipo
                 .append("<div class=\"col-6\" id=\"columnaNumEquipo\">")
-                .append("<label>Número de equipo:</label>")
+                .append("<label>ID del equipo:</label>")
                 .append("<input type=\"text\" readonly=\"true\" value=\"")
                 .append(ultimoNumEquipo)
                 .append("\" class=\"form-control\" name=\"txtNumEquipo\" id=\"txtNumEquipo\">")
@@ -286,19 +252,19 @@ public class GestionEquipos extends HttpServlet {
                 .append("<input type=\"date\" class=\"form-control\" name=\"txtFechaProximoMantenimiento\" id=\"txtFechaProximoMantenimiento\" required>")
                 .append("</div>")
                 // Columna fungibles
-                .append("<div class=\"col-6\" id=\"columnaFungibles\" style=\"display: none\">")
+                .append("<div class=\"col-6\" id=\"columnaFungibles\">")
                 .append("<label>Fungibles:</label>")
-                .append("<select class=\"form-control\" name=\"selectFungibles\" id=\"selectFungibles\" multiple>");
+                .append("<select class=\"form-control\" name=\"selectFungibles\" id=\"selectFungibles\" multiple required>");
         for (Fungible fungible : fungibles) {
             formHTML.append("<option name=\"opcFungibles\" value=\"").append(fungible.getId()).append("\">")
                     .append(fungible.getMarca()).append(" - ").append(fungible.getModelo())
                     .append("</option>");
         }
         formHTML.append("</select>").append("</div>")
-                // Columna fungibles
-                .append("<div class=\"col-6\" id=\"columnaHerramientas\" style=\"display: none\">")
+                // Columna herramientas
+                .append("<div class=\"col-6\" id=\"columnaHerramientas\">")
                 .append("<label>Herramientas:</label>")
-                .append("<select class=\"form-control\" name=\"selectHerramientas\" id=\"selectHerramientas\" multiple>");
+                .append("<select class=\"form-control\" name=\"selectHerramientas\" id=\"selectHerramientas\" multiple required>");
         for (Herramienta herramienta : herramientas) {
             formHTML.append("<option name=\"opcHerramientas\" value=\"").append(herramienta.getId()).append("\">")
                     .append(herramienta.getMarca()).append(" - ").append(herramienta.getModelo())
@@ -306,11 +272,9 @@ public class GestionEquipos extends HttpServlet {
         }
         formHTML.append("</select>").append("</div>").append("</div>")
                 .append("<div class=\"modal-footer\">")
-                .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Aceptar</button>")
-                .append("<button type=\"submit\" name=\"btnAsignarFungiblesAEquipo\" style=\"display: none;\" class=\"btn btn-primary\">Aceptar</button>")
-                .append("<button type=\"submit\" name=\"btnAsignarHerramientasAEquipo\" style=\"display: none;\" class=\"btn btn-secondary\">Aceptar</button>")
-                .append("<button type=\"submit\" name=\"btnEditar\" style=\"display: none;\" class=\"btn btn-warning\">Aceptar</button>")
-                .append("<button type=\"submit\" name=\"btnEliminar\" style=\"display: none;\" class=\"btn btn-danger\">Aceptar</button>")
+                .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
+                .append("<button type=\"submit\" name=\"btnEditar\" style=\"display: none;\" class=\"btn btn-warning\">Enviar</button>")
+                .append("<button type=\"submit\" name=\"btnEliminar\" style=\"display: none;\" class=\"btn btn-danger\">Confirmar</button>")
                 .append("<button type=\"button\" name=\"btnCancelar\" class=\"btn btn-dark\" data-bs-dismiss=\"modal\">Cancelar</button>")
                 .append("</div>")
                 .append("</form>");
@@ -318,4 +282,56 @@ public class GestionEquipos extends HttpServlet {
         return formHTML.toString();
     }
 
+    private String generarTablaHTML(HttpServletRequest request) {
+        List<Equipo> equipos = c.leerEquipos();
+        StringBuilder tablaHTML = new StringBuilder();
+
+        if (equipos != null || !equipos.isEmpty()) {
+            tablaHTML.append("<table id=\"tablaEquipos\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
+                    .append("<thead><tr>");
+
+            tablaHTML.append("<th scope=\"col\">Acciones</th>");
+            tablaHTML.append("<th scope=\"col\" id=\"columnaIdEquipo\">ID</th>")
+                    .append("<th scope=\"col\">Nº de identificación</th><th scope=\"col\">Nombre</th>")
+                    .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Fabricante</th>")
+                    .append("<th scope=\"col\">Fecha última calibración</th><th scope=\"col\">Fecha próxima calibración</th>");
+
+            tablaHTML.append("</tr></thead>");
+
+            tablaHTML.append("<tbody>");
+            for (Equipo equipo : equipos) {
+                tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
+                        .append(" data-action=\"Consultar\"")
+                        .append(" data-idequipo=\"").append(equipo.getId()).append("\"")
+                        .append(" data-numidentificacion=\"").append(equipo.getNumIdentificacion()).append("\"")
+                        .append(" data-nombre=\"").append(equipo.getNombre()).append("\"")
+                        .append(" data-fechacompraequipo=\"").append(equipo.getFechaCompra()).append("\"")
+                        .append(" data-fabricanteequipo=\"").append(equipo.getFabricante()).append("\"")
+                        .append(" data-fechaultimacalibracion=\"").append(equipo.getFechaUltimaCalibracion()).append("\"")
+                        .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\"")
+                        .append(" data-fechaultimomantenimiento=\"").append(equipo.getFechaUltimoMantenimiento()).append("\"")
+                        .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\">");
+
+                tablaHTML.append("<td>")
+                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
+                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Eliminar\" name=\"btnEliminarTrabajo\">Eliminar</button>&nbsp;")
+                        .append("</td>");
+
+                tablaHTML.append("<td>").append(equipo.getId()).append("</td>")
+                        .append("<td>").append(equipo.getNumIdentificacion()).append("</td>")
+                        .append("<td>").append(equipo.getNombre()).append("</td>")
+                        .append("<td>").append(equipo.getFechaCompra()).append("</td>")
+                        .append("<td>").append(equipo.getFabricante()).append("</td>")
+                        .append("<td>").append(equipo.getFechaUltimaCalibracion()).append("</td>")
+                        .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>");
+
+                tablaHTML.append("</tr>");
+            }
+            tablaHTML.append("</tbody>");
+
+            tablaHTML.append("</table>");
+        }
+
+        return tablaHTML.toString();
+    }
 }

@@ -4,16 +4,22 @@
  */
 package modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author carlos.mondejar
  */
 public class Fungible {
+
     private int id;
     private String marca;
     private String modelo;
     private String tamanyo;
     private int cantidad;
+    private List<Equipo> equipos;
+    private List<Herramienta> herramientas;
 
     public Fungible() {
     }
@@ -24,6 +30,8 @@ public class Fungible {
         this.modelo = modelo;
         this.tamanyo = tamanyo;
         this.cantidad = cantidad;
+        this.equipos = new ArrayList<>();
+        this.herramientas = new ArrayList<>();
     }
 
     public int getId() {
@@ -64,5 +72,21 @@ public class Fungible {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public List<Equipo> getEquipos() {
+        return equipos;
+    }
+
+    public void setEquipos(List<Equipo> equipos) {
+        this.equipos = equipos;
+    }
+
+    public List<Herramienta> getHerramientas() {
+        return herramientas;
+    }
+
+    public void setHerramientas(List<Herramienta> herramientas) {
+        this.herramientas = herramientas;
     }
 }

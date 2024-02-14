@@ -4,7 +4,9 @@
  */
 package modelo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -21,6 +23,8 @@ public class Equipo {
     private Date fechaProximaCalibracion;
     private Date fechaUltimoMantenimiento;
     private Date fechaProximoMantenimiento;
+    private List<Fungible> fungibles;
+    private List<Herramienta> herramientas;
 
     public Equipo() {
     }
@@ -35,6 +39,8 @@ public class Equipo {
         this.fechaProximaCalibracion = fechaProximaCalibracion;
         this.fechaUltimoMantenimiento = fechaUltimoMantenimiento;
         this.fechaProximoMantenimiento = fechaProximoMantenimiento;
+        this.fungibles = new ArrayList<>();
+        this.herramientas = new ArrayList<>();
     }
 
     public int getId() {
@@ -107,5 +113,21 @@ public class Equipo {
 
     public void setFechaProximoMantenimiento(Date fechaProximoMantenimiento) {
         this.fechaProximoMantenimiento = fechaProximoMantenimiento;
+    }
+
+    public List<Fungible> getFungibles() {
+        return fungibles;
+    }
+
+    public void setFungibles(List<Fungible> fungibles) {
+        this.fungibles = fungibles;
+    }
+
+    public List<Herramienta> getHerramientas() {
+        return herramientas;
+    }
+
+    public void setHerramientas(List<Herramienta> herramientas) {
+        this.herramientas = herramientas;
     }
 }

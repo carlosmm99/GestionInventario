@@ -7,8 +7,6 @@ package controlador;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modelo.Equipo;
 import modelo.Fungible;
 import modelo.Herramienta;
@@ -180,8 +178,8 @@ public class Controlador {
 
     int insertarEquipo(Equipo e) {
         int filasAfectadas;
-        String sql = "INSERT INTO equipos (num_identificacion, nombre, fecha_compra, fabricante, fecha_ultima_calibracion, fecha_proxima_calibracion)"
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO equipos (num_identificacion, nombre, fecha_compra, fabricante, fecha_ultima_calibracion, fecha_proxima_calibracion, fecha_ultimo_mantenimiento, fecha_proximo_mantenimiento)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -194,7 +192,25 @@ public class Controlador {
             ps.setString(4, e.getFabricante());
             ps.setDate(5, new Date(e.getFechaUltimaCalibracion().getTime()));
             ps.setDate(6, new Date(e.getFechaProximaCalibracion().getTime()));
+            ps.setDate(7, new Date(e.getFechaUltimoMantenimiento().getTime()));
+            ps.setDate(8, new Date(e.getFechaProximoMantenimiento().getTime()));
             filasAfectadas = ps.executeUpdate();
+
+            // Obtener el ID del equipo recién insertado
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int idEquipoInsertado = rs.getInt(1);
+                e.setId(idEquipoInsertado);
+                // Asociar el equipo con los fungibles
+                for (Fungible f : e.getFungibles()) {
+                    asociarEquipoFungible(e, f);
+                }
+                // Asociar el equipo con las herramientas
+                for (Herramienta h : e.getHerramientas()) {
+                    asociarEquipoHerramienta(e, h);
+                }
+            }
+
             return filasAfectadas;
         } catch (SQLException ex) {
             return 0;
@@ -245,7 +261,7 @@ public class Controlador {
         }
     }
 
-    Herramienta buscarHerramientas(int idHerramienta) {
+    Herramienta buscarHerramienta(int idHerramienta) {
         String sql = "SELECT * FROM herramientas WHERE id = ?";
 
         try {
@@ -329,5 +345,21 @@ public class Controlador {
         } finally {
             desconectar();
         }
+    }
+
+    int insertarFungible(Fungible f) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    int asociarFungibleHerramienta(Fungible f, Herramienta h) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    int modificarFungible(Fungible f) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    int eliminarFungible(Fungible f) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
