@@ -362,4 +362,36 @@ public class Controlador {
     int eliminarFungible(Fungible f) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    List<Fungible> obtenerFungiblesPorEquipo(Equipo e) {
+        List<Fungible> fungibles = new ArrayList<>();
+        String sql = "SELECT f.id, f.marca, f.modelo, f.tamanyo, f.cantidad FROM equipos e JOIN equipos_fungibles ef ON e.id = ef.equipo_id JOIN fungibles f ON ef.fungible_id = f.id WHERE e.id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, e.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("f.id");
+                String marca = rs.getString("f.marca");
+                String modelo = rs.getString("f.modelo");
+                String tamanyo = rs.getString("f.tamanyo");
+                int cantidad = rs.getInt("f.cantidad");
+                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al leer los equipos: " + ex.getMessage());
+        } finally {
+            desconectar();
+        }
+
+        return fungibles;
+    }
+
+    List<Herramienta> obtenerHerramientasPorEquipo(Equipo equipo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

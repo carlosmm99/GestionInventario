@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,7 +41,7 @@ public class GestionEquipos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -300,6 +301,16 @@ public class GestionEquipos extends HttpServlet {
 
             tablaHTML.append("<tbody>");
             for (Equipo equipo : equipos) {
+                List<Fungible> fungibles = c.obtenerFungiblesPorEquipo(equipo);
+                List<Integer> numFungibles = new ArrayList<>();
+                for (Fungible fungible : fungibles) {
+                    numFungibles.add(fungible.getId());
+                }
+                List<Herramienta> herramientas = c.obtenerHerramientasPorEquipo(equipo);
+                List<Integer> numHerramientas = new ArrayList<>();
+                for (Herramienta herramienta : herramientas) {
+                    numFungibles.add(herramienta.getId());
+                }
                 tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
                         .append(" data-action=\"Consultar\"")
                         .append(" data-idequipo=\"").append(equipo.getId()).append("\"")
@@ -310,7 +321,8 @@ public class GestionEquipos extends HttpServlet {
                         .append(" data-fechaultimacalibracion=\"").append(equipo.getFechaUltimaCalibracion()).append("\"")
                         .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\"")
                         .append(" data-fechaultimomantenimiento=\"").append(equipo.getFechaUltimoMantenimiento()).append("\"")
-                        .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\">");
+                        .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\"")
+                        .append(" data-numfungibles=\"").append(numFungibles).append("\">");
 
                 tablaHTML.append("<td>")
                         .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
