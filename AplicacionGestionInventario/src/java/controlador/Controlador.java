@@ -399,6 +399,11 @@ public class Controlador {
         return !herramientasAsociadas.isEmpty();
     }
 
+    private boolean verificarAsociacionHerramientasExistente(Fungible f) {
+        List<Herramienta> herramientasAsociadas = obtenerHerramientasPorFungible(f);
+        return !herramientasAsociadas.isEmpty();
+    }
+
     int borrarEquipo(Equipo e) {
         int filasAfectadas;
         String sql = "DELETE FROM equipos WHERE id = ?";
@@ -474,11 +479,60 @@ public class Controlador {
     }
 
     int modificarFungible(Fungible f) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int filasAfectadas;
+        String sql = "UPDATE equipos SET num_identificacion = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ?, fecha_ultimo_mantenimiento = ?, fecha_proximo_mantenimiento = ? WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, f.getMarca());
+            ps.setString(2, f.getModelo());
+            ps.setString(3, f.getTamanyo());
+            ps.setInt(4, f.getCantidad());
+            ps.setInt(5, f.getId());
+            filasAfectadas = ps.executeUpdate();
+
+            // Verificar si la asociación entre equipos y herramientas existe
+            boolean asociacionHerramientasExiste = verificarAsociacionHerramientasExistente(f);
+
+            // Actualizar asociaciones según corresponda
+            if (asociacionHerramientasExiste) {
+                // Solo la asociación con herramientas existe
+                for (Herramienta h : f.getHerramientas()) {
+                    filasAfectadas += asociarFungibleHerramienta(f, h);
+                }
+            } else {
+                // Ninguna asociación existe
+                filasAfectadas = 0;
+            }
+
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
     }
 
-    int eliminarFungible(Fungible f) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    int borrarFungible(Fungible f) {
+        int filasAfectadas;
+        String sql = "DELETE FROM fungibles WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, f.getId());
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
     }
 
     List<Fungible> obtenerFungiblesPorEquipo(Equipo e) {

@@ -81,11 +81,13 @@ public class GestionFungibles extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("txtNumFungible"));
+        String idStr = request.getParameter("txtNumFungible");
         String marca = request.getParameter("txtMarcaFungible");
         String modelo = request.getParameter("txtModeloFungible");
         String tamanyo = request.getParameter("txtTamanyo");
-        int cantidad = Integer.parseInt(request.getParameter("txtCantidad"));
+        String cantidadStr = request.getParameter("txtCantidad");
+        int id = idStr != null && !idStr.isEmpty() ? Integer.parseInt(idStr) : 0;
+        int cantidad = cantidadStr != null && !cantidadStr.isEmpty() ? Integer.parseInt(cantidadStr) : 0;
         Fungible f = new Fungible(id, marca, modelo, tamanyo, cantidad);
         String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
         if (opcionesHerramientas != null) {
@@ -93,7 +95,16 @@ public class GestionFungibles extends HttpServlet {
                 Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
                 boolean exists = false;
                 if (h != null) {
-                    
+                    for (Herramienta herramienta : f.getHerramientas()) {
+                        if (herramienta.getId() == h.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        f.getHerramientas().add(h);
+                        h.getFungibles().add(f);
+                    }
                 }
             }
         }
@@ -106,19 +117,6 @@ public class GestionFungibles extends HttpServlet {
             } else {
                 mensaje = "Error al dar de alta el fungible con id " + f.getId();
             }
-        } else if (request.getParameter("btnAsignarHerramientasAFungible") != null) {
-            String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
-            for (String idHerramienta : opcionesHerramientas) {
-                Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
-                if (h != null) {
-                    res = c.asociarFungibleHerramienta(f, h);
-                    if (res != 0) {
-                        mensaje = "Fungible y herramienta asociados correctamente";
-                    } else {
-                        mensaje = "Error al asociar el fungible y la herramienta";
-                    }
-                }
-            }
         } else if (request.getParameter("btnEditar") != null) {
             res = c.modificarFungible(f);
             if (res != 0) {
@@ -127,7 +125,7 @@ public class GestionFungibles extends HttpServlet {
                 mensaje = "Error al modificar el fungible con id " + f.getId();
             }
         } else if (request.getParameter("btnEliminar") != null) {
-            res = c.eliminarFungible(f);
+            res = c.borrarFungible(f);
             if (res != 0) {
                 mensaje = "Fungible con id " + f.getId() + " dado de baja correctamente";
             } else {
