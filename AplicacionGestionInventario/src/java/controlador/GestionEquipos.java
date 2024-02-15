@@ -41,7 +41,7 @@ public class GestionEquipos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -100,48 +100,52 @@ public class GestionEquipos extends HttpServlet {
             Date fechaProximoMantenimiento = dateFormat.parse(request.getParameter("txtFechaProximoMantenimiento"));
             Equipo e = new Equipo(id, numIdentificacion, nombre, fechaCompraEquipo, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento);
             String[] opcionesFungibles = request.getParameterValues("selectFungibles");
-            for (String idFungible : opcionesFungibles) {
-                Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
-                boolean exists = false;
-                if (f != null) {
-                    for (Fungible fungible : e.getFungibles()) {
-                        if (fungible.getId() == f.getId()) {
-                            exists = true;
-                            break;
+            if (opcionesFungibles != null) {
+                for (String idFungible : opcionesFungibles) {
+                    Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
+                    boolean exists = false;
+                    if (f != null) {
+                        for (Fungible fungible : e.getFungibles()) {
+                            if (fungible.getId() == f.getId()) {
+                                exists = true;
+                                break;
+                            }
                         }
-                    }
-                    for (Equipo equipo : f.getEquipos()) {
-                        if (equipo.getId() == e.getId()) {
-                            exists = true;
-                            break;
+                        for (Equipo equipo : f.getEquipos()) {
+                            if (equipo.getId() == e.getId()) {
+                                exists = true;
+                                break;
+                            }
                         }
-                    }
-                    if (!exists) {
-                        e.getFungibles().add(f);
-                        f.getEquipos().add(e);
+                        if (!exists) {
+                            e.getFungibles().add(f);
+                            f.getEquipos().add(e);
+                        }
                     }
                 }
             }
             String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
-            for (String idHerramienta : opcionesHerramientas) {
-                Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
-                boolean exists = false;
-                if (h != null) {
-                    for (Herramienta herramienta : e.getHerramientas()) {
-                        if (herramienta.getId() == h.getId()) {
-                            exists = true;
-                            break;
+            if (opcionesHerramientas != null) {
+                for (String idHerramienta : opcionesHerramientas) {
+                    Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
+                    boolean exists = false;
+                    if (h != null) {
+                        for (Herramienta herramienta : e.getHerramientas()) {
+                            if (herramienta.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
                         }
-                    }
-                    for (Equipo equipo : h.getEquipos()) {
-                        if (equipo.getId() == h.getId()) {
-                            exists = true;
-                            break;
+                        for (Equipo equipo : h.getEquipos()) {
+                            if (equipo.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
                         }
-                    }
-                    if (!exists) {
-                        e.getHerramientas().add(h);
-                        h.getEquipos().add(e);
+                        if (!exists) {
+                            e.getHerramientas().add(h);
+                            h.getEquipos().add(e);
+                        }
                     }
                 }
             }
@@ -203,7 +207,7 @@ public class GestionEquipos extends HttpServlet {
         request.setAttribute("ultimoNumEquipo", ultimoNumEquipo);
         StringBuilder formHTML = new StringBuilder();
 
-        formHTML.append("<h5 id=\"tituloEliminar\">¿Seguro que deseas eliminar este equipo?</h5><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
+        formHTML.append("<h6 id=\"tituloEliminar\">¿Seguro que deseas eliminar este equipo?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
                 .append("<div class=\"row\" id=\"filasFormulario\">")
                 // Columna nº de equipo
                 .append("<div class=\"col-6\" id=\"columnaNumEquipo\">")
@@ -295,7 +299,8 @@ public class GestionEquipos extends HttpServlet {
             tablaHTML.append("<th scope=\"col\" id=\"columnaIdEquipo\">ID</th>")
                     .append("<th scope=\"col\">Nº de identificación</th><th scope=\"col\">Nombre</th>")
                     .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Fabricante</th>")
-                    .append("<th scope=\"col\">Fecha última calibración</th><th scope=\"col\">Fecha próxima calibración</th>");
+                    .append("<th scope=\"col\">Fecha última calibración</th><th scope=\"col\">Fecha próxima calibración</th>")
+                    .append("<th scope=\"col\">Fecha último mantenimiento</th><th scope=\"col\">Fecha próximo mantenimiento</th>");
 
             tablaHTML.append("</tr></thead>");
 
@@ -309,7 +314,7 @@ public class GestionEquipos extends HttpServlet {
                 List<Herramienta> herramientas = c.obtenerHerramientasPorEquipo(equipo);
                 List<Integer> numHerramientas = new ArrayList<>();
                 for (Herramienta herramienta : herramientas) {
-                    numFungibles.add(herramienta.getId());
+                    numHerramientas.add(herramienta.getId());
                 }
                 tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
                         .append(" data-action=\"Consultar\"")
@@ -322,7 +327,8 @@ public class GestionEquipos extends HttpServlet {
                         .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\"")
                         .append(" data-fechaultimomantenimiento=\"").append(equipo.getFechaUltimoMantenimiento()).append("\"")
                         .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\"")
-                        .append(" data-numfungibles=\"").append(numFungibles).append("\">");
+                        .append(" data-numfungibles=\"").append(numFungibles).append("\"")
+                        .append(" data-numherramientas=\"").append(numHerramientas).append("\">");
 
                 tablaHTML.append("<td>")
                         .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
@@ -335,7 +341,9 @@ public class GestionEquipos extends HttpServlet {
                         .append("<td>").append(equipo.getFechaCompra()).append("</td>")
                         .append("<td>").append(equipo.getFabricante()).append("</td>")
                         .append("<td>").append(equipo.getFechaUltimaCalibracion()).append("</td>")
-                        .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>");
+                        .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>")
+                        .append("<td>").append(equipo.getFechaUltimoMantenimiento()).append("</td>")
+                        .append("<td>").append(equipo.getFechaProximoMantenimiento()).append("</td>");
 
                 tablaHTML.append("</tr>");
             }

@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import modelo.Fungible;
 import modelo.Herramienta;
@@ -86,6 +87,16 @@ public class GestionFungibles extends HttpServlet {
         String tamanyo = request.getParameter("txtTamanyo");
         int cantidad = Integer.parseInt(request.getParameter("txtCantidad"));
         Fungible f = new Fungible(id, marca, modelo, tamanyo, cantidad);
+        String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
+        if (opcionesHerramientas != null) {
+            for (String idHerramienta : opcionesHerramientas) {
+                Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
+                boolean exists = false;
+                if (h != null) {
+                    
+                }
+            }
+        }
         int res = 0;
         String mensaje = "";
         if (request.getParameter("btnAgregar") != null) {
@@ -152,10 +163,10 @@ public class GestionFungibles extends HttpServlet {
         request.setAttribute("ultimoNumFungible", ultimoNumFungible);
         StringBuilder formHTML = new StringBuilder();
 
-        formHTML.append("<h5 id=\"tituloEliminar\">¿Seguro que deseas eliminar este fungible?</h5><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
+        formHTML.append("<h6 id=\"tituloEliminar\">¿Seguro que deseas eliminar este fungible?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
                 .append("<div class=\"row\" id=\"filasFormulario\">")
                 // Columna nº de equipo
-                .append("<div class=\"col-6\" id=\"columnaNumFungible\">")
+                .append("<div class=\"col-6\" id=\"columnaNumFungible\" style=\"display: none;\">")
                 .append("<label>Número de fungible:</label>")
                 .append("<input type=\"text\" readonly=\"true\" value=\"")
                 .append(ultimoNumFungible)
@@ -186,7 +197,7 @@ public class GestionFungibles extends HttpServlet {
                 .append("</div>")
                 .append("</div>")
                 // Columna herramientas
-                .append("<div class=\"col-6\" id=\"columnaHerramientas\" style=\"display: none;\">")
+                .append("<div class=\"col-6\" id=\"columnaHerramientas\">")
                 .append("<label>Herramientas:</label>")
                 .append("<select class=\"form-control\" name=\"selectHerramientas\" id=\"selectHerramientas\" multiple>");
         for (Herramienta herramienta : herramientas) {
@@ -196,10 +207,9 @@ public class GestionFungibles extends HttpServlet {
         }
         formHTML.append("</select>").append("</div>").append("</div>")
                 .append("<div class=\"modal-footer\">")
-                .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Aceptar</button>")
-                .append("<button type=\"submit\" name=\"btnAsignarHerramientasAFungible\" style=\"display: none;\" class=\"btn btn-secondary\">Aceptar</button>")
-                .append("<button type=\"submit\" name=\"btnEditar\" style=\"display: none;\" class=\"btn btn-warning\">Aceptar</button>")
-                .append("<button type=\"submit\" name=\"btnEliminar\" style=\"display: none;\" class=\"btn btn-danger\">Aceptar</button>")
+                .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
+                .append("<button type=\"submit\" name=\"btnEditar\" style=\"display: none;\" class=\"btn btn-warning\">Enviar</button>")
+                .append("<button type=\"submit\" name=\"btnEliminar\" style=\"display: none;\" class=\"btn btn-danger\">Confirmar</button>")
                 .append("<button type=\"button\" name=\"btnCancelar\" class=\"btn btn-dark\" data-bs-dismiss=\"modal\">Cancelar</button>")
                 .append("</div>")
                 .append("</form>");
@@ -223,16 +233,21 @@ public class GestionFungibles extends HttpServlet {
 
             tablaHTML.append("<tbody>");
             for (Fungible fungible : fungibles) {
+                List<Herramienta> herramientas = c.obtenerHerramientasPorFungible(fungible);
+                List<Integer> numHerramientas = new ArrayList<>();
+                for (Herramienta herramienta : herramientas) {
+                    numHerramientas.add(herramienta.getId());
+                }
                 tablaHTML.append("<tr id=fila_").append(fungible.getId()).append("\"")
                         .append(" data-action=\"Consultar\"")
                         .append(" data-idfungible=\"").append(fungible.getId()).append("\"")
                         .append(" data-marcafungible=\"").append(fungible.getMarca()).append("\"")
                         .append(" data-modelofungible=\"").append(fungible.getModelo()).append("\"")
                         .append(" data-tamanyo=\"").append(fungible.getTamanyo()).append("\"")
-                        .append(" data-cantidad=\"").append(fungible.getCantidad()).append("\">");
+                        .append(" data-cantidad=\"").append(fungible.getCantidad()).append("\"")
+                        .append(" data-numherramientas=\"").append(numHerramientas).append("\">");
 
                 tablaHTML.append("<td>")
-                        .append("<button type=\"button\" class=\"btn btn-secondary btnHerramientasAFungible\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"AsignarHerramientasAFungible\" name=\"btnHerramientasAFungible\">Herramientas</button>&nbsp;")
                         .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
                         .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
                         .append("</td>");

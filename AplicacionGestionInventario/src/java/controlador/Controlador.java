@@ -53,23 +53,24 @@ public class Controlador {
     }
 
     public int obtenerNumRegistro(String tabla) {
-        int ultimoNum = 0;
-        String sql = "SELECT MAX(id) FROM " + tabla;
+        int siguienteNum = 0;
+        String sql = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
                 conn = this.conectar(false);
             }
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, "inventario");
+            preparedStatement.setString(2, tabla);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                ultimoNum = resultSet.getInt(1);
+                siguienteNum = resultSet.getInt("AUTO_INCREMENT");
             }
+            return siguienteNum;
         } catch (SQLException e) {
-            System.err.println("Error al obtener el último número de registro: " + e.getMessage());
+            return siguienteNum;
         }
-
-        return ultimoNum + 1;
     }
 
     public int contarRegistros(String tabla) {
@@ -140,13 +141,12 @@ public class Controlador {
                 int cantidad = rs.getInt("cantidad");
                 fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad));
             }
+            return fungibles;
         } catch (SQLException ex) {
-            System.err.println("Error al leer los equipos: " + ex.getMessage());
+            return null;
         } finally {
             desconectar();
         }
-
-        return fungibles;
     }
 
     List<Herramienta> leerHerramientas() {
@@ -167,16 +167,29 @@ public class Controlador {
                 Date fechaCompra = rs.getDate("fecha_compra");
                 herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra));
             }
+            return herramientas;
         } catch (SQLException ex) {
-            System.err.println("Error al leer los equipos: " + ex.getMessage());
+            return null;
         } finally {
             desconectar();
         }
-
-        return herramientas;
     }
 
     int insertarEquipo(Equipo e) {
+        // Comprobar si la fecha de próxima calibración es anterior a la fecha de última calibración
+        // o a la fecha de compra
+        if (e.getFechaProximaCalibracion().before(e.getFechaUltimaCalibracion())
+                || e.getFechaProximaCalibracion().before(e.getFechaCompra())) {
+            return 0; // No hacer nada si las condiciones no se cumplen
+        }
+
+        // Comprobar si la fecha de próximo mantenimiento es anterior a la fecha de último mantenimiento
+        // o a la fecha de compra
+        if (e.getFechaProximoMantenimiento().before(e.getFechaUltimoMantenimiento())
+                || e.getFechaProximoMantenimiento().before(e.getFechaCompra())) {
+            return 0; // No hacer nada si las condiciones no se cumplen
+        }
+
         int filasAfectadas;
         String sql = "INSERT INTO equipos (num_identificacion, nombre, fecha_compra, fabricante, fecha_ultima_calibracion, fecha_proxima_calibracion, fecha_ultimo_mantenimiento, fecha_proximo_mantenimiento)"
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -304,8 +317,22 @@ public class Controlador {
     }
 
     int modificarEquipo(Equipo e) {
+        // Comprobar si la fecha de próxima calibración es anterior a la fecha de última calibración
+        // o a la fecha de compra
+        if (e.getFechaProximaCalibracion().before(e.getFechaUltimaCalibracion())
+                || e.getFechaProximaCalibracion().before(e.getFechaCompra())) {
+            return 0; // No hacer nada si las condiciones no se cumplen
+        }
+
+        // Comprobar si la fecha de próximo mantenimiento es anterior a la fecha de último mantenimiento
+        // o a la fecha de compra
+        if (e.getFechaProximoMantenimiento().before(e.getFechaUltimoMantenimiento())
+                || e.getFechaProximoMantenimiento().before(e.getFechaCompra())) {
+            return 0; // No hacer nada si las condiciones no se cumplen
+        }
+
         int filasAfectadas;
-        String sql = "UPDATE equipos SET num_identificacion = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ? WHERE id = ?";
+        String sql = "UPDATE equipos SET num_identificacion = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ?, fecha_ultimo_mantenimiento = ?, fecha_proximo_mantenimiento = ? WHERE id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -318,14 +345,58 @@ public class Controlador {
             ps.setString(4, e.getFabricante());
             ps.setDate(5, new Date(e.getFechaUltimaCalibracion().getTime()));
             ps.setDate(6, new Date(e.getFechaProximaCalibracion().getTime()));
-            ps.setInt(7, e.getId());
+            ps.setDate(7, new Date(e.getFechaUltimoMantenimiento().getTime()));
+            ps.setDate(8, new Date(e.getFechaProximoMantenimiento().getTime()));
+            ps.setInt(9, e.getId());
             filasAfectadas = ps.executeUpdate();
+
+            // Verificar si la asociación entre equipos y fungibles existe
+            boolean asociacionFungiblesExiste = verificarAsociacionFungiblesExistente(e);
+            // Verificar si la asociación entre equipos y herramientas existe
+            boolean asociacionHerramientasExiste = verificarAsociacionHerramientasExistente(e);
+
+            // Actualizar asociaciones según corresponda
+            if (asociacionFungiblesExiste && asociacionHerramientasExiste) {
+                // Ambas asociaciones existen
+                for (Fungible f : e.getFungibles()) {
+                    filasAfectadas += asociarEquipoFungible(e, f);
+                }
+                for (Herramienta h : e.getHerramientas()) {
+                    filasAfectadas += asociarEquipoHerramienta(e, h);
+                }
+            } else if (asociacionFungiblesExiste) {
+                // Solo la asociación con fungibles existe
+                for (Fungible f : e.getFungibles()) {
+                    filasAfectadas += asociarEquipoFungible(e, f);
+                }
+            } else if (asociacionHerramientasExiste) {
+                // Solo la asociación con herramientas existe
+                for (Herramienta h : e.getHerramientas()) {
+                    filasAfectadas += asociarEquipoHerramienta(e, h);
+                }
+            } else {
+                // Ninguna asociación existe
+                filasAfectadas = 0;
+            }
+
             return filasAfectadas;
         } catch (SQLException ex) {
             return 0;
         } finally {
             desconectar();
         }
+    }
+
+    // Método para verificar si la asociación entre equipos y fungibles existe
+    private boolean verificarAsociacionFungiblesExistente(Equipo e) {
+        List<Fungible> fungiblesAsociados = obtenerFungiblesPorEquipo(e);
+        return !fungiblesAsociados.isEmpty();
+    }
+
+    // Método para verificar si la asociación entre equipos y herramientas existe
+    private boolean verificarAsociacionHerramientasExistente(Equipo e) {
+        List<Herramienta> herramientasAsociadas = obtenerHerramientasPorEquipo(e);
+        return !herramientasAsociadas.isEmpty();
     }
 
     int borrarEquipo(Equipo e) {
@@ -348,11 +419,58 @@ public class Controlador {
     }
 
     int insertarFungible(Fungible f) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int filasAfectadas;
+        String sql = "INSERT INTO fungibles (marca, modelo, tamanyo, cantidad)"
+                + "VALUES (?, ?, ?, ?)";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, f.getMarca());
+            ps.setString(2, f.getModelo());
+            ps.setString(3, f.getTamanyo());
+            ps.setInt(4, f.getCantidad());
+            filasAfectadas = ps.executeUpdate();
+
+            // Obtener el ID del fungible recién insertado
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int idFungibleInsertado = rs.getInt(1);
+                f.setId(idFungibleInsertado);
+                // Asociar el fungible con las herramientas
+                for (Herramienta h : f.getHerramientas()) {
+                    asociarFungibleHerramienta(f, h);
+                }
+            }
+
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
     }
 
     int asociarFungibleHerramienta(Fungible f, Herramienta h) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int filasAfectadas;
+        String sql = "INSERT INTO fungibles_herramientas VALUES (?, ?)";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, f.getId());
+            ps.setInt(2, h.getId());
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
     }
 
     int modificarFungible(Fungible f) {
@@ -382,16 +500,65 @@ public class Controlador {
                 int cantidad = rs.getInt("f.cantidad");
                 fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad));
             }
+            return fungibles;
         } catch (SQLException ex) {
-            System.err.println("Error al leer los equipos: " + ex.getMessage());
+            return null;
         } finally {
             desconectar();
         }
-
-        return fungibles;
     }
 
-    List<Herramienta> obtenerHerramientasPorEquipo(Equipo equipo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    List<Herramienta> obtenerHerramientasPorEquipo(Equipo e) {
+        List<Herramienta> herramientas = new ArrayList<>();
+        String sql = "SELECT h.id, h.marca, h.modelo, h.fabricante, h.fecha_compra FROM equipos e JOIN equipos_herramientas eh ON e.id = eh.equipo_id JOIN herramientas h ON eh.herramienta_id = h.id WHERE e.id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, e.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("h.id");
+                String marca = rs.getString("h.marca");
+                String modelo = rs.getString("h.modelo");
+                String fabricante = rs.getString("h.fabricante");
+                Date fechaCompra = rs.getDate("h.fecha_compra");
+                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra));
+            }
+            return herramientas;
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
+    }
+
+    List<Herramienta> obtenerHerramientasPorFungible(Fungible f) {
+        List<Herramienta> herramientas = new ArrayList<>();
+        String sql = "SELECT h.* FROM herramientas h JOIN fungibles_herramientas fh ON h.id = fh.herramienta_id JOIN fungibles f ON fh.fungible_id = f.id WHERE f.id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, f.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("h.id");
+                String marca = rs.getString("h.marca");
+                String modelo = rs.getString("h.modelo");
+                String fabricante = rs.getString("h.fabricante");
+                Date fechaCompra = rs.getDate("h.fecha_compra");
+                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra));
+            }
+            return herramientas;
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
     }
 }
