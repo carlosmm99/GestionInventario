@@ -17,3 +17,13 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none; /* WebKit/Blink */
     margin: 0; /* Espaciado adicional */
 }
+
+#tablaEquipos thead tr, #tablaFungibles thead tr {
+    background-color: seagreen;
+    color: white;
+}
+
+#tablaEquipos tbody tr:nth-child(even), #tablaFungibles tbody tr:nth-child(even) {
+    background-color: mediumseagreen;
+    color: white;
+}
