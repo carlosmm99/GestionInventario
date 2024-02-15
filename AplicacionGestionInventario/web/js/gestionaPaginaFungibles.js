@@ -70,79 +70,51 @@ $(document).ready(function () {
             $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
             $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", false);
             $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
+            $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
             $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
             $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
             $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
-            $("#filasFormulario #columnaCantidad #txtCantidad").prop("readonly", false);
-            $("#filasFormulario #columnaNumFungible").show();
-            $("#filasFormulario #columnaMarcaFungible").show();
-            $("#filasFormulario #columnaModeloFungible").show();
-            $("#filasFormulario #columnaTamanyo").show();
-            $("#filasFormulario #columnaCantidad").show();
-            $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
-            $("#filasFormulario #columnaHerramientas").hide();
+            $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
+            $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
 
             // Poner visibles los campos
             $("#filasFormulario").show();
 
             $("[name='btnAgregar']").show();
-            $("[name='btnAsignarHerramientasAFungible']").hide();
+            $("[name='btnAgregar']").prop("disabled", false);
             $("[name='btnEditar']").hide();
+            $("[name='btnEditar']").prop("disabled", true);
             $("[name='btnEliminar']").hide();
+            $("[name='btnEliminar']").prop("disabled", true);
         } else {
             $("#filasFormulario #columnaNumFungible #txtNumFungible").val(fila.data("idfungible"));
             $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val(fila.data("marcafungible"));
             $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val(fila.data("modelofungible"));
             $("#filasFormulario #columnaTamanyo #txtTamanyo").val(fila.data("tamanyo"));
             $("#filasFormulario #columnaCantidad #txtCantidad").val(fila.data("cantidad"));
+            $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
 
-            if (accion === 'AsignarHerramientasAFungible') {
-                $(".modal-title").text("Asignar herramientas");
-                $("#tituloEliminar").hide();
-
-                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
-                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
-                $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
-                $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
-                $("#filasFormulario #columnaNumFungible").show();
-                $("#filasFormulario #columnaMarcaFungible").hide();
-                $("#filasFormulario #columnaModeloFungible").hide();
-                $("#filasFormulario #columnaTamanyo").hide();
-                $("#filasFormulario #columnaCantidad").hide();
-                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("required", true);
-                $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
-                $("#filasFormulario #columnaHerramientas").show();
-
-                // Poner visibles los campos
-                $("#filasFormulario").show();
-
-                $("[name='btnAgregar']").hide();
-                $("[name='btnAsignarHerramientasAFungible']").show();
-                $("[name='btnEditar']").hide();
-                $("[name='btnEliminar']").hide();
-            } else if (accion === 'Consultar') {
+            if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
-                $(".modal-title").text("Información del equipo");
+                $(".modal-title").text("Información del fungible");
                 $("#tituloEliminar").hide();
 
                 $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
                 $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
                 $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
+                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
                 $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
-                $("#filasFormulario #columnaNumFungible").show();
-                $("#filasFormulario #columnaMarcaFungible").show();
-                $("#filasFormulario #columnaModeloFungible").show();
-                $("#filasFormulario #columnaTamanyo").show();
-                $("#filasFormulario #columnaCantidad").show();
-                $("#filasFormulario #columnaHerramientas").hide();
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
 
                 $("[name='btnAgregar']").hide();
-                $("[name='btnAsignarHerramientasAFungible']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
                 $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
                 $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             } else if (accion === 'Editar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Editar fungible");
@@ -151,21 +123,19 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
                 $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
                 $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
+                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
                 $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", false);
-                $("#filasFormulario #columnaNumFungible").show();
-                $("#filasFormulario #columnaMarcaFungible").show();
-                $("#filasFormulario #columnaModeloFungible").show();
-                $("#filasFormulario #columnaTamanyo").show();
-                $("#filasFormulario #columnaCantidad").show();
-                $("#filasFormulario #columnaHerramientas").hide();
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
 
                 $("[name='btnAgregar']").hide();
-                $("[name='btnAsignarHerramientasAFungible']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
                 $("[name='btnEditar']").show();
+                $("[name='btnEditar']").prop("disabled", false);
                 $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Eliminar fungible");
@@ -174,21 +144,19 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
                 $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
                 $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
+                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
                 $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
-                $("#filasFormulario #columnaNumFungible").hide();
-                $("#filasFormulario #columnaMarcaFungible").hide();
-                $("#filasFormulario #columnaModeloFungible").hide();
-                $("#filasFormulario #columnaTamanyo").hide();
-                $("#filasFormulario #columnaCantidad").hide();
-                $("#filasFormulario #columnaHerramientas").hide();
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
 
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();
 
                 $("[name='btnAgregar']").hide();
-                $("[name='btnAsignarHerramientasAFungible']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
                 $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
                 $("[name='btnEliminar']").show();
+                $("[name='btnEliminar']").prop("disabled", false);
             }
         }
     }
@@ -209,6 +177,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // Asegurarse de que el valor nunca sea menor que 1
         if (quantityInput.value > 0) {
             quantityInput.value = parseInt(quantityInput.value) - 1;
+        }
+    });
+
+    quantityInput.addEventListener('keydown', function (event) {
+        if (event.key === "Backspace") {
+            event.preventDefault();
         }
     });
 });

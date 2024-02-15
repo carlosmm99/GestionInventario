@@ -96,8 +96,11 @@ $(document).ready(function () {
             $("#filasFormulario").show();
 
             $("[name='btnAgregar']").show();
+            $("[name='btnAgregar']").prop("disabled", false);
             $("[name='btnEditar']").hide();
+            $("[name='btnEditar']").prop("disabled", true);
             $("[name='btnEliminar']").hide();
+            $("[name='btnEliminar']").prop("disabled", true);
         } else {
             $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(fila.data("idequipo"));
             $("#filasFormulario #columnaNumIdentificacion #txtNumIdentificacion").val(fila.data("numidentificacion"));
@@ -109,6 +112,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").val(fila.data("fechaultimomantenimiento"));
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val(fila.data("fechaproximomantenimiento"));
             $("#filasFormulario #columnaFungibles #selectFungibles").val(fila.data("numfungibles"));
+            $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
@@ -130,8 +134,11 @@ $(document).ready(function () {
                 $("#filasFormulario").show();
 
                 $("[name='btnAgregar']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
                 $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
                 $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             } else if (accion === 'Editar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Editar equipo");
@@ -152,8 +159,11 @@ $(document).ready(function () {
                 $("#filasFormulario").show();
 
                 $("[name='btnAgregar']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
                 $("[name='btnEditar']").show();
+                $("[name='btnEditar']").prop("disabled", false);
                 $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             } else if (accion === 'Eliminar') {// Cambiar el texto del título del modal
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Confirmar acción");
@@ -171,11 +181,14 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
 
                 // Poner visibles los campos
-                $("#filasFormulario").show();
+                $("#filasFormulario").hide();
 
                 $("[name='btnAgregar']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
                 $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
                 $("[name='btnEliminar']").show();
+                $("[name='btnEliminar']").prop("disabled", false);
             }
         }
     }
