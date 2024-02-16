@@ -7,6 +7,9 @@
 
 $(document).ready(function () {
     tablaEquipos = $("#tablaEquipos").DataTable({
+        searching: true,
+        select: false,
+        responsive: true,
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
         },
@@ -17,22 +20,6 @@ $(document).ready(function () {
     $("#btnAgregarEquipo").on("click", function () {
         var accion = 'Agregar';
         configurarModal(null, accion);
-    });
-
-    $("#tablaEquipos tbody").on("click", "tr td .btnFungiblesAEquipo", function (e) {
-        e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'AsignarFungiblesAEquipo';
-        configurarModal(fila, accion);
-        $('#modalEquipos').modal('show');
-    });
-
-    $("#tablaEquipos tbody").on("click", "tr td .btnHerramientasAEquipo", function (e) {
-        e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'AsignarHerramientasAEquipo';
-        configurarModal(fila, accion);
-        $('#modalEquipos').modal('show');
     });
 
     $("#tablaEquipos tbody").on("click", "tr td:not(:first-child)", function () {

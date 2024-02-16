@@ -3,10 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumFungible, tablaFungibles */
+/* global ultimoNumHerramienta, tablaHerramientas */
 
 $(document).ready(function () {
-    tablaFungibles = $("#tablaFungibles").DataTable({
+    tablaHerramientas = $("#tablaHerramientas").DataTable({
         searching: true,
         select: false,
         responsive: true,
@@ -16,36 +16,32 @@ $(document).ready(function () {
         order: []
     });
 
-    $("#btnAgregarFungible").on("click", function () {
+    $("#btnAgregarHerramienta").on("click", function () {
         var accion = 'Agregar';
         configurarModal(null, accion);
     });
 
-    $("#tablaFungibles tbody").on("click", "tr td:not(:first-child)", function () {
+    $("#tablaHerramientas tbody").on("click", "tr td:not(:first-child)", function () {
         fila = obtenerFilaSeleccionada($(this).closest('tr'));
         var accion = 'Consultar';
         configurarModal(fila, accion);
-        $('#modalFungibles').modal('show');
+        $('#modalHerramientas').modal('show');
     });
 
-    $("#tablaFungibles tbody").on("click", "tr td .btnEditar", function (e) {
+    $("#tablaHerramientas tbody").on("click", "tr td .btnEditar", function (e) {
         e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
         fila = obtenerFilaSeleccionada($(this).closest('tr'));
         var accion = 'Editar';
         configurarModal(fila, accion);
-        $('#modalFungibles').modal('show');
+        $('#modalHerramientas').modal('show');
     });
 
-    $("#tablaFungibles tbody").on("click", "tr td .btnEliminar", function (e) {
+    $("#tablaHerramientas tbody").on("click", "tr td .btnEliminar", function (e) {
         e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
         fila = obtenerFilaSeleccionada($(this).closest('tr'));
         var accion = 'Eliminar';
         configurarModal(fila, accion);
-        $('#modalFungibles').modal('show');
-    });
-
-    $("[type='number']").keypress(function (evt) {
-        evt.preventDefault();
+        $('#modalHerramientas').modal('show');
     });
 
     // Función para obtener la fila seleccionada
@@ -56,23 +52,22 @@ $(document).ready(function () {
     function configurarModal(fila, accion) {
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
-            $(".modal-title").text("Agregar fungible");
+            $(".modal-title").text("Agregar herramienta");
             $("#tituloEliminar").hide();
 
-            $("#filasFormulario #columnaNumFungible #txtNumFungible").val(ultimoNumFungible);
-            $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
-            $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
-            $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
-            $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", false);
-            $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
+            $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(ultimoNumHerramienta);
+            $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val("");
+            $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").val("");
+            $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").val("");
+            $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
             $("#filasFormulario #columnaEquipos #selectEquipos").val("");
-            $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
-            $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
-            $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
-            $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
-            $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
+            $("#filasFormulario #columnaFungibles #selectFungibles").val("");
+            $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", false);
+            $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", false);
+            $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", false);
+            $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", false);
             $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
-            $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+            $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
 
             // Poner visibles los campos
             $("#filasFormulario").show();
@@ -84,26 +79,25 @@ $(document).ready(function () {
             $("[name='btnEliminar']").hide();
             $("[name='btnEliminar']").prop("disabled", true);
         } else {
-            $("#filasFormulario #columnaNumFungible #txtNumFungible").val(fila.data("idfungible"));
-            $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val(fila.data("marcafungible"));
-            $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val(fila.data("modelofungible"));
-            $("#filasFormulario #columnaTamanyo #txtTamanyo").val(fila.data("tamanyo"));
-            $("#filasFormulario #columnaCantidad #txtCantidad").val(fila.data("cantidad"));
+            $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(fila.data("idherramienta"));
+            $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val(fila.data("marcaherramienta"));
+            $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").val(fila.data("modeloherramienta"));
+            $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").val(fila.data("fabricanteherramienta"));
+            $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val(fila.data("fechacompraherramienta"));
             $("#filasFormulario #columnaEquipos #selectEquipos").val(fila.data("numequipos"));
-            $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
+            $("#filasFormulario #columnaFungibles #selectFungibles").val(fila.data("numfungibles"));
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
-                $(".modal-title").text("Información del fungible");
+                $(".modal-title").text("Información de la herramienta");
                 $("#tituloEliminar").hide();
 
-                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
-                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
-                $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
-                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
-                $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
+                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
-                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
@@ -116,16 +110,15 @@ $(document).ready(function () {
                 $("[name='btnEliminar']").prop("disabled", true);
             } else if (accion === 'Editar') {
                 // Cambiar el texto del título del modal
-                $(".modal-title").text("Editar fungible");
+                $(".modal-title").text("Editar herramienta");
                 $("#tituloEliminar").hide();
 
-                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
-                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
-                $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
-                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
-                $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", false);
+                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", false);
+                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", false);
+                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", false);
+                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", false);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
-                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+                $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
@@ -141,13 +134,12 @@ $(document).ready(function () {
                 $(".modal-title").text("Confirmar acción");
                 $("#tituloEliminar").show();
 
-                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
-                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
-                $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
-                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
-                $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
+                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
-                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
 
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();
