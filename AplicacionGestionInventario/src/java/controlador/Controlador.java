@@ -7,6 +7,8 @@ package controlador;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Equipo;
 import modelo.Fungible;
 import modelo.Herramienta;
@@ -232,6 +234,106 @@ public class Controlador {
         }
     }
 
+    int insertarFungible(Fungible f) {
+        int filasAfectadas;
+        String sql = "INSERT INTO fungibles (marca, modelo, tamanyo, cantidad)"
+                + "VALUES (?, ?, ?, ?)";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, f.getMarca());
+            ps.setString(2, f.getModelo());
+            ps.setString(3, f.getTamanyo());
+            ps.setInt(4, f.getCantidad());
+            filasAfectadas = ps.executeUpdate();
+
+            // Obtener el ID del fungible recién insertado
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int idFungibleInsertado = rs.getInt(1);
+                f.setId(idFungibleInsertado);
+                // Asociar el fungible con los equipos
+                for (Equipo e : f.getEquipos()) {
+                    asociarEquipoFungible(e, f);
+                }
+                // Asociar el fungible con las herramientas
+                for (Herramienta h : f.getHerramientas()) {
+                    asociarFungibleHerramienta(f, h);
+                }
+            }
+
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    int insertarHerramienta(Herramienta h) {
+        int filasAfectadas;
+        String sql = "INSERT INTO herramientas (marca, modelo, fabricante, fecha_compra)"
+                + "VALUES (?, ?, ?, ?)";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, h.getMarca());
+            ps.setString(2, h.getModelo());
+            ps.setString(3, h.getFabricante());
+            ps.setDate(4, new Date(h.getFechaCompra().getTime()));
+            filasAfectadas = ps.executeUpdate();
+
+            // Obtener el ID de la herramienta recién insertada
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int idHerramientaInsertada = rs.getInt(1);
+                h.setId(idHerramientaInsertada);
+                // Asociar la herramienta con los equipos
+                for (Equipo e : h.getEquipos()) {
+                    asociarEquipoHerramienta(e, h);
+                }
+                // Asociar la herramienta con los fungibles
+                for (Fungible f : h.getFungibles()) {
+                    asociarFungibleHerramienta(f, h);
+                }
+            }
+
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    Equipo buscarEquipo(int idEquipo) {
+        String sql = "SELECT * FROM equipos WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Equipo(idEquipo, rs.getInt("num_identificacion"), rs.getString("nombre"), rs.getDate("fecha_compra"), rs.getString("fabricante"), rs.getDate("fecha_ultima_calibracion"), rs.getDate("fecha_proxima_calibracion"), rs.getDate("fecha_ultimo_mantenimiento"), rs.getDate("fecha_proximo_mantenimiento"));
+            }
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
+
+        return null;
+    }
+
     Fungible buscarFungible(int idFungible) {
         String sql = "SELECT * FROM fungibles WHERE id = ?";
 
@@ -244,6 +346,28 @@ public class Controlador {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new Fungible(idFungible, rs.getString("marca"), rs.getString("modelo"), rs.getString("tamanyo"), rs.getInt("cantidad"));
+            }
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
+
+        return null;
+    }
+
+    Herramienta buscarHerramienta(int idHerramienta) {
+        String sql = "SELECT * FROM herramientas WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idHerramienta);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Herramienta(idHerramienta, rs.getString("marca"), rs.getString("modelo"), rs.getString("fabricante"), rs.getDate("fecha_compra"));
             }
         } catch (SQLException ex) {
             return null;
@@ -274,28 +398,6 @@ public class Controlador {
         }
     }
 
-    Herramienta buscarHerramienta(int idHerramienta) {
-        String sql = "SELECT * FROM herramientas WHERE id = ?";
-
-        try {
-            if (conn == null || conn.isClosed()) {
-                conn = this.conectar(false);
-            }
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, idHerramienta);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new Herramienta(idHerramienta, rs.getString("marca"), rs.getString("modelo"), rs.getString("fabricante"), rs.getDate("fecha_compra"));
-            }
-        } catch (SQLException ex) {
-            return null;
-        } finally {
-            desconectar();
-        }
-
-        return null;
-    }
-
     int asociarEquipoHerramienta(Equipo e, Herramienta h) {
         int filasAfectadas;
         String sql = "INSERT INTO equipos_herramientas VALUES (?, ?)";
@@ -306,6 +408,26 @@ public class Controlador {
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, e.getId());
+            ps.setInt(2, h.getId());
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    int asociarFungibleHerramienta(Fungible f, Herramienta h) {
+        int filasAfectadas;
+        String sql = "INSERT INTO fungibles_herramientas VALUES (?, ?)";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, f.getId());
             ps.setInt(2, h.getId());
             filasAfectadas = ps.executeUpdate();
             return filasAfectadas;
@@ -351,9 +473,9 @@ public class Controlador {
             filasAfectadas = ps.executeUpdate();
 
             // Verificar si la asociación entre equipos y fungibles existe
-            boolean asociacionFungiblesExiste = verificarAsociacionFungiblesExistente(e);
+            boolean asociacionFungiblesExiste = verificarAsociacionEquiposFungiblesExistente(e);
             // Verificar si la asociación entre equipos y herramientas existe
-            boolean asociacionHerramientasExiste = verificarAsociacionHerramientasExistente(e);
+            boolean asociacionHerramientasExiste = verificarAsociacionEquiposHerramientasExistente(e);
 
             // Actualizar asociaciones según corresponda
             if (asociacionFungiblesExiste && asociacionHerramientasExiste) {
@@ -387,100 +509,9 @@ public class Controlador {
         }
     }
 
-    // Método para verificar si la asociación entre equipos y fungibles existe
-    private boolean verificarAsociacionFungiblesExistente(Equipo e) {
-        List<Fungible> fungiblesAsociados = obtenerFungiblesPorEquipo(e);
-        return !fungiblesAsociados.isEmpty();
-    }
-
-    // Método para verificar si la asociación entre equipos y herramientas existe
-    private boolean verificarAsociacionHerramientasExistente(Equipo e) {
-        List<Herramienta> herramientasAsociadas = obtenerHerramientasPorEquipo(e);
-        return !herramientasAsociadas.isEmpty();
-    }
-
-    private boolean verificarAsociacionHerramientasExistente(Fungible f) {
-        List<Herramienta> herramientasAsociadas = obtenerHerramientasPorFungible(f);
-        return !herramientasAsociadas.isEmpty();
-    }
-
-    int borrarEquipo(Equipo e) {
-        int filasAfectadas;
-        String sql = "DELETE FROM equipos WHERE id = ?";
-
-        try {
-            if (conn == null || conn.isClosed()) {
-                conn = this.conectar(false);
-            }
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, e.getId());
-            filasAfectadas = ps.executeUpdate();
-            return filasAfectadas;
-        } catch (SQLException ex) {
-            return 0;
-        } finally {
-            desconectar();
-        }
-    }
-
-    int insertarFungible(Fungible f) {
-        int filasAfectadas;
-        String sql = "INSERT INTO fungibles (marca, modelo, tamanyo, cantidad)"
-                + "VALUES (?, ?, ?, ?)";
-
-        try {
-            if (conn == null || conn.isClosed()) {
-                conn = this.conectar(false);
-            }
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, f.getMarca());
-            ps.setString(2, f.getModelo());
-            ps.setString(3, f.getTamanyo());
-            ps.setInt(4, f.getCantidad());
-            filasAfectadas = ps.executeUpdate();
-
-            // Obtener el ID del fungible recién insertado
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                int idFungibleInsertado = rs.getInt(1);
-                f.setId(idFungibleInsertado);
-                // Asociar el fungible con las herramientas
-                for (Herramienta h : f.getHerramientas()) {
-                    asociarFungibleHerramienta(f, h);
-                }
-            }
-
-            return filasAfectadas;
-        } catch (SQLException ex) {
-            return 0;
-        } finally {
-            desconectar();
-        }
-    }
-
-    int asociarFungibleHerramienta(Fungible f, Herramienta h) {
-        int filasAfectadas;
-        String sql = "INSERT INTO fungibles_herramientas VALUES (?, ?)";
-
-        try {
-            if (conn == null || conn.isClosed()) {
-                conn = this.conectar(false);
-            }
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, f.getId());
-            ps.setInt(2, h.getId());
-            filasAfectadas = ps.executeUpdate();
-            return filasAfectadas;
-        } catch (SQLException ex) {
-            return 0;
-        } finally {
-            desconectar();
-        }
-    }
-
     int modificarFungible(Fungible f) {
         int filasAfectadas;
-        String sql = "UPDATE equipos SET num_identificacion = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ?, fecha_ultimo_mantenimiento = ?, fecha_proximo_mantenimiento = ? WHERE id = ?";
+        String sql = "UPDATE fungibles SET marca = ?, modelo = ?, tamanyo = ?, cantidad = ? WHERE id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -494,11 +525,26 @@ public class Controlador {
             ps.setInt(5, f.getId());
             filasAfectadas = ps.executeUpdate();
 
-            // Verificar si la asociación entre equipos y herramientas existe
-            boolean asociacionHerramientasExiste = verificarAsociacionHerramientasExistente(f);
+            // Verificar si la asociación entre fungibles y equipos existe
+            boolean asociacionEquiposExiste = verificarAsociacionFungiblesEquiposExistente(f);
+            // Verificar si la asociación entre fungibles y herramientas existe
+            boolean asociacionHerramientasExiste = verificarAsociacionFungiblesHerramientasExistente(f);
 
             // Actualizar asociaciones según corresponda
-            if (asociacionHerramientasExiste) {
+            if (asociacionEquiposExiste && asociacionHerramientasExiste) {
+                // Ambas asociaciones existen
+                for (Equipo e : f.getEquipos()) {
+                    filasAfectadas += asociarEquipoFungible(e, f);
+                }
+                for (Herramienta h : f.getHerramientas()) {
+                    filasAfectadas += asociarFungibleHerramienta(f, h);
+                }
+            } else if (asociacionEquiposExiste) {
+                // Solo la asociación con equipos existe
+                for (Equipo e : f.getEquipos()) {
+                    filasAfectadas += asociarEquipoFungible(e, f);
+                }
+            } else if (asociacionHerramientasExiste) {
                 // Solo la asociación con herramientas existe
                 for (Herramienta h : f.getHerramientas()) {
                     filasAfectadas += asociarFungibleHerramienta(f, h);
@@ -508,6 +554,114 @@ public class Controlador {
                 filasAfectadas = 0;
             }
 
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    int modificarHerramienta(Herramienta h) {
+        int filasAfectadas;
+        String sql = "UPDATE herramientas SET marca = ?, modelo = ?, fabricante = ?, fecha_compra = ? WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, h.getMarca());
+            ps.setString(2, h.getModelo());
+            ps.setString(3, h.getFabricante());
+            ps.setDate(4, new Date(h.getFechaCompra().getTime()));
+            ps.setInt(5, h.getId());
+            filasAfectadas = ps.executeUpdate();
+
+            // Verificar si la asociación entre herramientas y equipos existe
+            boolean asociacionEquiposExiste = verificarAsociacionHerramientasEquiposExistente(h);
+            // Verificar si la asociación entre herramientas y fungibles existe
+            boolean asociacionFungiblesExiste = verificarAsociacionHerramientasFungiblesExistente(h);
+
+            // Actualizar asociaciones según corresponda
+            if (asociacionEquiposExiste && asociacionFungiblesExiste) {
+                // Ambas asociaciones existen
+                for (Equipo e : h.getEquipos()) {
+                    filasAfectadas += asociarEquipoHerramienta(e, h);
+                }
+                for (Fungible f : h.getFungibles()) {
+                    filasAfectadas += asociarFungibleHerramienta(f, h);
+                }
+            } else if (asociacionEquiposExiste) {
+                // Solo la asociación con equipos existe
+                for (Equipo e : h.getEquipos()) {
+                    filasAfectadas += asociarEquipoHerramienta(e, h);
+                }
+            } else if (asociacionFungiblesExiste) {
+                // Solo la asociación con fungibles existe
+                for (Fungible f : h.getFungibles()) {
+                    filasAfectadas += asociarFungibleHerramienta(f, h);
+                }
+            } else {
+                // Ninguna asociación existe
+                filasAfectadas = 0;
+            }
+
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
+    // Método para verificar si la asociación entre equipos y fungibles existe
+    private boolean verificarAsociacionEquiposFungiblesExistente(Equipo e) {
+        List<Fungible> fungiblesAsociados = obtenerFungiblesPorEquipo(e);
+        return !fungiblesAsociados.isEmpty();
+    }
+
+    // Método para verificar si la asociación entre equipos y herramientas existe
+    private boolean verificarAsociacionEquiposHerramientasExistente(Equipo e) {
+        List<Herramienta> herramientasAsociadas = obtenerHerramientasPorEquipo(e);
+        return !herramientasAsociadas.isEmpty();
+    }
+
+    // Método para verificar si la asociación entre fungibles y equipos existe
+    private boolean verificarAsociacionFungiblesEquiposExistente(Fungible f) {
+        List<Equipo> equiposAsociados = obtenerEquiposPorFungible(f);
+        return !equiposAsociados.isEmpty();
+    }
+
+    // Método para verificar si la asociación entre fungibles y herramientas existe
+    private boolean verificarAsociacionFungiblesHerramientasExistente(Fungible f) {
+        List<Herramienta> herramientasAsociadas = obtenerHerramientasPorFungible(f);
+        return !herramientasAsociadas.isEmpty();
+    }
+
+    // Método para verificar si la asociación entre herramientas y equipos existe
+    private boolean verificarAsociacionHerramientasEquiposExistente(Herramienta h) {
+        List<Equipo> equiposAsociados = obtenerEquiposPorHerramienta(h);
+        return !equiposAsociados.isEmpty();
+    }
+
+    // Método para verificar si la asociación entre herramientas y fungibles existe
+    private boolean verificarAsociacionHerramientasFungiblesExistente(Herramienta h) {
+        List<Fungible> fungiblesAsociados = obtenerFungiblesPorHerramienta(h);
+        return !fungiblesAsociados.isEmpty();
+    }
+
+    int borrarEquipo(Equipo e) {
+        int filasAfectadas;
+        String sql = "DELETE FROM equipos WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, e.getId());
+            filasAfectadas = ps.executeUpdate();
             return filasAfectadas;
         } catch (SQLException ex) {
             return 0;
@@ -535,9 +689,28 @@ public class Controlador {
         }
     }
 
+    int borrarHerramienta(Herramienta h) {
+        int filasAfectadas;
+        String sql = "DELETE FROM herramientas WHERE id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, h.getId());
+            filasAfectadas = ps.executeUpdate();
+            return filasAfectadas;
+        } catch (SQLException ex) {
+            return 0;
+        } finally {
+            desconectar();
+        }
+    }
+
     List<Fungible> obtenerFungiblesPorEquipo(Equipo e) {
         List<Fungible> fungibles = new ArrayList<>();
-        String sql = "SELECT f.id, f.marca, f.modelo, f.tamanyo, f.cantidad FROM equipos e JOIN equipos_fungibles ef ON e.id = ef.equipo_id JOIN fungibles f ON ef.fungible_id = f.id WHERE e.id = ?";
+        String sql = "SELECT f.* FROM fungibles f JOIN equipos_fungibles ef ON f.id = ef.fungible_id JOIN equipos e ON ef.equipo_id = e.id WHERE e.id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -556,6 +729,7 @@ public class Controlador {
             }
             return fungibles;
         } catch (SQLException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } finally {
             desconectar();
@@ -564,7 +738,7 @@ public class Controlador {
 
     List<Herramienta> obtenerHerramientasPorEquipo(Equipo e) {
         List<Herramienta> herramientas = new ArrayList<>();
-        String sql = "SELECT h.id, h.marca, h.modelo, h.fabricante, h.fecha_compra FROM equipos e JOIN equipos_herramientas eh ON e.id = eh.equipo_id JOIN herramientas h ON eh.herramienta_id = h.id WHERE e.id = ?";
+        String sql = "SELECT h.* FROM herramientas h JOIN equipos_herramientas eh ON h.id = eh.herramienta_id JOIN equipos e ON eh.equipo_id = e.id WHERE e.id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -582,6 +756,37 @@ public class Controlador {
                 herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra));
             }
             return herramientas;
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
+    }
+
+    List<Equipo> obtenerEquiposPorFungible(Fungible f) {
+        List<Equipo> equipos = new ArrayList<>();
+        String sql = "SELECT e.* FROM equipos e JOIN equipos_fungibles ef ON e.id = ef.equipo_id JOIN fungibles f ON ef.fungible_id = f.id WHERE f.id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, f.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("e.id");
+                int numIdentificacion = rs.getInt("e.num_identificacion");
+                String nombre = rs.getString("e.nombre");
+                Date fechaCompra = rs.getDate("e.fecha_compra");
+                String fabricante = rs.getString("e.fabricante");
+                Date fechaUltimaCalibracion = rs.getDate("e.fecha_ultima_calibracion");
+                Date fechaProximaCalibracion = rs.getDate("e.fecha_proxima_calibracion");
+                Date fechaUltimoMantenimiento = rs.getDate("e.fecha_ultimo_mantenimiento");
+                Date fechaProximoMantenimiento = rs.getDate("e.fecha_proximo_mantenimiento");
+                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento));
+            }
+            return equipos;
         } catch (SQLException ex) {
             return null;
         } finally {
@@ -615,4 +820,64 @@ public class Controlador {
             desconectar();
         }
     }
+
+    List<Equipo> obtenerEquiposPorHerramienta(Herramienta h) {
+        List<Equipo> equipos = new ArrayList<>();
+        String sql = "SELECT e.* FROM equipos e JOIN equipos_herramientas eh ON e.id = eh.equipo_id JOIN herramientas h ON eh.herramienta_id = h.id WHERE h.id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, h.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("e.id");
+                int numIdentificacion = rs.getInt("e.num_identificacion");
+                String nombre = rs.getString("e.nombre");
+                Date fechaCompra = rs.getDate("e.fecha_compra");
+                String fabricante = rs.getString("e.fabricante");
+                Date fechaUltimaCalibracion = rs.getDate("e.fecha_ultima_calibracion");
+                Date fechaProximaCalibracion = rs.getDate("e.fecha_proxima_calibracion");
+                Date fechaUltimoMantenimiento = rs.getDate("e.fecha_ultimo_mantenimiento");
+                Date fechaProximoMantenimiento = rs.getDate("e.fecha_proximo_mantenimiento");
+                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento));
+            }
+            return equipos;
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
+    }
+
+    List<Fungible> obtenerFungiblesPorHerramienta(Herramienta h) {
+        List<Fungible> fungibles = new ArrayList<>();
+        String sql = "SELECT f.* FROM fungibles f JOIN fungibles_herramientas fh ON f.id = fh.fungible_id JOIN herramientas h ON fh.fungible_id = h.id WHERE h.id = ?";
+
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, h.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("f.id");
+                String marca = rs.getString("f.marca");
+                String modelo = rs.getString("f.modelo");
+                String tamanyo = rs.getString("f.tamanyo");
+                int cantidad = rs.getInt("f.cantidad");
+                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad));
+            }
+            return fungibles;
+        } catch (SQLException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            desconectar();
+        }
+    }
+
 }

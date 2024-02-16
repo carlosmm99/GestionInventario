@@ -10,12 +10,24 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import modelo.Equipo;
+import modelo.Fungible;
+import modelo.Herramienta;
 
 /**
  *
  * @author carlos.mondejar
  */
 public class GestionHerramientas extends HttpServlet {
+
+    private final Controlador c = new Controlador();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,7 +46,7 @@ public class GestionHerramientas extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet GestionHerramientas</title>");            
+            out.println("<title>Servlet GestionHerramientas</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet GestionHerramientas at " + request.getContextPath() + "</h1>");
@@ -55,7 +67,13 @@ public class GestionHerramientas extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String btnAgregar = generarBotonHTML();
+        request.setAttribute("btnAgregar", btnAgregar);
+        String tablaHerramientas = generarTablaHTML(request);
+        request.setAttribute("tablaHerramientas", tablaHerramientas);
+        String formHerramientas = generarFormularioHTML(request);
+        request.setAttribute("formHerramientas", formHerramientas);
+        request.getRequestDispatcher("herramientas.jsp").forward(request, response);
     }
 
     /**
@@ -69,7 +87,97 @@ public class GestionHerramientas extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            int id = Integer.parseInt(request.getParameter("txtNumHerramienta"));
+            String marca = request.getParameter("txtMarcaHerramienta");
+            String modelo = request.getParameter("txtModeloHerramienta");
+            String fabricante = request.getParameter("txtFabricanteHerramienta");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaCompra = dateFormat.parse(request.getParameter("txtFechaCompraHerramienta"));
+            Herramienta h = new Herramienta(id, marca, modelo, fabricante, fechaCompra);
+            String[] opcionesEquipos = request.getParameterValues("selectEquipos");
+            if (opcionesEquipos != null) {
+                for (String idEquipo : opcionesEquipos) {
+                    Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
+                    boolean exists = false;
+                    if (e != null) {
+                        for (Equipo equipo : h.getEquipos()) {
+                            if (equipo.getId() == e.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        for (Herramienta herramienta : e.getHerramientas()) {
+                            if (herramienta.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            e.getHerramientas().add(h);
+                            h.getEquipos().add(e);
+                        }
+                    }
+                }
+            }
+            String[] opcionesFungibles = request.getParameterValues("selectFungibles");
+            if (opcionesFungibles != null) {
+                for (String idFungible : opcionesFungibles) {
+                    Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
+                    boolean exists = false;
+                    if (f != null) {
+                        for (Fungible fungible : h.getFungibles()) {
+                            if (fungible.getId() == f.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        for (Herramienta herramienta : f.getHerramientas()) {
+                            if (herramienta.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            f.getHerramientas().add(h);
+                            h.getFungibles().add(f);
+                        }
+                    }
+                }
+            }
+            
+            int res = 0;
+            String mensaje = "";
+            if (request.getParameter("btnAgregar") != null) {
+                res = c.insertarHerramienta(h);
+                if (res != 0) {
+                    mensaje = "Herramienta con id " + h.getId() + " dada de alta correctamente";
+                } else {
+                    mensaje = "Error al dar de alta la herramienta con id " + h.getId();
+                }
+            } else if (request.getParameter("btnEditar") != null) {
+                res = c.modificarHerramienta(h);
+                if (res != 0) {
+                    mensaje = "Herramienta con id " + h.getId() + " modificada correctamente";
+                } else {
+                    mensaje = "Error al modificar la herramienta con id " + h.getId();
+                }
+            } else if (request.getParameter("btnEliminar") != null) {
+                res = c.borrarHerramienta(h);
+                if (res != 0) {
+                    mensaje = "Herramienta con id " + h.getId() + " dada de baja correctamente";
+                } else {
+                    mensaje = "Error al dar de baja la herramienta con id " + h.getId();
+                }
+            }
+
+            // Establecer atributos para mostrar el cuadro de diálogo y redirigir
+            request.setAttribute("showDialog", true);
+            request.setAttribute("message", mensaje);
+            request.getRequestDispatcher("equipos.jsp").forward(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(GestionHerramientas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -82,4 +190,133 @@ public class GestionHerramientas extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private String generarBotonHTML() {
+        StringBuilder btnHTML = new StringBuilder();
+        btnHTML.append("<button type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" id=\"btnAgregarHerramienta\">Agregar</button>");
+        return btnHTML.toString();
+    }
+
+    private String generarFormularioHTML(HttpServletRequest request) {
+        int ultimoNumHerramienta = c.obtenerNumRegistro("herramientas");
+        List<Equipo> equipos = c.leerEquipos();
+        List<Fungible> fungibles = c.leerFungibles();
+        request.setAttribute("ultimoNumHerramienta", ultimoNumHerramienta);
+        StringBuilder formHTML = new StringBuilder();
+
+        formHTML.append("<h6 id=\"tituloEliminar\">¿Seguro que deseas eliminar esta herramienta?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
+                .append("<div class=\"row\" id=\"filasFormulario\">")
+                // Columna nº de herramienta
+                .append("<div class=\"col-6\" id=\"columnaNumHerramienta\" style=\"display: none;\">")
+                .append("<label>Número de herramienta:</label>")
+                .append("<input type=\"text\" readonly=\"true\" value=\"")
+                .append(ultimoNumHerramienta)
+                .append("\" class=\"form-control\" name=\"txtNumHerramienta\" id=\"txtNumHerramienta\">")
+                .append("</div>")
+                // Columna marca de la herramienta
+                .append("<div class=\"col-6\" id=\"columnaMarcaHerramienta\">")
+                .append("<label>Marca de la herramienta:</label>")
+                .append("<input type=\"text\" class=\"form-control\" name=\"txtMarcaHerramienta\" id=\"txtMarcaHerramienta\" required placeholder=\"Marca de la herramienta\">")
+                .append("</div>")
+                // Columna modelo de la herramienta
+                .append("<div class=\"col-6\" id=\"columnaModeloHerramienta\">")
+                .append("<label>Modelo de la herramienbta:</label>")
+                .append("<input type=\"text\" class=\"form-control\" name=\"txtModeloHerramienta\" id=\"txtModeloHerramienta\" required placeholder=\"Modelo de la herramienta\">")
+                .append("</div>")
+                // Columna fabricante
+                .append("<div class=\"col-6\" id=\"columnaFabricanteHerramienta\">")
+                .append("<label>Fabricante de la herramienta:</label>")
+                .append("<input type=\"text\" class=\"form-control\" name=\"txtFabricanteHerramienta\" id=\"txtFabricanteHerramienta\" required placeholder=\"Fabricante de la herramienta\">")
+                .append("</div>")
+                // Columna fecha de compra
+                .append("<div class=\"col-6\" id=\"columnaFechaCompraHerramienta\">")
+                .append("<label>Fecha de compra de la herramienta:</label>")
+                .append("<input type=\"date\" class=\"form-control\" name=\"txtFechaCompraHerramienta\" id=\"txtFechaCompraHerramienta\" required>")
+                .append("</div>")
+                // Columna equipos
+                .append("<div class=\"col-6\" id=\"columnaEquipos\">")
+                .append("<label>Equipos:</label>")
+                .append("<select class=\"form-control\" name=\"selectEquipos\" id=\"selectEquipos\" multiple required>");
+        for (Equipo equipo : equipos) {
+            formHTML.append("<option name=\"opcEquipos\" value=\"").append(equipo.getId()).append("\">")
+                    .append(equipo.getNumIdentificacion()).append(" - ").append(equipo.getNombre())
+                    .append("</option>");
+        }
+        formHTML.append("</select>").append("</div>")
+                // Columna fungibles
+                .append("<div class=\"col-6\" id=\"columnaFungibles\">")
+                .append("<label>Fungibles:</label>")
+                .append("<select class=\"form-control\" name=\"selectFungibles\" id=\"selectFungibles\" multiple required>");
+        for (Fungible fungible : fungibles) {
+            formHTML.append("<option name=\"opcFungibles\" value=\"").append(fungible.getId()).append("\">")
+                    .append(fungible.getMarca()).append(" - ").append(fungible.getModelo())
+                    .append("</option>");
+        }
+        formHTML.append("</select>").append("</div>").append("</div>")
+                .append("<div class=\"modal-footer\">")
+                .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
+                .append("<button type=\"submit\" name=\"btnEditar\" style=\"display: none;\" class=\"btn btn-warning\">Enviar</button>")
+                .append("<button type=\"submit\" name=\"btnEliminar\" style=\"display: none;\" class=\"btn btn-danger\">Confirmar</button>")
+                .append("<button type=\"button\" name=\"btnCancelar\" class=\"btn btn-dark\" data-bs-dismiss=\"modal\">Cancelar</button>")
+                .append("</div>")
+                .append("</form>");
+
+        return formHTML.toString();
+    }
+
+    private String generarTablaHTML(HttpServletRequest request) {
+        List<Herramienta> herramientas = c.leerHerramientas();
+        StringBuilder tablaHTML = new StringBuilder();
+
+        if (herramientas != null || !herramientas.isEmpty()) {
+            tablaHTML.append("<table id=\"tablaHerramientas\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
+                    .append("<thead><tr>");
+
+            tablaHTML.append("<th scope=\"col\">Acciones</th><th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th>")
+                    .append("<th scope=\"col\">Marca</th><th scope=\"col\">Modelo</th>")
+                    .append("<th scope=\"col\">Fabricante</th><th scope=\"col\">Fecha de compra</th>");
+
+            tablaHTML.append("</tr></thead>");
+
+            tablaHTML.append("<tbody>");
+            for (Herramienta herramienta : herramientas) {
+                List<Equipo> equipos = c.obtenerEquiposPorHerramienta(herramienta);
+                List<Integer> numEquipos = new ArrayList<>();
+                for (Equipo equipo : equipos) {
+                    numEquipos.add(equipo.getId());
+                }
+                List<Fungible> fungibles = c.obtenerFungiblesPorHerramienta(herramienta);
+                List<Integer> numFungibles = new ArrayList<>();
+                for (Fungible fungible : fungibles) {
+                    numFungibles.add(fungible.getId());
+                }
+                tablaHTML.append("<tr id=fila_").append(herramienta.getId()).append("\"")
+                        .append(" data-action=\"Consultar\"")
+                        .append(" data-idherramienta=\"").append(herramienta.getId()).append("\"")
+                        .append(" data-marcaherramienta=\"").append(herramienta.getMarca()).append("\"")
+                        .append(" data-modeloherramienta=\"").append(herramienta.getModelo()).append("\"")
+                        .append(" data-fabricanteherramienta=\"").append(herramienta.getFabricante()).append("\"")
+                        .append(" data-fechacompraherramienta=\"").append(herramienta.getFechaCompra()).append("\"")
+                        .append(" data-numequipos=\"").append(numEquipos).append("\"")
+                        .append(" data-numfungibles=\"").append(numFungibles).append("\">");
+
+                tablaHTML.append("<td>")
+                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
+                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
+                        .append("</td>");
+
+                tablaHTML.append("<td id=\"celdaIdHerramienta\">").append(herramienta.getId()).append("</td>")
+                        .append("<td>").append(herramienta.getMarca()).append("</td>")
+                        .append("<td>").append(herramienta.getModelo()).append("</td>")
+                        .append("<td>").append(herramienta.getFabricante()).append("</td>")
+                        .append("<td>").append(herramienta.getFechaCompra()).append("</td>");
+
+                tablaHTML.append("</tr>");
+            }
+            tablaHTML.append("</tbody>");
+
+            tablaHTML.append("</table>");
+        }
+
+        return tablaHTML.toString();
+    }
 }

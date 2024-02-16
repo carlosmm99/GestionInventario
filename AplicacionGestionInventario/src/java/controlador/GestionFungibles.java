@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import modelo.Equipo;
 import modelo.Fungible;
 import modelo.Herramienta;
 
@@ -89,6 +90,31 @@ public class GestionFungibles extends HttpServlet {
         int id = idStr != null && !idStr.isEmpty() ? Integer.parseInt(idStr) : 0;
         int cantidad = cantidadStr != null && !cantidadStr.isEmpty() ? Integer.parseInt(cantidadStr) : 0;
         Fungible f = new Fungible(id, marca, modelo, tamanyo, cantidad);
+        String[] opcionesEquipos = request.getParameterValues("selectEquipos");
+        if (opcionesEquipos != null) {
+            for (String idEquipo : opcionesEquipos) {
+                Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
+                boolean exists = false;
+                if (e != null) {
+                    for (Equipo equipo : f.getEquipos()) {
+                        if (equipo.getId() == e.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (Fungible fungible : e.getFungibles()) {
+                        if (fungible.getId() == f.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        e.getFungibles().add(f);
+                        f.getEquipos().add(e);
+                    }
+                }
+            }
+        }
         String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
         if (opcionesHerramientas != null) {
             for (String idHerramienta : opcionesHerramientas) {
@@ -97,6 +123,12 @@ public class GestionFungibles extends HttpServlet {
                 if (h != null) {
                     for (Herramienta herramienta : f.getHerramientas()) {
                         if (herramienta.getId() == h.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (Fungible fungible : h.getFungibles()) {
+                        if (fungible.getId() == f.getId()) {
                             exists = true;
                             break;
                         }
@@ -157,15 +189,16 @@ public class GestionFungibles extends HttpServlet {
 
     private String generarFormularioHTML(HttpServletRequest request) {
         int ultimoNumFungible = c.obtenerNumRegistro("fungibles");
+        List<Equipo> equipos = c.leerEquipos();
         List<Herramienta> herramientas = c.leerHerramientas();
         request.setAttribute("ultimoNumFungible", ultimoNumFungible);
         StringBuilder formHTML = new StringBuilder();
 
         formHTML.append("<h6 id=\"tituloEliminar\">¿Seguro que deseas eliminar este fungible?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
                 .append("<div class=\"row\" id=\"filasFormulario\">")
-                // Columna nº de equipo
+                // Columna id de fungible
                 .append("<div class=\"col-6\" id=\"columnaNumFungible\" style=\"display: none;\">")
-                .append("<label>Número de fungible:</label>")
+                .append("<label>ID del fungible:</label>")
                 .append("<input type=\"text\" readonly=\"true\" value=\"")
                 .append(ultimoNumFungible)
                 .append("\" class=\"form-control\" name=\"txtNumFungible\" id=\"txtNumFungible\">")
@@ -194,10 +227,20 @@ public class GestionFungibles extends HttpServlet {
                 .append("<input type=\"button\" value=\"+\" class=\"plus btn btn-primary\">")
                 .append("</div>")
                 .append("</div>")
+                // Columna equipos
+                .append("<div class=\"col-6\" id=\"columnaEquipos\">")
+                .append("<label>Equipos:</label>")
+                .append("<select class=\"form-control\" name=\"selectEquipos\" id=\"selectEquipos\" multiple required>");
+        for (Equipo equipo : equipos) {
+            formHTML.append("<option name=\"opcEquipos\" value=\"").append(equipo.getId()).append("\">")
+                    .append(equipo.getNumIdentificacion()).append(" - ").append(equipo.getNombre())
+                    .append("</option>");
+        }
+        formHTML.append("</select>").append("</div>")
                 // Columna herramientas
                 .append("<div class=\"col-6\" id=\"columnaHerramientas\">")
                 .append("<label>Herramientas:</label>")
-                .append("<select class=\"form-control\" name=\"selectHerramientas\" id=\"selectHerramientas\" multiple>");
+                .append("<select class=\"form-control\" name=\"selectHerramientas\" id=\"selectHerramientas\" multiple required>");
         for (Herramienta herramienta : herramientas) {
             formHTML.append("<option name=\"opcHerramientas\" value=\"").append(herramienta.getId()).append("\">")
                     .append(herramienta.getMarca()).append(" - ").append(herramienta.getModelo())
@@ -223,7 +266,7 @@ public class GestionFungibles extends HttpServlet {
             tablaHTML.append("<table id=\"tablaFungibles\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
-            tablaHTML.append("<th scope=\"col\">Acciones</th><th scope=\"col\" id=\"columnaIdHerramienta\">ID</th>")
+            tablaHTML.append("<th scope=\"col\">Acciones</th><th scope=\"col\" id=\"celdaEncabezadoIdFungible\">ID</th>")
                     .append("<th scope=\"col\">Marca</th><th scope=\"col\">Modelo</th>")
                     .append("<th scope=\"col\">Tamaño</th><th scope=\"col\">Cantidad</th>");
 
@@ -231,6 +274,11 @@ public class GestionFungibles extends HttpServlet {
 
             tablaHTML.append("<tbody>");
             for (Fungible fungible : fungibles) {
+                List<Equipo> equipos = c.obtenerEquiposPorFungible(fungible);
+                List<Integer> numEquipos = new ArrayList<>();
+                for (Equipo equipo : equipos) {
+                    numEquipos.add(equipo.getId());
+                }
                 List<Herramienta> herramientas = c.obtenerHerramientasPorFungible(fungible);
                 List<Integer> numHerramientas = new ArrayList<>();
                 for (Herramienta herramienta : herramientas) {
@@ -243,6 +291,7 @@ public class GestionFungibles extends HttpServlet {
                         .append(" data-modelofungible=\"").append(fungible.getModelo()).append("\"")
                         .append(" data-tamanyo=\"").append(fungible.getTamanyo()).append("\"")
                         .append(" data-cantidad=\"").append(fungible.getCantidad()).append("\"")
+                        .append(" data-numequipos=\"").append(numEquipos).append("\"")
                         .append(" data-numherramientas=\"").append(numHerramientas).append("\">");
 
                 tablaHTML.append("<td>")
@@ -250,7 +299,7 @@ public class GestionFungibles extends HttpServlet {
                         .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
                         .append("</td>");
 
-                tablaHTML.append("<td>").append(fungible.getId()).append("</td>")
+                tablaHTML.append("<td id=\"celdaIdFungible\">").append(fungible.getId()).append("</td>")
                         .append("<td>").append(fungible.getMarca()).append("</td>")
                         .append("<td>").append(fungible.getModelo()).append("</td>")
                         .append("<td>").append(fungible.getTamanyo()).append("</td>")

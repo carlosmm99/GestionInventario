@@ -209,7 +209,7 @@ public class GestionEquipos extends HttpServlet {
 
         formHTML.append("<h6 id=\"tituloEliminar\">¿Seguro que deseas eliminar este equipo?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
                 .append("<div class=\"row\" id=\"filasFormulario\">")
-                // Columna nº de equipo
+                // Columna id de equipo
                 .append("<div class=\"col-6\" id=\"columnaNumEquipo\">")
                 .append("<label>ID del equipo:</label>")
                 .append("<input type=\"text\" readonly=\"true\" value=\"")
@@ -296,7 +296,7 @@ public class GestionEquipos extends HttpServlet {
                     .append("<thead><tr>");
 
             tablaHTML.append("<th scope=\"col\">Acciones</th>");
-            tablaHTML.append("<th scope=\"col\" id=\"columnaIdEquipo\">ID</th>")
+            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdEquipo\">ID</th>")
                     .append("<th scope=\"col\">Nº de identificación</th><th scope=\"col\">Nombre</th>")
                     .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Fabricante</th>")
                     .append("<th scope=\"col\">Fecha última calibración</th><th scope=\"col\">Fecha próxima calibración</th>")
