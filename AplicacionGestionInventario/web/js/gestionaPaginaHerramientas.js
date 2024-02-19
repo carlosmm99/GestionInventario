@@ -154,28 +154,3 @@ $(document).ready(function () {
         }
     }
 });
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Obtener referencia a los botones
-    var plusButton = document.querySelector('.plus');
-    var minusButton = document.querySelector('.minus');
-    var quantityInput = document.getElementById('txtCantidad');
-
-    // Agregar event listeners a los botones
-    plusButton.addEventListener('click', function () {
-        quantityInput.value = parseInt(quantityInput.value) + 1;
-    });
-
-    minusButton.addEventListener('click', function () {
-        // Asegurarse de que el valor nunca sea menor que 1
-        if (quantityInput.value > 0) {
-            quantityInput.value = parseInt(quantityInput.value) - 1;
-        }
-    });
-
-    quantityInput.addEventListener('keydown', function (event) {
-        if (event.key === "Backspace") {
-            event.preventDefault();
-        }
-    });
-});

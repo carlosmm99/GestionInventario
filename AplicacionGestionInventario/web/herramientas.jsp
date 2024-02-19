@@ -75,7 +75,7 @@
         <% if (request.getAttribute("showDialog") != null) { %>
         <script>
             alert("<%= request.getAttribute("message") %>");
-            window.location.href = "<%= request.getContextPath() %>/GestionFungibles";
+            window.location.href = "<%= request.getContextPath() %>/GestionHerramientas";
         </script>
         <% } %>
         <script>
