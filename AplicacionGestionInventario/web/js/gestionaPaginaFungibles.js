@@ -6,6 +6,8 @@
 /* global ultimoNumFungible, tablaFungibles */
 
 $(document).ready(function () {
+    $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
+    var indiceColumnaMarca = $("#tablaFungibles thead th#celdaEncabezadoMarcaFungible").index();
     tablaFungibles = $("#tablaFungibles").DataTable({
         searching: true,
         select: false,

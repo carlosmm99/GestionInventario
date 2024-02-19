@@ -267,7 +267,7 @@ public class GestionFungibles extends HttpServlet {
                     .append("<thead><tr>");
 
             tablaHTML.append("<th scope=\"col\">Acciones</th><th scope=\"col\" id=\"celdaEncabezadoIdFungible\">ID</th>")
-                    .append("<th scope=\"col\">Marca</th><th scope=\"col\">Modelo</th>")
+                    .append("<th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th><th scope=\"col\">Modelo</th>")
                     .append("<th scope=\"col\">Tamaño</th><th scope=\"col\">Cantidad</th>");
 
             tablaHTML.append("</tr></thead>");
