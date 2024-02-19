@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Gestión de equipos</title>
+        <title>Equipos</title>
         <link rel="stylesheet" type="text/css" href="style/styles.css">
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -24,13 +24,13 @@
     <body>
         <%
             Integer ultimoNumEquipo = (Integer) request.getAttribute("ultimoNumEquipo");
-//            Integer cantidadEquipos = (Integer) request.getAttribute("cantidadEquipos");
+            Integer cantidadEquipos = (Integer) request.getAttribute("cantidadEquipos");
         %>
         <div class="container">
             <%@include file="template/menu.jsp" %>
             <div class="row align-items-start">
                 <div class="col-9">
-                    <h1>Gestión de equipos</h1>
+                    <h1>Equipos</h1>
                 </div>
                 <div class="col-3 align-self-center">
                     <div class="d-grid gap-2">
@@ -81,6 +81,7 @@
         <% } %>
         <script>
             var ultimoNumEquipo = <%= ultimoNumEquipo %>;
+            var cantidadEquipos = <%= cantidadEquipos %>;
         </script>
         <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginaEquipos.js"></script>
     </body>

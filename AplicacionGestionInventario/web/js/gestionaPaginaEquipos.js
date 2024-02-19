@@ -3,13 +3,81 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumEquipo, tablaEquipos */
+/* global ultimoNumEquipo, tablaEquipos, cantidadEquipos */
 
 $(document).ready(function () {
+    $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
+    var indiceColumnaID = $("#tablaEquipos thead th#celdaEncabezadoIdEquipo").index();
     tablaEquipos = $("#tablaEquipos").DataTable({
         searching: true,
         select: false,
         responsive: true,
+        dom: 'Blfrtip',
+        buttons: {
+            dom: {
+                button: {
+                    className: 'btn'
+                }
+            },
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: '',
+                    text: 'Exportar a Excel',
+                    className: 'btn btn-outline-success',
+                    excelStyles: (function () {
+                        var styles = [];
+                        var startColumn = 'A'.charCodeAt(0);
+                        var endColumn = 'K'.charCodeAt(0);
+
+                        // Estilos para la fila 0
+                        for (var colCode = startColumn; colCode <= endColumn; colCode++) {
+                            var cell = String.fromCharCode(colCode) + '0';
+                            var styleConfig = {
+                                cells: 's' + cell,
+                                style: {
+                                    font: {
+                                        color: 'FFFFFF',
+                                        b: true
+                                    },
+                                    fill: {
+                                        pattern: {
+                                            color: '2E8B57' // Código de color para "seagreen"
+                                        }
+                                    }
+                                }
+                            };
+
+                            styles.push(styleConfig);
+                        }
+
+                        // Estilos para filas pares desde la fila 2 en adelante
+                        for (var row = 2; row <= cantidadEquipos; row += 2) {
+                            for (var colCode = startColumn; colCode <= endColumn; colCode++) {
+                                var cell = String.fromCharCode(colCode) + row;
+                                var styleConfig = {
+                                    cells: 's' + cell,
+                                    style: {
+                                        fill: {
+                                            pattern: {
+                                                color: '3CB371' // Código de color para "mediumseagreen"
+                                            }
+                                        }
+                                    }
+                                };
+
+                                styles.push(styleConfig);
+                            }
+                        }
+
+                        return styles;
+                    })(),
+                    exportOptions: {
+                        columns: ':eq(' + indiceColumnaID + '), :gt(' + indiceColumnaID + ')'
+                    }
+                }
+            ]
+        },
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
         },

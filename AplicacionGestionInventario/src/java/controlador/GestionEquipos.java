@@ -317,6 +317,8 @@ public class GestionEquipos extends HttpServlet {
                 for (Herramienta herramienta : herramientas) {
                     numHerramientas.add(herramienta.getId());
                 }
+                equipo.setFungibles(fungibles);
+                equipo.setHerramientas(herramientas);
                 tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
                         .append(" data-action=\"Consultar\"")
                         .append(" data-idequipo=\"").append(equipo.getId()).append("\"")
@@ -345,29 +347,26 @@ public class GestionEquipos extends HttpServlet {
                         .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>")
                         .append("<td>").append(equipo.getFechaUltimoMantenimiento()).append("</td>")
                         .append("<td>").append(equipo.getFechaProximoMantenimiento()).append("</td>")
-                        .append("<td><br>");
-                if (!fungibles.isEmpty()) {
-                    for (int i = 0; i < fungibles.size() - 1; i++) {
-                        tablaHTML.append(fungibles.get(i)).append(";<br>");
+                        .append("<td>");
+                for (Fungible fungible : equipo.getFungibles()) {
+                    tablaHTML.append(fungible);
+                    if (equipo.getFungibles().size() > 1 && fungible != equipo.getFungibles().get(equipo.getFungibles().size() - 1)) {
+                        tablaHTML.append(";");
                     }
-                    tablaHTML.append(fungibles.get(fungibles.size() - 1));
                 }
-                tablaHTML.append("</td>")
-                        .append("<td><br>");
-                if (!herramientas.isEmpty()) {
-                    for (int i = 0; i < herramientas.size() - 1; i++) {
-                        tablaHTML.append(herramientas.get(i)).append(";<br>");
+                tablaHTML.append("</td><td>");
+                for (Herramienta herramienta : equipo.getHerramientas()) {
+                    tablaHTML.append(herramienta);
+                    if (equipo.getHerramientas().size() > 1 && herramienta != equipo.getHerramientas().get(equipo.getHerramientas().size() - 1)) {
+                        tablaHTML.append(";");
                     }
-                    tablaHTML.append(herramientas.get(herramientas.size() - 1));
                 }
-                tablaHTML.append("</td>");
-
-                tablaHTML.append("</tr>");
+                tablaHTML.append("</td></tr>");
             }
-            tablaHTML.append("</tbody>");
-
-            tablaHTML.append("</table>");
+            tablaHTML.append("</tbody></table>");
         }
+
+        request.setAttribute("cantidadEquipos", equipos.size());
 
         return tablaHTML.toString();
     }

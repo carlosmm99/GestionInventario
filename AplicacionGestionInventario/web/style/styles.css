@@ -49,3 +49,26 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: red !important; /* Color de fondo */
   color: white !important; /* Color del texto */
 }
+
+.dataTables_paginate.paging_simple_numbers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dataTables_paginate.paging_simple_numbers a {
+    margin: 2px; /* Ajusta el espaciado entre los enlaces según sea necesario */
+}
+
+.dataTables_paginate.paging_simple_numbers span {
+    display: flex;
+    justify-content: center; /* Ajusta según sea necesario */
+    align-items: center; /* Ajusta según sea necesario */
+}
+
+.dataTables_length, dataTables_filter {
+    clear: both;
+    margin-top: 5px; /* Ajusta el espacio según sea necesario */
+    margin-bottom: 10px; /* Ajusta el espacio según sea necesario */
+    text-align: right;
+}
