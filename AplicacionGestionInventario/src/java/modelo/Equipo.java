@@ -15,7 +15,7 @@ import java.util.List;
 public class Equipo {
 
     private int id;
-    private int numIdentificacion;
+    private int numInventario;
     private String nombre;
     private Date fechaCompra;
     private String fabricante;
@@ -29,9 +29,9 @@ public class Equipo {
     public Equipo() {
     }
 
-    public Equipo(int id, int numIdentificacion, String nombre, Date fechaCompra, String fabricante, Date fechaUltimaCalibracion, Date fechaProximaCalibracion, Date fechaUltimoMantenimiento, Date fechaProximoMantenimiento) {
+    public Equipo(int id, int numInventario, String nombre, Date fechaCompra, String fabricante, Date fechaUltimaCalibracion, Date fechaProximaCalibracion, Date fechaUltimoMantenimiento, Date fechaProximoMantenimiento) {
         this.id = id;
-        this.numIdentificacion = numIdentificacion;
+        this.numInventario = numInventario;
         this.nombre = nombre;
         this.fechaCompra = fechaCompra;
         this.fabricante = fabricante;
@@ -51,12 +51,12 @@ public class Equipo {
         this.id = id;
     }
 
-    public int getNumIdentificacion() {
-        return numIdentificacion;
+    public int getNumInventario() {
+        return numInventario;
     }
 
-    public void setNumIdentificacion(int numIdentificacion) {
-        this.numIdentificacion = numIdentificacion;
+    public void setNumInventario(int numInventario) {
+        this.numInventario = numInventario;
     }
 
     public String getNombre() {
@@ -135,7 +135,7 @@ public class Equipo {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("id: ").append(id);
-        sb.append(", número CEDEX: ").append(numIdentificacion);
+        sb.append(", número CEDEX: ").append(numInventario);
         sb.append(", nombre: ").append(nombre);
         sb.append(", fecha de compra: ").append(fechaCompra);
         sb.append(", fabricante: ").append(fabricante);
