@@ -12,6 +12,10 @@
         <servlet-name>GestionHerramientas</servlet-name>
         <servlet-class>controlador.GestionHerramientas</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ObtenerEquiposYFungibles</servlet-name>
+        <servlet-class>controlador.ObtenerEquiposYFungibles</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GestionEquipos</servlet-name>
         <url-pattern>/GestionEquipos</url-pattern>
@@ -23,5 +27,9 @@
     <servlet-mapping>
         <servlet-name>GestionHerramientas</servlet-name>
         <url-pattern>/GestionHerramientas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ObtenerEquiposYFungibles</servlet-name>
+        <url-pattern>/ObtenerEquiposYFungibles</url-pattern>
     </servlet-mapping>
 </web-app>
