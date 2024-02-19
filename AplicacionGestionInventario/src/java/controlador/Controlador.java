@@ -107,7 +107,7 @@ public class Controlador {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
-                int numIdentificacion = rs.getInt("num_identificacion");
+                int numIdentificacion = rs.getInt("num_inventario");
                 String nombre = rs.getString("nombre");
                 Date fechaCompra = rs.getDate("fecha_compra");
                 String fabricante = rs.getString("fabricante");
@@ -193,7 +193,7 @@ public class Controlador {
         }
 
         int filasAfectadas;
-        String sql = "INSERT INTO equipos (num_identificacion, nombre, fecha_compra, fabricante, fecha_ultima_calibracion, fecha_proxima_calibracion, fecha_ultimo_mantenimiento, fecha_proximo_mantenimiento)"
+        String sql = "INSERT INTO equipos (num_inventario, nombre, fecha_compra, fabricante, fecha_ultima_calibracion, fecha_proxima_calibracion, fecha_ultimo_mantenimiento, fecha_proximo_mantenimiento)"
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
@@ -201,7 +201,7 @@ public class Controlador {
                 conn = this.conectar(false);
             }
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, e.getNumIdentificacion());
+            ps.setInt(1, e.getNumInventario());
             ps.setString(2, e.getNombre());
             ps.setDate(3, new Date(e.getFechaCompra().getTime()));
             ps.setString(4, e.getFabricante());
@@ -323,7 +323,7 @@ public class Controlador {
             ps.setInt(1, idEquipo);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Equipo(idEquipo, rs.getInt("num_identificacion"), rs.getString("nombre"), rs.getDate("fecha_compra"), rs.getString("fabricante"), rs.getDate("fecha_ultima_calibracion"), rs.getDate("fecha_proxima_calibracion"), rs.getDate("fecha_ultimo_mantenimiento"), rs.getDate("fecha_proximo_mantenimiento"));
+                return new Equipo(idEquipo, rs.getInt("num_inventario"), rs.getString("nombre"), rs.getDate("fecha_compra"), rs.getString("fabricante"), rs.getDate("fecha_ultima_calibracion"), rs.getDate("fecha_proxima_calibracion"), rs.getDate("fecha_ultimo_mantenimiento"), rs.getDate("fecha_proximo_mantenimiento"));
             }
         } catch (SQLException ex) {
             return null;
@@ -454,14 +454,14 @@ public class Controlador {
         }
 
         int filasAfectadas;
-        String sql = "UPDATE equipos SET num_identificacion = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ?, fecha_ultimo_mantenimiento = ?, fecha_proximo_mantenimiento = ? WHERE id = ?";
+        String sql = "UPDATE equipos SET num_inventario = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ?, fecha_ultimo_mantenimiento = ?, fecha_proximo_mantenimiento = ? WHERE id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
                 conn = this.conectar(false);
             }
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, e.getNumIdentificacion());
+            ps.setInt(1, e.getNumInventario());
             ps.setString(2, e.getNombre());
             ps.setDate(3, new Date(e.getFechaCompra().getTime()));
             ps.setString(4, e.getFabricante());
@@ -776,7 +776,7 @@ public class Controlador {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("e.id");
-                int numIdentificacion = rs.getInt("e.num_identificacion");
+                int numIdentificacion = rs.getInt("e.num_inventario");
                 String nombre = rs.getString("e.nombre");
                 Date fechaCompra = rs.getDate("e.fecha_compra");
                 String fabricante = rs.getString("e.fabricante");
@@ -834,7 +834,7 @@ public class Controlador {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("e.id");
-                int numIdentificacion = rs.getInt("e.num_identificacion");
+                int numIdentificacion = rs.getInt("e.num_inventario");
                 String nombre = rs.getString("e.nombre");
                 Date fechaCompra = rs.getDate("e.fecha_compra");
                 String fabricante = rs.getString("e.fabricante");

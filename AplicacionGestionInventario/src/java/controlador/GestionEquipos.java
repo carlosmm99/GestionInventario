@@ -89,7 +89,7 @@ public class GestionEquipos extends HttpServlet {
             throws ServletException, IOException {
         try {
             int id = Integer.parseInt(request.getParameter("txtNumEquipo"));
-            int numIdentificacion = Integer.parseInt(request.getParameter("txtNumIdentificacion"));
+            int numInventario = Integer.parseInt(request.getParameter("txtNumInventarioCEDEX"));
             String nombre = request.getParameter("txtNombreEquipo");
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date fechaCompraEquipo = dateFormat.parse(request.getParameter("txtFechaCompraEquipo"));
@@ -98,7 +98,7 @@ public class GestionEquipos extends HttpServlet {
             Date fechaProximaCalibracion = dateFormat.parse(request.getParameter("txtFechaProximaCalibracion"));
             Date fechaUltimoMantenimiento = dateFormat.parse(request.getParameter("txtFechaUltimoMantenimiento"));
             Date fechaProximoMantenimiento = dateFormat.parse(request.getParameter("txtFechaProximoMantenimiento"));
-            Equipo e = new Equipo(id, numIdentificacion, nombre, fechaCompraEquipo, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento);
+            Equipo e = new Equipo(id, numInventario, nombre, fechaCompraEquipo, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento);
             String[] opcionesFungibles = request.getParameterValues("selectFungibles");
             if (opcionesFungibles != null) {
                 for (String idFungible : opcionesFungibles) {
@@ -217,9 +217,9 @@ public class GestionEquipos extends HttpServlet {
                 .append("\" class=\"form-control\" name=\"txtNumEquipo\" id=\"txtNumEquipo\">")
                 .append("</div>")
                 // Columna nº de identificación
-                .append("<div class=\"col-6\" id=\"columnaNumIdentificacion\">")
-                .append("<label>Número de identificación:</label>")
-                .append("<input type=\"text\" class=\"form-control\" name=\"txtNumIdentificacion\" id=\"txtNumIdentificacion\" required placeholder=\"Número de identificación\">")
+                .append("<div class=\"col-6\" id=\"columnaNumInventarioCEDEX\">")
+                .append("<label>Número inventario CEDEX:</label>")
+                .append("<input type=\"text\" class=\"form-control\" name=\"txtNumInventarioCEDEX\" id=\"txtNumInventarioCEDEX\" required placeholder=\"Número de identificación\">")
                 .append("</div>")
                 // Columna nombre
                 .append("<div class=\"col-6\" id=\"columnaNombreEquipo\">")
@@ -297,7 +297,7 @@ public class GestionEquipos extends HttpServlet {
 
             tablaHTML.append("<th scope=\"col\">Acciones</th>");
             tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdEquipo\">ID</th>")
-                    .append("<th scope=\"col\">Nº de identificación</th><th scope=\"col\">Nombre</th>")
+                    .append("<th scope=\"col\">Nº inventario CEDEX</th><th scope=\"col\">Nombre</th>")
                     .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Fabricante</th>")
                     .append("<th scope=\"col\">Fecha última calibración</th><th scope=\"col\">Fecha próxima calibración</th>")
                     .append("<th scope=\"col\">Fecha último mantenimiento</th><th scope=\"col\">Fecha próximo mantenimiento</th>")
@@ -320,7 +320,7 @@ public class GestionEquipos extends HttpServlet {
                 tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
                         .append(" data-action=\"Consultar\"")
                         .append(" data-idequipo=\"").append(equipo.getId()).append("\"")
-                        .append(" data-numidentificacion=\"").append(equipo.getNumIdentificacion()).append("\"")
+                        .append(" data-numinventariocedex=\"").append(equipo.getNumInventario()).append("\"")
                         .append(" data-nombre=\"").append(equipo.getNombre()).append("\"")
                         .append(" data-fechacompraequipo=\"").append(equipo.getFechaCompra()).append("\"")
                         .append(" data-fabricanteequipo=\"").append(equipo.getFabricante()).append("\"")
@@ -337,7 +337,7 @@ public class GestionEquipos extends HttpServlet {
                         .append("</td>");
 
                 tablaHTML.append("<td>").append(equipo.getId()).append("</td>")
-                        .append("<td>").append(equipo.getNumIdentificacion()).append("</td>")
+                        .append("<td>").append(equipo.getNumInventario()).append("</td>")
                         .append("<td>").append(equipo.getNombre()).append("</td>")
                         .append("<td>").append(equipo.getFechaCompra()).append("</td>")
                         .append("<td>").append(equipo.getFabricante()).append("</td>")

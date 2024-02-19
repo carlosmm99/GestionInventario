@@ -238,7 +238,7 @@ public class GestionHerramientas extends HttpServlet {
                 .append("<select class=\"form-control\" name=\"selectEquipos\" id=\"selectEquipos\" multiple required>");
         for (Equipo equipo : equipos) {
             formHTML.append("<option name=\"opcEquipos\" value=\"").append(equipo.getId()).append("\">")
-                    .append(equipo.getNumIdentificacion()).append(" - ").append(equipo.getNombre())
+                    .append(equipo.getNumInventario()).append(" - ").append(equipo.getNombre())
                     .append("</option>");
         }
         formHTML.append("</select>").append("</div>")
