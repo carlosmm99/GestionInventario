@@ -57,7 +57,7 @@ $(document).ready(function () {
             $("#tituloEliminar").hide();
 
             $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
-            $("#filasFormulario #columnaNumIdentificacion #txtNumIdentificacion").val("");
+            $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").val("");
             $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").val("");
             $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").val("");
             $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").val("");
@@ -68,7 +68,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFungibles #selectFungibles").val("");
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
 
-            $("#filasFormulario #columnaNumIdentificacion #txtNumIdentificacion").prop("readonly", false);
+            $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", false);
             $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", false);
             $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", false);
             $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", false);
@@ -90,7 +90,7 @@ $(document).ready(function () {
             $("[name='btnEliminar']").prop("disabled", true);
         } else {
             $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(fila.data("idequipo"));
-            $("#filasFormulario #columnaNumIdentificacion #txtNumIdentificacion").val(fila.data("numidentificacion"));
+            $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").val(fila.data("numinventariocedex"));
             $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").val(fila.data("nombre"));
             $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").val(fila.data("fechacompraequipo"));
             $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").val(fila.data("fabricanteequipo"));
@@ -106,7 +106,7 @@ $(document).ready(function () {
                 $(".modal-title").text("Información del equipo");
                 $("#tituloEliminar").hide();
 
-                $("#filasFormulario #columnaNumIdentificacion #txtNumIdentificacion").prop("readonly", true);
+                $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
                 $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
                 $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", true);
                 $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", true);
@@ -131,7 +131,7 @@ $(document).ready(function () {
                 $(".modal-title").text("Editar equipo");
                 $("#tituloEliminar").hide();
 
-                $("#filasFormulario #columnaNumIdentificacion #txtNumIdentificacion").prop("readonly", false);
+                $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", false);
                 $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", false);
                 $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", false);
                 $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", false);
@@ -156,7 +156,7 @@ $(document).ready(function () {
                 $(".modal-title").text("Confirmar acción");
                 $("#tituloEliminar").show();
 
-                $("#filasFormulario #columnaNumIdentificacion #txtNumIdentificacion").prop("readonly", true);
+                $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
                 $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
                 $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", true);
                 $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", true);
