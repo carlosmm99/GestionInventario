@@ -89,4 +89,15 @@ public class Fungible {
     public void setHerramientas(List<Herramienta> herramientas) {
         this.herramientas = herramientas;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(id);
+        sb.append(", marca: ").append(marca);
+        sb.append(", modelo: ").append(modelo);
+        sb.append(", tamaño: ").append(tamanyo);
+        sb.append(", cantidad: ").append(cantidad);
+        return sb.toString();
+    }
 }

@@ -300,7 +300,8 @@ public class GestionEquipos extends HttpServlet {
                     .append("<th scope=\"col\">Nº de identificación</th><th scope=\"col\">Nombre</th>")
                     .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Fabricante</th>")
                     .append("<th scope=\"col\">Fecha última calibración</th><th scope=\"col\">Fecha próxima calibración</th>")
-                    .append("<th scope=\"col\">Fecha último mantenimiento</th><th scope=\"col\">Fecha próximo mantenimiento</th>");
+                    .append("<th scope=\"col\">Fecha último mantenimiento</th><th scope=\"col\">Fecha próximo mantenimiento</th>")
+                    .append("<th scope=\"col\">Listado de fungibles del equipo</th><th scope=\"col\">Listado de herramientas del equipo</th>");
 
             tablaHTML.append("</tr></thead>");
 
@@ -343,7 +344,23 @@ public class GestionEquipos extends HttpServlet {
                         .append("<td>").append(equipo.getFechaUltimaCalibracion()).append("</td>")
                         .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>")
                         .append("<td>").append(equipo.getFechaUltimoMantenimiento()).append("</td>")
-                        .append("<td>").append(equipo.getFechaProximoMantenimiento()).append("</td>");
+                        .append("<td>").append(equipo.getFechaProximoMantenimiento()).append("</td>")
+                        .append("<td><br>");
+                if (!fungibles.isEmpty()) {
+                    for (int i = 0; i < fungibles.size() - 1; i++) {
+                        tablaHTML.append(fungibles.get(i)).append(";<br>");
+                    }
+                    tablaHTML.append(fungibles.get(fungibles.size() - 1));
+                }
+                tablaHTML.append("</td>")
+                        .append("<td><br>");
+                if (!herramientas.isEmpty()) {
+                    for (int i = 0; i < herramientas.size() - 1; i++) {
+                        tablaHTML.append(herramientas.get(i)).append(";<br>");
+                    }
+                    tablaHTML.append(herramientas.get(herramientas.size() - 1));
+                }
+                tablaHTML.append("</td>");
 
                 tablaHTML.append("</tr>");
             }

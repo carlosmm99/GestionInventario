@@ -130,4 +130,19 @@ public class Equipo {
     public void setHerramientas(List<Herramienta> herramientas) {
         this.herramientas = herramientas;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(id);
+        sb.append(", número CEDEX: ").append(numIdentificacion);
+        sb.append(", nombre: ").append(nombre);
+        sb.append(", fecha de compra: ").append(fechaCompra);
+        sb.append(", fabricante: ").append(fabricante);
+        sb.append(", fecha de la última calibración: ").append(fechaUltimaCalibracion);
+        sb.append(", fecha de la próxima calibración: ").append(fechaProximaCalibracion);
+        sb.append(", fecha del último mantenimiento: ").append(fechaUltimoMantenimiento);
+        sb.append(", fecha del próximo mantenimiento: ").append(fechaProximoMantenimiento);
+        return sb.toString();
+    }
 }

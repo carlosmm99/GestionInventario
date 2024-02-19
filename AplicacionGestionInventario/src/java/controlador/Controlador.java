@@ -854,7 +854,7 @@ public class Controlador {
 
     List<Fungible> obtenerFungiblesPorHerramienta(Herramienta h) {
         List<Fungible> fungibles = new ArrayList<>();
-        String sql = "SELECT f.* FROM fungibles f JOIN fungibles_herramientas fh ON f.id = fh.fungible_id JOIN herramientas h ON fh.fungible_id = h.id WHERE h.id = ?";
+        String sql = "SELECT f.* FROM fungibles f JOIN fungibles_herramientas fh ON f.id = fh.fungible_id JOIN herramientas h ON fh.herramienta_id = h.id WHERE h.id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {

@@ -90,4 +90,15 @@ public class Herramienta {
     public void setFungibles(List<Fungible> fungibles) {
         this.fungibles = fungibles;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(id);
+        sb.append(", marca: ").append(marca);
+        sb.append(", modelo: ").append(modelo);
+        sb.append(", fabricante: ").append(fabricante);
+        sb.append(", fecha de compra: ").append(fechaCompra);
+        return sb.toString();
+    }
 }

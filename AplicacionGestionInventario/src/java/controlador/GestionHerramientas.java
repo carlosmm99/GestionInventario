@@ -174,7 +174,7 @@ public class GestionHerramientas extends HttpServlet {
             // Establecer atributos para mostrar el cuadro de diálogo y redirigir
             request.setAttribute("showDialog", true);
             request.setAttribute("message", mensaje);
-            request.getRequestDispatcher("equipos.jsp").forward(request, response);
+            request.getRequestDispatcher("herramientas.jsp").forward(request, response);
         } catch (ParseException ex) {
             Logger.getLogger(GestionHerramientas.class.getName()).log(Level.SEVERE, null, ex);
         }
