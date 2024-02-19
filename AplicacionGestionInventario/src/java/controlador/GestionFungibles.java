@@ -36,7 +36,7 @@ public class GestionFungibles extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -303,14 +303,12 @@ public class GestionFungibles extends HttpServlet {
                         .append("<td>").append(fungible.getMarca()).append("</td>")
                         .append("<td>").append(fungible.getModelo()).append("</td>")
                         .append("<td>").append(fungible.getTamanyo()).append("</td>")
-                        .append("<td>").append(fungible.getCantidad()).append("</td>");
-
-                tablaHTML.append("</tr>");
+                        .append("<td>").append(fungible.getCantidad()).append("</td></tr>");
             }
-            tablaHTML.append("</tbody>");
-
-            tablaHTML.append("</table>");
+            tablaHTML.append("</tbody></table>");
         }
+
+        request.setAttribute("cantidadFungibles", fungibles.size());
 
         return tablaHTML.toString();
     }
