@@ -18,21 +18,47 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0; /* Espaciado adicional */
 }
 
-#tablaEquipos thead tr, #tablaFungibles thead tr, #tablaHerramientas thead tr {
+#tablaEquipos thead tr {
     background-color: seagreen;
     color: white;
 }
 
-#tablaEquipos tbody tr:nth-child(even), #tablaFungibles tbody tr:nth-child(even), #tablaHerramientas tbody tr:nth-child(even) {
+#tablaFungibles thead tr {
+    background-color: seagreen;
+    color: white;
+}
+
+#tablaHerramientas thead tr {
+    background-color: seagreen;
+    color: white;
+}
+
+#tablaEquipos tbody tr:nth-child(even) {
     background-color: mediumseagreen;
 }
 
-#tablaFungibles thead tr #celdaEncabezadoIdFungible, #tablaHerramientas thead tr #celdaEncabezadoIdHerramienta, #tablaFungibles tbody tr #celdaIdFungible, #tablaHerramientas tbody tr #celdaIdHerramienta {
+#tablaFungibles tbody tr:nth-child(even) {
+    background-color: mediumseagreen;
+}
+
+#tablaHerramientas tbody tr:nth-child(even) {
+    background-color: mediumseagreen;
+}
+
+#tablaFungibles thead tr #celdaEncabezadoIdFungible {
     display: none;
 }
 
-#toast-container>.toast-warning {
-    background-image: none !important;
+#tablaFungibles tbody tr #celdaIdFungible {
+    display: none;
+}
+
+#tablaHerramientas thead tr #celdaEncabezadoIdHerramienta {
+    display: none;
+}
+
+#tablaHerramientas tbody tr #celdaIdHerramienta {
+    display: none;
 }
 
 .first-level-warning-toast {
