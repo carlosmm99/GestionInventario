@@ -97,12 +97,12 @@ public class Controlador {
                 Date fechaProximoMantenimiento = rs.getDate("fecha_proximo_mantenimiento");
                 equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento));
             }
+            return equipos;
         } catch (SQLException ex) {
             return null;
         } finally {
             desconectar();
         }
-        return equipos;
     }
 
     List<Fungible> leerFungibles() {
