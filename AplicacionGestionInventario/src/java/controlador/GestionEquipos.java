@@ -349,17 +349,11 @@ public class GestionEquipos extends HttpServlet {
                         .append("<td>").append(equipo.getFechaProximoMantenimiento()).append("</td>")
                         .append("<td>");
                 for (Fungible fungible : equipo.getFungibles()) {
-                    tablaHTML.append(fungible);
-                    if (equipo.getFungibles().size() > 1 && fungible != equipo.getFungibles().get(equipo.getFungibles().size() - 1)) {
-                        tablaHTML.append(";");
-                    }
+                    tablaHTML.append("<p>").append(fungible).append(";</p>");
                 }
                 tablaHTML.append("</td><td>");
                 for (Herramienta herramienta : equipo.getHerramientas()) {
-                    tablaHTML.append(herramienta);
-                    if (equipo.getHerramientas().size() > 1 && herramienta != equipo.getHerramientas().get(equipo.getHerramientas().size() - 1)) {
-                        tablaHTML.append(";");
-                    }
+                    tablaHTML.append("<p>").append(herramienta).append(";</p>");
                 }
                 tablaHTML.append("</td></tr>");
             }
