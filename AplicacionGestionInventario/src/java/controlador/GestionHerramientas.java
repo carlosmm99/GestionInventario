@@ -219,7 +219,7 @@ public class GestionHerramientas extends HttpServlet {
                 .append("</div>")
                 // Columna modelo de la herramienta
                 .append("<div class=\"col-6\" id=\"columnaModeloHerramienta\">")
-                .append("<label>Modelo de la herramienbta:</label>")
+                .append("<label>Modelo de la herramienta:</label>")
                 .append("<input type=\"text\" class=\"form-control\" name=\"txtModeloHerramienta\" id=\"txtModeloHerramienta\" required placeholder=\"Modelo de la herramienta\">")
                 .append("</div>")
                 // Columna fabricante
@@ -272,7 +272,7 @@ public class GestionHerramientas extends HttpServlet {
                     .append("<thead><tr>");
 
             tablaHTML.append("<th scope=\"col\">Acciones</th><th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th>")
-                    .append("<th scope=\"col\">Marca</th><th scope=\"col\">Modelo</th>")
+                    .append("<th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th><th scope=\"col\">Modelo</th>")
                     .append("<th scope=\"col\">Fabricante</th><th scope=\"col\">Fecha de compra</th>");
 
             tablaHTML.append("</tr></thead>");
@@ -308,14 +308,12 @@ public class GestionHerramientas extends HttpServlet {
                         .append("<td>").append(herramienta.getMarca()).append("</td>")
                         .append("<td>").append(herramienta.getModelo()).append("</td>")
                         .append("<td>").append(herramienta.getFabricante()).append("</td>")
-                        .append("<td>").append(herramienta.getFechaCompra()).append("</td>");
-
-                tablaHTML.append("</tr>");
+                        .append("<td>").append(herramienta.getFechaCompra()).append("</td>").append("</tr>");
             }
-            tablaHTML.append("</tbody>");
-
-            tablaHTML.append("</table>");
+            tablaHTML.append("</tbody>").append("</table>");
         }
+        
+        request.setAttribute("cantidadHerramientas", herramientas.size());
 
         return tablaHTML.toString();
     }
