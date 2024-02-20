@@ -30,7 +30,7 @@
             <%@include file="template/menu.jsp" %>
             <div class="row align-items-start">
                 <div class="col-9">
-                    <h1>Fungibles</h1>
+                    <h1>Gestión de fungibles</h1>
                 </div>
                 <div class="col-3 align-self-center">
                     <div class="d-grid gap-2">
