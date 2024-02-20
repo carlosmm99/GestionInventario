@@ -93,11 +93,11 @@ public class Fungible {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("id: ").append(id);
-        sb.append(", marca: ").append(marca);
-        sb.append(", modelo: ").append(modelo);
-        sb.append(", tamaño: ").append(tamanyo);
-        sb.append(", cantidad: ").append(cantidad);
+        sb.append("id: ").append(id)
+                .append(", marca: ").append(marca)
+                .append(", modelo: ").append(modelo)
+                .append(", tamaño: ").append(tamanyo)
+                .append(", cantidad: ").append(cantidad);
         return sb.toString();
     }
 }

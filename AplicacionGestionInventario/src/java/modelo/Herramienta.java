@@ -94,11 +94,11 @@ public class Herramienta {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("id: ").append(id);
-        sb.append(", marca: ").append(marca);
-        sb.append(", modelo: ").append(modelo);
-        sb.append(", fabricante: ").append(fabricante);
-        sb.append(", fecha de compra: ").append(fechaCompra);
+        sb.append("id: ").append(id)
+                .append(", marca: ").append(marca)
+                .append(", modelo: ").append(modelo)
+                .append(", fabricante: ").append(fabricante)
+                .append(", fecha de compra: ").append(fechaCompra);
         return sb.toString();
     }
 }
