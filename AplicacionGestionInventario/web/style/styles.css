@@ -7,6 +7,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Author     : carlos.mondejar
 */
 
+.container-fluid,
+.collapse.navbar-collapse,
+.container,
+.row.align-items-start,
+.col-9,
+.col-3.align-self-center,
+.d-grid.gap-2,
+.table-responsive,
+.modal-content, .modal-header,
+.modal-body, .row, .col-6,
+.modal-footer
+{
+    overflow: hidden; /* Oculta el contenido que se desborda */
+    max-width: 200vh; /* Establece la altura máxima para el contenido */
+    max-height: 200vh; /* Establece la altura máxima para el contenido */
+}
+
 /* Ocultar las flechas en input numérico */
 input[type="number"] {
     -moz-appearance: none; /* Firefox */
