@@ -72,15 +72,15 @@ window.onload = function () {
 
                     // Mostrar notificaciones según la cantidad
                     if (cantidad <= 10 && cantidad > 5) {
-                        toastr.warning('El fungible con id ' + fungible.id + ' tiene 10 unidades o menos.', 'Advertencia', {
+                        toastr.warning('El fungible ' + fungible.marca + ' ' + fungible.modelo + ' tiene 10 unidades o menos.', 'Advertencia', {
                             toastClass: 'first-level-warning-toast'
                         });
                     } else if (cantidad <= 5 && cantidad > 0) {
-                        toastr.warning('El fungible con id ' + fungible.id + ' tiene 5 unidades o menos.', 'Advertencia', {
+                        toastr.warning('El fungible ' + fungible.marca + ' ' + fungible.modelo + ' tiene 5 unidades o menos.', 'Advertencia', {
                             toastClass: 'second-level-warning-toast'
                         });
                     } else if (cantidad === 0) {
-                        toastr.error('El fungible con id ' + fungible.id + ' no tiene unidades.', 'Error', {
+                        toastr.error('El fungible ' + fungible.marca + ' ' + fungible.modelo + ' no tiene unidades.', 'Error', {
                             toastClass: 'error-toast'
                         });
                     }
