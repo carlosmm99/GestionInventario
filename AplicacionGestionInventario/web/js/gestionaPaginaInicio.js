@@ -32,7 +32,11 @@ window.onload = function () {
                 function mostrarToast(mensaje, tipo, toastClass) {
                     var titulo = '';
                     if (tipo === 'warning') {
-                        titulo = 'Advertencia';
+                        if (toastClass === 'first-level-warning-toast') {
+                            titulo = '1ª advertencia';
+                        } else if (toastClass === 'second-level-warning-toast') {
+                            titulo = '2ª advertencia';
+                        }
                     } else if (tipo === 'error') {
                         titulo = 'Error';
                     }
