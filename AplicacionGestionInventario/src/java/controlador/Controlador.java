@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import modelo.Equipo;
 import modelo.Fungible;
 import modelo.Herramienta;
+import modelo.Usuario;
 
 /**
  *
@@ -858,6 +859,37 @@ public class Controlador {
         } finally {
             desconectar();
         }
+    }
+
+    Usuario comprobarCredenciales(String nombreUsuario, String contrasenia) {
+        String sql = "SELECT * FROM usuarios WHERE usuario = ? AND contrasenia = ?";
+        
+        try {
+            if (conn == null || conn.isClosed()) {
+                conn = this.conectar(false);
+            }
+            
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, nombreUsuario);
+            ps.setString(2, contrasenia);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            // Si hay al menos una fila en el resultado, las credenciales son válidas
+            if (rs.next()) {
+                if (rs.getString("contrasenia").equals(contrasenia)) {
+                    Integer rol = rs.getInt("rol");
+                    return new Usuario(nombreUsuario, contrasenia, rol);
+                }
+            }
+        } catch (SQLException ex) {
+            return null;
+        } finally {
+            desconectar();
+        }
+
+        // Si hay algún error o las credenciales son inválidas, retornar null
+        return null;
     }
 
 }

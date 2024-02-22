@@ -67,13 +67,23 @@ public class GestionEquipos extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String btnAgregar = generarBotonHTML();
-        request.setAttribute("btnAgregar", btnAgregar);
-        String tablaEquipos = generarTablaHTML(request);
-        request.setAttribute("tablaEquipos", tablaEquipos);
-        String formEquipos = generarFormularioHTML(request);
-        request.setAttribute("formEquipos", formEquipos);
-        request.getRequestDispatcher("equipos.jsp").forward(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            String usuario = (String) request.getSession().getAttribute("usuario");
+            if (usuario != null) {
+                Integer rol = (Integer) request.getSession().getAttribute("rol");
+                String btnAgregar = generarBotonHTML(usuario, rol);
+                request.setAttribute("btnAgregar", btnAgregar);
+                String tablaEquipos = generarTablaHTML(request, usuario, rol);
+                request.setAttribute("tablaEquipos", tablaEquipos);
+                String formEquipos = generarFormularioHTML(request);
+                request.setAttribute("formEquipos", formEquipos);
+                request.getRequestDispatcher("equipos.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("error.jsp").include(request, response);
+                out.write("<div><p class=\"text-center\" style=\"color: red; font-weight: bold;\">Para gestionar equipos debe autenticarse primero.</p></div>");
+            }
+        }
     }
 
     /**
@@ -194,10 +204,14 @@ public class GestionEquipos extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private String generarBotonHTML() {
-        StringBuilder btnHTML = new StringBuilder();
-        btnHTML.append("<button type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" id=\"btnAgregarEquipo\">Agregar</button>");
-        return btnHTML.toString();
+    private String generarBotonHTML(String usuario, Integer rol) {
+        if (usuario != null && rol.equals(1)) {
+            StringBuilder btnHTML = new StringBuilder();
+            btnHTML.append("<button type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" id=\"btnAgregarEquipo\">Agregar</button>");
+            return btnHTML.toString();
+        } else {
+            return null;
+        }
     }
 
     private String generarFormularioHTML(HttpServletRequest request) {
@@ -287,7 +301,7 @@ public class GestionEquipos extends HttpServlet {
         return formHTML.toString();
     }
 
-    private String generarTablaHTML(HttpServletRequest request) {
+    private String generarTablaHTML(HttpServletRequest request, String usuario, Integer rol) {
         List<Equipo> equipos = c.leerEquipos();
         StringBuilder tablaHTML = new StringBuilder();
 
@@ -295,7 +309,10 @@ public class GestionEquipos extends HttpServlet {
             tablaHTML.append("<table id=\"tablaEquipos\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
-            tablaHTML.append("<th scope=\"col\">Acciones</th>");
+            if (usuario != null && rol.equals(1)) {
+                tablaHTML.append("<th scope=\"col\">Acciones</th>");
+            }
+
             tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdEquipo\">ID</th>")
                     .append("<th scope=\"col\">Nº inventario CEDEX</th><th scope=\"col\">Nombre</th>")
                     .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Fabricante</th>")
@@ -333,10 +350,12 @@ public class GestionEquipos extends HttpServlet {
                         .append(" data-numfungibles=\"").append(numFungibles).append("\"")
                         .append(" data-numherramientas=\"").append(numHerramientas).append("\">");
 
-                tablaHTML.append("<td>")
-                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
-                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Eliminar\" name=\"btnEliminarTrabajo\">Eliminar</button>&nbsp;")
-                        .append("</td>");
+                if (usuario != null && rol.equals(1)) {
+                    tablaHTML.append("<td>")
+                            .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
+                            .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Eliminar\" name=\"btnEliminarTrabajo\">Eliminar</button>&nbsp;")
+                            .append("</td>");
+                }
 
                 tablaHTML.append("<td>").append(equipo.getId()).append("</td>")
                         .append("<td>").append(equipo.getNumInventario()).append("</td>")

@@ -67,13 +67,23 @@ public class GestionHerramientas extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String btnAgregar = generarBotonHTML();
-        request.setAttribute("btnAgregar", btnAgregar);
-        String tablaHerramientas = generarTablaHTML(request);
-        request.setAttribute("tablaHerramientas", tablaHerramientas);
-        String formHerramientas = generarFormularioHTML(request);
-        request.setAttribute("formHerramientas", formHerramientas);
-        request.getRequestDispatcher("herramientas.jsp").forward(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            String usuario = (String) request.getSession().getAttribute("usuario");
+            if (usuario != null) {
+                Integer rol = (Integer) request.getSession().getAttribute("rol");
+                String btnAgregar = generarBotonHTML(usuario, rol);
+                request.setAttribute("btnAgregar", btnAgregar);
+                String tablaHerramientas = generarTablaHTML(request, usuario, rol);
+                request.setAttribute("tablaHerramientas", tablaHerramientas);
+                String formHerramientas = generarFormularioHTML(request);
+                request.setAttribute("formHerramientas", formHerramientas);
+                request.getRequestDispatcher("herramientas.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("error.jsp").include(request, response);
+                out.write("<div><p class=\"text-center\" style=\"color: red; font-weight: bold;\">Para gestionar herramientas debe autenticarse primero.</p></div>");
+            }
+        }
     }
 
     /**
@@ -145,7 +155,7 @@ public class GestionHerramientas extends HttpServlet {
                     }
                 }
             }
-            
+
             int res = 0;
             String mensaje = "";
             if (request.getParameter("btnAgregar") != null) {
@@ -190,10 +200,14 @@ public class GestionHerramientas extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private String generarBotonHTML() {
-        StringBuilder btnHTML = new StringBuilder();
-        btnHTML.append("<button type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" id=\"btnAgregarHerramienta\">Agregar</button>");
-        return btnHTML.toString();
+    private String generarBotonHTML(String usuario, Integer rol) {
+        if (usuario != null && rol.equals(1)) {
+            StringBuilder btnHTML = new StringBuilder();
+            btnHTML.append("<button type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" id=\"btnAgregarHerramienta\">Agregar</button>");
+            return btnHTML.toString();
+        } else {
+            return null;
+        }
     }
 
     private String generarFormularioHTML(HttpServletRequest request) {
@@ -263,7 +277,7 @@ public class GestionHerramientas extends HttpServlet {
         return formHTML.toString();
     }
 
-    private String generarTablaHTML(HttpServletRequest request) {
+    private String generarTablaHTML(HttpServletRequest request, String usuario, Integer rol) {
         List<Herramienta> herramientas = c.leerHerramientas();
         StringBuilder tablaHTML = new StringBuilder();
 
@@ -271,7 +285,11 @@ public class GestionHerramientas extends HttpServlet {
             tablaHTML.append("<table id=\"tablaHerramientas\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
-            tablaHTML.append("<th scope=\"col\">Acciones</th><th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th>")
+            if (usuario != null && rol.equals(1)) {
+                tablaHTML.append("<th scope=\"col\">Acciones</th>");
+            }
+
+            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th>")
                     .append("<th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th><th scope=\"col\">Modelo</th>")
                     .append("<th scope=\"col\">Fabricante</th><th scope=\"col\">Fecha de compra</th>");
 
@@ -299,10 +317,12 @@ public class GestionHerramientas extends HttpServlet {
                         .append(" data-numequipos=\"").append(numEquipos).append("\"")
                         .append(" data-numfungibles=\"").append(numFungibles).append("\">");
 
-                tablaHTML.append("<td>")
-                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
-                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
-                        .append("</td>");
+                if (usuario != null && rol.equals(1)) {
+                    tablaHTML.append("<td>")
+                            .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
+                            .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
+                            .append("</td>");
+                }
 
                 tablaHTML.append("<td id=\"celdaIdHerramienta\">").append(herramienta.getId()).append("</td>")
                         .append("<td>").append(herramienta.getMarca()).append("</td>")
@@ -312,7 +332,7 @@ public class GestionHerramientas extends HttpServlet {
             }
             tablaHTML.append("</tbody>").append("</table>");
         }
-        
+
         request.setAttribute("cantidadHerramientas", herramientas.size());
 
         return tablaHTML.toString();

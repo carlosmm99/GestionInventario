@@ -36,7 +36,7 @@ public class GestionFungibles extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -62,13 +62,23 @@ public class GestionFungibles extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String btnAgregar = generarBotonHTML();
-        request.setAttribute("btnAgregar", btnAgregar);
-        String tablaFungibles = generarTablaHTML(request);
-        request.setAttribute("tablaFungibles", tablaFungibles);
-        String formFungibles = generarFormularioHTML(request);
-        request.setAttribute("formFungibles", formFungibles);
-        request.getRequestDispatcher("fungibles.jsp").forward(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            String usuario = (String) request.getSession().getAttribute("usuario");
+            if (usuario != null) {
+                Integer rol = (Integer) request.getSession().getAttribute("rol");
+                String btnAgregar = generarBotonHTML(usuario, rol);
+                request.setAttribute("btnAgregar", btnAgregar);
+                String tablaFungibles = generarTablaHTML(request, usuario, rol);
+                request.setAttribute("tablaFungibles", tablaFungibles);
+                String formFungibles = generarFormularioHTML(request);
+                request.setAttribute("formFungibles", formFungibles);
+                request.getRequestDispatcher("fungibles.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("error.jsp").include(request, response);
+                out.write("<div><p class=\"text-center\" style=\"color: red; font-weight: bold;\">Para gestionar fungibles debe autenticarse primero.</p></div>");
+            }
+        }
     }
 
     /**
@@ -181,10 +191,14 @@ public class GestionFungibles extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private String generarBotonHTML() {
-        StringBuilder btnHTML = new StringBuilder();
-        btnHTML.append("<button type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" id=\"btnAgregarFungible\">Agregar</button>");
-        return btnHTML.toString();
+    private String generarBotonHTML(String usuario, Integer rol) {
+        if (usuario != null && rol.equals(1)) {
+            StringBuilder btnHTML = new StringBuilder();
+            btnHTML.append("<button type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" id=\"btnAgregarFungible\">Agregar</button>");
+            return btnHTML.toString();
+        } else {
+            return null;
+        }
     }
 
     private String generarFormularioHTML(HttpServletRequest request) {
@@ -258,7 +272,7 @@ public class GestionFungibles extends HttpServlet {
         return formHTML.toString();
     }
 
-    private String generarTablaHTML(HttpServletRequest request) {
+    private String generarTablaHTML(HttpServletRequest request, String usuario, Integer rol) {
         List<Fungible> fungibles = c.leerFungibles();
         StringBuilder tablaHTML = new StringBuilder();
 
@@ -266,7 +280,11 @@ public class GestionFungibles extends HttpServlet {
             tablaHTML.append("<table id=\"tablaFungibles\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
-            tablaHTML.append("<th scope=\"col\">Acciones</th><th scope=\"col\" id=\"celdaEncabezadoIdFungible\">ID</th>")
+            if (usuario != null) {
+                tablaHTML.append("<th scope=\"col\">Acciones</th>");
+            }
+
+            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdFungible\">ID</th>")
                     .append("<th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th><th scope=\"col\">Modelo</th>")
                     .append("<th scope=\"col\">Tamaño</th><th scope=\"col\">Cantidad</th>");
 
@@ -294,10 +312,14 @@ public class GestionFungibles extends HttpServlet {
                         .append(" data-numequipos=\"").append(numEquipos).append("\"")
                         .append(" data-numherramientas=\"").append(numHerramientas).append("\">");
 
-                tablaHTML.append("<td>")
-                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
-                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
-                        .append("</td>");
+                tablaHTML.append("<td>");
+                if (usuario != null) {
+                    tablaHTML.append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;");
+                    if (rol.equals(1)) {
+                        tablaHTML.append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;");
+                    }
+                }
+                tablaHTML.append("</td>");
 
                 tablaHTML.append("<td id=\"celdaIdFungible\">").append(fungible.getId()).append("</td>")
                         .append("<td>").append(fungible.getMarca()).append("</td>")
