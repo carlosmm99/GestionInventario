@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-02-2024 a las 12:46:14
+-- Tiempo de generación: 22-02-2024 a las 08:26:29
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -171,6 +171,45 @@ INSERT INTO `herramientas` (`id`, `marca`, `modelo`, `fabricante`, `fecha_compra
 (2, 'Marca2', 'Modelo2', 'Fabricante2', '2023-02-01'),
 (3, 'Marca3', 'Modelo3', 'Fabricante3', '2023-03-01');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `roles`
+--
+
+CREATE TABLE `roles` (
+  `cod_rol` int(11) NOT NULL,
+  `rol` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`cod_rol`, `rol`) VALUES
+(1, 'Administrador'),
+(2, 'Usuario');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `usuario` varchar(255) NOT NULL,
+  `contrasenia` varchar(255) NOT NULL,
+  `rol` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`usuario`, `contrasenia`, `rol`) VALUES
+('admin', 'admin', 1),
+('usuario', 'usuario', 2);
+
 --
 -- Índices para tablas volcadas
 --
@@ -219,6 +258,19 @@ ALTER TABLE `herramientas`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`cod_rol`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`usuario`),
+  ADD KEY `fk_rol` (`rol`) USING BTREE;
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -264,6 +316,12 @@ ALTER TABLE `equipos_herramientas`
 ALTER TABLE `fungibles_herramientas`
   ADD CONSTRAINT `fungibles_herramientas_ibfk_1` FOREIGN KEY (`fungible_id`) REFERENCES `fungibles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fungibles_herramientas_ibfk_2` FOREIGN KEY (`herramienta_id`) REFERENCES `herramientas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`rol`) REFERENCES `roles` (`cod_rol`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
