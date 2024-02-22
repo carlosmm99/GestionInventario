@@ -9,16 +9,13 @@ window.onload = function () {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'ObtenerEquiposYFungibles', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 var data = JSON.parse(xhr.responseText);
-
                 var equipos = data.equipos;
                 var fungibles = data.fungibles;
                 var hoy = new Date();
-
                 function mostrarToastsSecuencialmente(toasts, index) {
                     if (index < toasts.length) {
                         var toast = toasts[index];
@@ -46,17 +43,35 @@ window.onload = function () {
                     });
                 }
 
+                function formatearFecha(fechaOriginal) {
+                    // Expresión regular para extraer el mes, el día y el año
+                    var regex = /([a-z]{3})\. (\d{1,2}), (\d{4})/i;
+                    var match = regex.exec(fechaOriginal);
+                    if (match) {
+                        // Mapear el mes abreviado a un nombre completo de mes
+                        var meses = {
+                            "ene": "January", "feb": "February", "mar": "March", "abr": "April", "may": "May", "jun": "June",
+                            "jul": "July", "ago": "August", "sep": "September", "oct": "October", "nov": "November", "dic": "December"
+                        };
+                        var month = meses[match[1].toLowerCase()];
+                        var day = match[2];
+                        var year = match[3];
+                        // Formatear la fecha
+                        return month + ' ' + day + ', ' + year;
+                    } else {
+                        // Si no se puede analizar la fecha, devolver la cadena original
+                        return fechaOriginal;
+                    }
+                }
+
                 var toasts = [];
-
                 equipos.forEach(function (equipo) {
-                    var fechaProximoMantenimiento = new Date(equipo.fechaProximoMantenimiento);
-                    var fechaProximaCalibracion = new Date(equipo.fechaProximaCalibracion);
-                    var tiempoRestanteProximoMantenimiento = fechaProximoMantenimiento.getTime() - hoy.getTime();
-                    var tiempoRestanteProximaCalibracion = fechaProximaCalibracion.getTime() - hoy.getTime();
-
+                    var fechaProximoMantenimiento = formatearFecha(equipo.fechaProximoMantenimiento);
+                    var fechaProximaCalibracion = formatearFecha(equipo.fechaProximaCalibracion);
+                    var tiempoRestanteProximoMantenimiento = new Date(fechaProximoMantenimiento).getTime() - hoy.getTime();
+                    var tiempoRestanteProximaCalibracion = new Date(fechaProximaCalibracion).getTime() - hoy.getTime();
                     var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
                     var mesesRestantesProximaCalibracion = tiempoRestanteProximaCalibracion / (1000 * 60 * 60 * 24 * 30);
-
                     if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
                         toasts.push({
                             mensaje: 'El equipo ' + equipo.nombre + ' necesita mantenimiento en menos de 6 meses.',
@@ -97,10 +112,8 @@ window.onload = function () {
                         });
                     }
                 });
-
                 fungibles.forEach(function (fungible) {
                     var cantidad = fungible.cantidad;
-
                     if (cantidad <= 10 && cantidad > 5) {
                         toasts.push({
                             mensaje: 'El fungible ' + fungible.marca + ' ' + fungible.modelo + ' tiene 10 unidades o menos.',
@@ -121,13 +134,11 @@ window.onload = function () {
                         });
                     }
                 });
-
                 mostrarToastsSecuencialmente(toasts, 0);
             } else {
                 console.error('Hubo un error en la solicitud.');
             }
         }
     };
-
     xhr.send();
 };
