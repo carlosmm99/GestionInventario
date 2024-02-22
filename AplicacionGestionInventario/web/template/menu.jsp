@@ -25,7 +25,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.servletContext.contextPath}/GestionHerramientas">Gestión de herramientas</a>
                 </li>
+                <% if (session.getAttribute("usuario") != null) { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.servletContext.contextPath}/Logout">Cerrar sesión</a>
+                </li>
+                <% } %>
             </ul>
+            <% if (session.getAttribute("usuario") != null) { %>
+            <h6>Usuario conectado: <%= session.getAttribute("usuario") %></h6>
+            <% } %>
         </div>
     </div>
 </nav>
