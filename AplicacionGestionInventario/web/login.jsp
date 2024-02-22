@@ -18,7 +18,6 @@
     </head>
     <body>
         <div class="container">
-            <%--<%@include file="template/menu.jsp" %>--%>
             <div class="row align-items-start">
                 <div class="col-9">
                     <h1>Iniciar sesión</h1>
