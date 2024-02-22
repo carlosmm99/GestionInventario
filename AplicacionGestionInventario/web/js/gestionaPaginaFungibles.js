@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumFungible, tablaFungibles, cantidadFungibles */
+/* global ultimoNumFungible, tablaFungibles, cantidadFungibles, usuario, rol */
 
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
@@ -202,13 +202,24 @@ $(document).ready(function () {
                 $(".modal-title").text("Editar fungible");
                 $("#tituloEliminar").hide();
 
-                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
-                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
-                $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
+                if (usuario !== null) {
+                    if (rol === 1) {
+                        $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
+                        $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
+                        $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
+                        $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
+                        $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+                    } else if (rol === 2) {
+                        $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
+                        $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
+                        $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
+                        $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                        $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                    }
+                }
+
                 $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
                 $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", false);
-                $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
-                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
