@@ -57,6 +57,8 @@ public class Inicio extends HttpServlet {
             throws ServletException, IOException {
         try (PrintWriter out = response.getWriter()) {
             if (request.getSession().getAttribute("usuario") != null) {
+                String divNotificaciones = generarDivHTML();
+                request.setAttribute("divNotificaciones", divNotificaciones);
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             } else {
                 request.getRequestDispatcher("error.jsp").include(request, response);
@@ -90,5 +92,11 @@ public class Inicio extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private String generarDivHTML() {
+        StringBuilder divHTML = new StringBuilder();
+        divHTML.append("<div id=\"divNotificaciones\"></div>");
+        return divHTML.toString();
+    }
 
 }
