@@ -76,7 +76,9 @@ public class GestionFungibles extends HttpServlet {
                 request.getRequestDispatcher("fungibles.jsp").forward(request, response);
             } else {
                 request.getRequestDispatcher("error.jsp").include(request, response);
-                out.write("<div><p class=\"text-center\" style=\"color: red; font-weight: bold;\">Para gestionar fungibles debe autenticarse primero.</p></div>");
+                // Obtiene la URL base de la aplicación
+                String baseURL = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
+                out.write("<div><p class=\"text-center\" style=\"color: red; font-weight: bold;\">Para gestionar fungibles debe <a href=\"" + baseURL + "\">" + "autenticarse</a> primero.</p></div>");
             }
         }
     }
