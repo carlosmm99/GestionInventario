@@ -35,46 +35,17 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0; /* Espaciado adicional */
 }
 
-#tablaEquipos thead tr {
+#tablaEquipos thead tr, #tablaFungibles thead tr, #tablaHerramientas thead tr {
     background-color: seagreen;
     color: white;
 }
 
-#tablaFungibles thead tr {
-    background-color: seagreen;
-    color: white;
-}
-
-#tablaHerramientas thead tr {
-    background-color: seagreen;
-    color: white;
-}
-
-#tablaEquipos tbody tr:nth-child(even) {
+#tablaEquipos tbody tr:nth-child(even), #tablaFungibles tbody tr:nth-child(even), #tablaHerramientas tbody tr:nth-child(even) {
     background-color: mediumseagreen;
 }
 
-#tablaFungibles tbody tr:nth-child(even) {
-    background-color: mediumseagreen;
-}
-
-#tablaHerramientas tbody tr:nth-child(even) {
-    background-color: mediumseagreen;
-}
-
-#tablaFungibles thead tr #celdaEncabezadoIdFungible {
-    display: none;
-}
-
-#tablaFungibles tbody tr #celdaIdFungible {
-    display: none;
-}
-
-#tablaHerramientas thead tr #celdaEncabezadoIdHerramienta {
-    display: none;
-}
-
-#tablaHerramientas tbody tr #celdaIdHerramienta {
+#tablaFungibles thead tr #celdaEncabezadoIdFungible, #tablaFungibles tbody tr #celdaIdFungible,
+#tablaHerramientas thead tr #celdaEncabezadoIdHerramienta, #tablaHerramientas tbody tr #celdaIdHerramienta {
     display: none;
 }
 
