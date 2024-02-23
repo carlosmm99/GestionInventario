@@ -43,11 +43,16 @@ input[type="number"]::-webkit-outer-spin-button {
 
 #tablaEquipos tbody tr:nth-child(even), #tablaFungibles tbody tr:nth-child(even), #tablaHerramientas tbody tr:nth-child(even) {
     background-color: mediumseagreen;
+    color: white;
 }
 
 #tablaFungibles thead tr #celdaEncabezadoIdFungible, #tablaFungibles tbody tr #celdaIdFungible,
 #tablaHerramientas thead tr #celdaEncabezadoIdHerramienta, #tablaHerramientas tbody tr #celdaIdHerramienta {
     display: none;
+}
+
+#tablaEquipos tbody tr.even:hover td, #tablaFungibles tbody tr.even:hover td, #tablaHerramientas tbody tr.even:hover td {
+    color: white; /* Cambiar el color del texto a blanco */
 }
 
 .first-level-warning-toast {
