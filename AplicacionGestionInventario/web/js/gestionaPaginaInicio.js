@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global toastr */
-
 window.onload = function () {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'ObtenerEquiposYFungibles', true);
@@ -16,32 +14,6 @@ window.onload = function () {
                 var equipos = data.equipos;
                 var fungibles = data.fungibles;
                 var hoy = new Date();
-                function mostrarToastsSecuencialmente(toasts, index) {
-                    if (index < toasts.length) {
-                        var toast = toasts[index];
-                        mostrarToast(toast.mensaje, toast.tipo, toast.toastClass);
-                        setTimeout(function () {
-                            mostrarToastsSecuencialmente(toasts, index + 1);
-                        }, 2000); // Cambia este valor si deseas un retraso diferente entre cada toast
-                    }
-                }
-
-                function mostrarToast(mensaje, tipo, toastClass) {
-                    var titulo = '';
-                    if (tipo === 'warning') {
-                        if (toastClass === 'first-level-warning-toast') {
-                            titulo = '1ª advertencia';
-                        } else if (toastClass === 'second-level-warning-toast') {
-                            titulo = '2ª advertencia';
-                        }
-                    } else if (tipo === 'error') {
-                        titulo = 'Error';
-                    }
-
-                    toastr[tipo](mensaje, titulo, {
-                        toastClass: toastClass
-                    });
-                }
 
                 function formatearFecha(fechaOriginal) {
                     // Expresión regular para extraer el mes, el día y el año
@@ -64,7 +36,8 @@ window.onload = function () {
                     }
                 }
 
-                var toasts = [];
+                var divNotificaciones = document.getElementById("divNotificaciones");
+
                 equipos.forEach(function (equipo) {
                     var fechaProximoMantenimiento = formatearFecha(equipo.fechaProximoMantenimiento);
                     var fechaProximaCalibracion = formatearFecha(equipo.fechaProximaCalibracion);
@@ -72,69 +45,124 @@ window.onload = function () {
                     var tiempoRestanteProximaCalibracion = new Date(fechaProximaCalibracion).getTime() - hoy.getTime();
                     var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
                     var mesesRestantesProximaCalibracion = tiempoRestanteProximaCalibracion / (1000 * 60 * 60 * 24 * 30);
+
+                    var divAlertaProximoMantenimiento = document.createElement("div");
+                    divAlertaProximoMantenimiento.id = "divAlertaProximoMantenimientoEquipo" + equipo.id;
+                    divNotificaciones.appendChild(divAlertaProximoMantenimiento);
+
+                    var icono = document.createElement("img");
+                    icono.style.width = "64px";
+                    icono.style.height = "64px";
+
+                    var titulo = document.createElement("h3");
+                    var textoAlerta = document.createElement("p");
+
                     if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
-                        toasts.push({
-                            mensaje: 'El equipo ' + equipo.nombre + ' necesita mantenimiento en menos de 6 meses.',
-                            tipo: 'warning',
-                            toastClass: 'first-level-warning-toast'
-                        });
+                        divAlertaProximoMantenimiento.style.backgroundColor = "yellow";
+                        divAlertaProximoMantenimiento.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_icon.png";
+                        divAlertaProximoMantenimiento.appendChild(icono);
+                        titulo.textContent = "Alerta de Mantenimiento";
+                        divAlertaProximoMantenimiento.appendChild(titulo);
+                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.";
+                        divAlertaProximoMantenimiento.appendChild(textoAlerta);
                     } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
-                        toasts.push({
-                            mensaje: 'El equipo ' + equipo.nombre + ' necesita mantenimiento en menos de 3 meses.',
-                            tipo: 'warning',
-                            toastClass: 'second-level-warning-toast'
-                        });
+                        divAlertaProximoMantenimiento.style.backgroundColor = "orange";
+                        divAlertaProximoMantenimiento.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_icon.png";
+                        divAlertaProximoMantenimiento.appendChild(icono);
+                        titulo.textContent = "Alerta de Mantenimiento";
+                        divAlertaProximoMantenimiento.appendChild(titulo);
+                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.";
+                        divAlertaProximoMantenimiento.appendChild(textoAlerta);
                     } else if (mesesRestantesProximoMantenimiento < 0) {
-                        toasts.push({
-                            mensaje: 'El equipo ' + equipo.nombre + ' necesita mantenimiento urgente.',
-                            tipo: 'error',
-                            toastClass: 'error-toast'
-                        });
+                        divAlertaProximoMantenimiento.style.backgroundColor = "red";
+                        divAlertaProximoMantenimiento.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_shield_icon.png";
+                        divAlertaProximoMantenimiento.appendChild(icono);
+                        titulo.textContent = "Alerta de Mantenimiento Urgente";
+                        divAlertaProximoMantenimiento.appendChild(titulo);
+                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita mantenimiento urgente.";
+                        divAlertaProximoMantenimiento.appendChild(textoAlerta);
                     }
 
+                    var divAlertaProximaCalibracion = document.createElement("div");
+                    divAlertaProximaCalibracion.id = "divAlertaProximaCalibracionEquipo" + equipo.id;
+                    divNotificaciones.appendChild(divAlertaProximaCalibracion);
+
                     if (mesesRestantesProximaCalibracion < 6 && mesesRestantesProximaCalibracion >= 3) {
-                        toasts.push({
-                            mensaje: 'El equipo ' + equipo.nombre + ' necesita calibración en menos de 6 meses.',
-                            tipo: 'warning',
-                            toastClass: 'first-level-warning-toast'
-                        });
+                        divAlertaProximaCalibracion.style.backgroundColor = "yellow";
+                        divAlertaProximaCalibracion.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_icon.png";
+                        divAlertaProximaCalibracion.appendChild(icono);
+                        titulo.textContent = "Alerta de Calibración";
+                        divAlertaProximaCalibracion.appendChild(titulo);
+                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita calibración en menos de 6 meses.";
+                        divAlertaProximaCalibracion.appendChild(textoAlerta);
                     } else if (mesesRestantesProximaCalibracion < 3 && mesesRestantesProximaCalibracion >= 0) {
-                        toasts.push({
-                            mensaje: 'El equipo ' + equipo.nombre + ' necesita calibración en menos de 3 meses.',
-                            tipo: 'warning',
-                            toastClass: 'second-level-warning-toast'
-                        });
+                        divAlertaProximaCalibracion.style.backgroundColor = "orange";
+                        divAlertaProximaCalibracion.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_icon.png";
+                        divAlertaProximaCalibracion.appendChild(icono);
+                        titulo.textContent = "Alerta de Calibración";
+                        divAlertaProximaCalibracion.appendChild(titulo);
+                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita calibración en menos de 3 meses.";
+                        divAlertaProximaCalibracion.appendChild(textoAlerta);
                     } else if (mesesRestantesProximaCalibracion < 0) {
-                        toasts.push({
-                            mensaje: 'El equipo ' + equipo.nombre + ' necesita calibración urgente.',
-                            tipo: 'error',
-                            toastClass: 'error-toast'
-                        });
+                        divAlertaProximaCalibracion.style.backgroundColor = "red";
+                        divAlertaProximaCalibracion.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_shield_icon.png";
+                        divAlertaProximaCalibracion.appendChild(icono);
+                        titulo.textContent = "Alerta de Calibración Urgente";
+                        divAlertaProximaCalibracion.appendChild(titulo);
+                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita calibración urgente.";
+                        divAlertaProximaCalibracion.appendChild(textoAlerta);
                     }
                 });
                 fungibles.forEach(function (fungible) {
                     var cantidad = fungible.cantidad;
+
+                    var divAlertaCantidad = document.createElement("div");
+                    divAlertaCantidad.id = "divAlertaCantidadFungible" + fungible.id;
+                    divNotificaciones.appendChild(divAlertaCantidad);
+
+                    var icono = document.createElement("img");
+                    icono.style.width = "64px";
+                    icono.style.height = "64px";
+
+                    var titulo = document.createElement("h3");
+                    var textoAlerta = document.createElement("p");
+
                     if (cantidad <= 10 && cantidad > 5) {
-                        toasts.push({
-                            mensaje: 'El fungible ' + fungible.marca + ' ' + fungible.modelo + ' tiene 10 unidades o menos.',
-                            tipo: 'warning',
-                            toastClass: 'first-level-warning-toast'
-                        });
+                        divAlertaCantidad.style.backgroundColor = "yellow";
+                        divAlertaCantidad.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_icon.png";
+                        divAlertaCantidad.appendChild(icono);
+                        titulo.textContent = "Alerta de Cantidad";
+                        divAlertaCantidad.appendChild(titulo);
+                        textoAlerta.textContent = "El fungible " + fungible.id + " tiene 10 unidades o menos.";
+                        divAlertaCantidad.appendChild(textoAlerta);
                     } else if (cantidad <= 5 && cantidad > 0) {
-                        toasts.push({
-                            mensaje: 'El fungible ' + fungible.marca + ' ' + fungible.modelo + ' tiene 5 unidades o menos.',
-                            tipo: 'warning',
-                            toastClass: 'second-level-warning-toast'
-                        });
+                        divAlertaCantidad.style.backgroundColor = "orange";
+                        divAlertaCantidad.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_icon.png";
+                        divAlertaCantidad.appendChild(icono);
+                        titulo.textContent = "Alerta de Cantidad";
+                        divAlertaCantidad.appendChild(titulo);
+                        textoAlerta.textContent = "El fungible " + fungible.id + " tiene 5 unidades o menos.";
+                        divAlertaCantidad.appendChild(textoAlerta);
                     } else if (cantidad === 0) {
-                        toasts.push({
-                            mensaje: 'El fungible ' + fungible.marca + ' ' + fungible.modelo + ' no tiene unidades.',
-                            tipo: 'error',
-                            toastClass: 'error-toast'
-                        });
+                        divAlertaCantidad.style.backgroundColor = "red";
+                        divAlertaCantidad.style.marginBottom = "10px";
+                        icono.src = contexto + "/img/warning_shield_icon.png";
+                        divAlertaCantidad.appendChild(icono);
+                        titulo.textContent = "Alerta de Cantidad Urgente";
+                        divAlertaCantidad.appendChild(titulo);
+                        textoAlerta.textContent = "El fungible " + fungible.id + " no tiene unidades.";
+                        divAlertaCantidad.appendChild(textoAlerta);
                     }
                 });
-                mostrarToastsSecuencialmente(toasts, 0);
+
             } else {
                 console.error('Hubo un error en la solicitud.');
             }
