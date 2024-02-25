@@ -12,7 +12,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Equipo;
 import modelo.Fungible;
 
@@ -42,11 +47,25 @@ public class ObtenerEquiposYFungibles extends HttpServlet {
         // Obtener los datos de equipos y fungibles del controlador
         // Supongamos que obtienes estos datos de alguna manera
         List<Equipo> equipos = c.leerEquipos();
+        // Formatear las fechas de los equipos
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+        for (Equipo e : equipos) {
+            try {
+                String fechaProximaCalibracionStr = sdf.format(e.getFechaProximaCalibracion());
+                String fechaProximoMantenimientoStr = sdf.format(e.getFechaProximoMantenimiento());
+                Date fechaProximaCalibracion = sdf.parse(fechaProximaCalibracionStr);
+                Date fechaProximoMantenimiento = sdf.parse(fechaProximoMantenimientoStr);
+                e.setFechaProximaCalibracion(fechaProximaCalibracion);
+                e.setFechaProximoMantenimiento(fechaProximoMantenimiento);
+            } catch (ParseException ex) {
+                out.println("Error: " + ex.getMessage());
+            }
+        }
         List<Fungible> fungibles = c.leerFungibles();
 
         // Convertir los datos a arrays
-        Equipo[] equiposArray = equipos.toArray(Equipo[]::new);
-        Fungible[] fungiblesArray = fungibles.toArray(Fungible[]::new);
+        Equipo[] equiposArray = equipos.toArray(new Equipo[equipos.size()]);
+        Fungible[] fungiblesArray = fungibles.toArray(new Fungible[fungibles.size()]);
 
         // Construir un objeto JSON que contenga ambos arrays
         JsonObject respuestaJson = new JsonObject();

@@ -1,7 +1,4 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
- */
+/* global contexto */
 
 window.onload = function () {
     var xhr = new XMLHttpRequest();
@@ -15,110 +12,35 @@ window.onload = function () {
                 var fungibles = data.fungibles;
                 var hoy = new Date();
 
-                function formatearFecha(fechaOriginal) {
-                    // Expresión regular para extraer el mes, el día y el año
-                    var regex = /([a-z]{3})\. (\d{1,2}), (\d{4})/i;
-                    var match = regex.exec(fechaOriginal);
-                    if (match) {
-                        // Mapear el mes abreviado a un nombre completo de mes
-                        var meses = {
-                            "ene": "January", "feb": "February", "mar": "March", "abr": "April", "may": "May", "jun": "June",
-                            "jul": "July", "ago": "August", "sep": "September", "oct": "October", "nov": "November", "dic": "December"
-                        };
-                        var month = meses[match[1].toLowerCase()];
-                        var day = match[2];
-                        var year = match[3];
-                        // Formatear la fecha
-                        return month + ' ' + day + ', ' + year;
-                    } else {
-                        // Si no se puede analizar la fecha, devolver la cadena original
-                        return fechaOriginal;
-                    }
-                }
-
                 var divNotificaciones = document.getElementById("divNotificaciones");
 
                 equipos.forEach(function (equipo) {
-                    var fechaProximoMantenimiento = formatearFecha(equipo.fechaProximoMantenimiento);
-                    var fechaProximaCalibracion = formatearFecha(equipo.fechaProximaCalibracion);
+                    var fechaProximoMantenimiento = equipo.fechaProximoMantenimiento;
+                    var fechaProximaCalibracion = equipo.fechaProximaCalibracion;
                     var tiempoRestanteProximoMantenimiento = new Date(fechaProximoMantenimiento).getTime() - hoy.getTime();
+                    console.log("Tiempo restante próximo mantenimiento del equipo con id " + equipo.id + ": " + tiempoRestanteProximoMantenimiento);
                     var tiempoRestanteProximaCalibracion = new Date(fechaProximaCalibracion).getTime() - hoy.getTime();
+                    console.log("Tiempo restante próxima calibración del equipo con id " + equipo.id + ": " + tiempoRestanteProximaCalibracion);
                     var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
                     var mesesRestantesProximaCalibracion = tiempoRestanteProximaCalibracion / (1000 * 60 * 60 * 24 * 30);
 
-                    var divAlertaProximoMantenimiento = document.createElement("div");
-                    divAlertaProximoMantenimiento.id = "divAlertaProximoMantenimientoEquipo" + equipo.id;
-                    divNotificaciones.appendChild(divAlertaProximoMantenimiento);
-
-                    var icono = document.createElement("img");
-                    icono.style.width = "64px";
-                    icono.style.height = "64px";
-
-                    var titulo = document.createElement("h3");
-                    var textoAlerta = document.createElement("p");
-
                     if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
-                        divAlertaProximoMantenimiento.style.backgroundColor = "yellow";
-                        divAlertaProximoMantenimiento.style.marginBottom = "10px";
-                        icono.src = contexto + "/img/warning_icon.png";
-                        divAlertaProximoMantenimiento.appendChild(icono);
-                        titulo.textContent = "Alerta de Mantenimiento";
-                        divAlertaProximoMantenimiento.appendChild(titulo);
-                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.";
-                        divAlertaProximoMantenimiento.appendChild(textoAlerta);
+                        crearAlertaMantenimiento(equipo, "yellow", "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
                     } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
-                        divAlertaProximoMantenimiento.style.backgroundColor = "orange";
-                        divAlertaProximoMantenimiento.style.marginBottom = "10px";
-                        icono.src = contexto + "/img/warning_icon.png";
-                        divAlertaProximoMantenimiento.appendChild(icono);
-                        titulo.textContent = "Alerta de Mantenimiento";
-                        divAlertaProximoMantenimiento.appendChild(titulo);
-                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.";
-                        divAlertaProximoMantenimiento.appendChild(textoAlerta);
+                        crearAlertaMantenimiento(equipo, "orange", "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
                     } else if (mesesRestantesProximoMantenimiento < 0) {
-                        divAlertaProximoMantenimiento.style.backgroundColor = "red";
-                        divAlertaProximoMantenimiento.style.marginBottom = "10px";
-                        icono.src = contexto + "/img/warning_shield_icon.png";
-                        divAlertaProximoMantenimiento.appendChild(icono);
-                        titulo.textContent = "Alerta de Mantenimiento Urgente";
-                        divAlertaProximoMantenimiento.appendChild(titulo);
-                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita mantenimiento urgente.";
-                        divAlertaProximoMantenimiento.appendChild(textoAlerta);
+                        crearAlertaMantenimiento(equipo, "red", "El equipo " + equipo.nombre + " necesita mantenimiento urgente.");
                     }
-
-                    var divAlertaProximaCalibracion = document.createElement("div");
-                    divAlertaProximaCalibracion.id = "divAlertaProximaCalibracionEquipo" + equipo.id;
-                    divNotificaciones.appendChild(divAlertaProximaCalibracion);
 
                     if (mesesRestantesProximaCalibracion < 6 && mesesRestantesProximaCalibracion >= 3) {
-                        divAlertaProximaCalibracion.style.backgroundColor = "yellow";
-                        divAlertaProximaCalibracion.style.marginBottom = "10px";
-                        icono.src = contexto + "/img/warning_icon.png";
-                        divAlertaProximaCalibracion.appendChild(icono);
-                        titulo.textContent = "Alerta de Calibración";
-                        divAlertaProximaCalibracion.appendChild(titulo);
-                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita calibración en menos de 6 meses.";
-                        divAlertaProximaCalibracion.appendChild(textoAlerta);
+                        crearAlertaCalibracion(equipo, "yellow", "El equipo " + equipo.nombre + " necesita calibración en menos de 6 meses.");
                     } else if (mesesRestantesProximaCalibracion < 3 && mesesRestantesProximaCalibracion >= 0) {
-                        divAlertaProximaCalibracion.style.backgroundColor = "orange";
-                        divAlertaProximaCalibracion.style.marginBottom = "10px";
-                        icono.src = contexto + "/img/warning_icon.png";
-                        divAlertaProximaCalibracion.appendChild(icono);
-                        titulo.textContent = "Alerta de Calibración";
-                        divAlertaProximaCalibracion.appendChild(titulo);
-                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita calibración en menos de 3 meses.";
-                        divAlertaProximaCalibracion.appendChild(textoAlerta);
+                        crearAlertaCalibracion(equipo, "orange", "El equipo " + equipo.nombre + " necesita calibración en menos de 3 meses.");
                     } else if (mesesRestantesProximaCalibracion < 0) {
-                        divAlertaProximaCalibracion.style.backgroundColor = "red";
-                        divAlertaProximaCalibracion.style.marginBottom = "10px";
-                        icono.src = contexto + "/img/warning_shield_icon.png";
-                        divAlertaProximaCalibracion.appendChild(icono);
-                        titulo.textContent = "Alerta de Calibración Urgente";
-                        divAlertaProximaCalibracion.appendChild(titulo);
-                        textoAlerta.textContent = "El equipo " + equipo.nombre + " necesita calibración urgente.";
-                        divAlertaProximaCalibracion.appendChild(textoAlerta);
+                        crearAlertaCalibracion(equipo, "red", "El equipo " + equipo.nombre + " necesita calibración urgente.");
                     }
                 });
+
                 fungibles.forEach(function (fungible) {
                     var cantidad = fungible.cantidad;
 
@@ -170,3 +92,59 @@ window.onload = function () {
     };
     xhr.send();
 };
+
+function crearAlertaMantenimiento(equipo, color, mensaje) {
+    var divNotificaciones = document.getElementById("divNotificaciones");
+
+    var divAlertaProximoMantenimiento = document.createElement("div");
+    divAlertaProximoMantenimiento.id = "divAlertaProximoMantenimientoEquipo" + equipo.id;
+    divAlertaProximoMantenimiento.style.backgroundColor = color;
+    divAlertaProximoMantenimiento.style.marginBottom = "10px";
+    divNotificaciones.appendChild(divAlertaProximoMantenimiento);
+
+    var icono = document.createElement("img");
+    icono.style.width = "64px";
+    icono.style.height = "64px";
+    if (color === "orange" || color === "yellow") {
+        icono.src = contexto + "/img/warning_icon.png";
+    } else if (color === "red") {
+        icono.src = contexto + "/img/warning_shield_icon.png";
+    }
+    divAlertaProximoMantenimiento.appendChild(icono);
+
+    var titulo = document.createElement("h3");
+    titulo.textContent = "Alerta de Mantenimiento";
+    divAlertaProximoMantenimiento.appendChild(titulo);
+
+    var textoAlerta = document.createElement("p");
+    textoAlerta.textContent = mensaje;
+    divAlertaProximoMantenimiento.appendChild(textoAlerta);
+}
+
+function crearAlertaCalibracion(equipo, color, mensaje) {
+    var divNotificaciones = document.getElementById("divNotificaciones");
+
+    var divAlertaProximaCalibracion = document.createElement("div");
+    divAlertaProximaCalibracion.id = "divAlertaProximaCalibracionEquipo" + equipo.id;
+    divAlertaProximaCalibracion.style.backgroundColor = color;
+    divAlertaProximaCalibracion.style.marginBottom = "10px";
+    divNotificaciones.appendChild(divAlertaProximaCalibracion);
+
+    var icono = document.createElement("img");
+    icono.style.width = "64px";
+    icono.style.height = "64px";
+    if (color === "orange" || color === "yellow") {
+        icono.src = contexto + "/img/warning_icon.png";
+    } else if (color === "red") {
+        icono.src = contexto + "/img/warning_shield_icon.png";
+    }
+    divAlertaProximaCalibracion.appendChild(icono);
+
+    var titulo = document.createElement("h3");
+    titulo.textContent = "Alerta de Calibración";
+    divAlertaProximaCalibracion.appendChild(titulo);
+
+    var textoAlerta = document.createElement("p");
+    textoAlerta.textContent = mensaje;
+    divAlertaProximaCalibracion.appendChild(textoAlerta);
+}
