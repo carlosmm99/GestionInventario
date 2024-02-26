@@ -15,12 +15,10 @@ window.onload = function () {
                 var divNotificaciones = document.getElementById("divNotificaciones");
 
                 equipos.forEach(function (equipo) {
-                    var fechaProximoMantenimiento = equipo.fechaProximoMantenimiento;
-                    var fechaProximaCalibracion = equipo.fechaProximaCalibracion;
-                    var tiempoRestanteProximoMantenimiento = new Date(fechaProximoMantenimiento).getTime() - hoy.getTime();
-                    console.log("Tiempo restante próximo mantenimiento del equipo con id " + equipo.id + ": " + tiempoRestanteProximoMantenimiento);
-                    var tiempoRestanteProximaCalibracion = new Date(fechaProximaCalibracion).getTime() - hoy.getTime();
-                    console.log("Tiempo restante próxima calibración del equipo con id " + equipo.id + ": " + tiempoRestanteProximaCalibracion);
+                    var fechaProximoMantenimiento = new Date(equipo.fechaProximoMantenimiento).getTime();
+                    var fechaProximaCalibracion = new Date(equipo.fechaProximaCalibracion).getTime();
+                    var tiempoRestanteProximoMantenimiento = fechaProximoMantenimiento - hoy.getTime();
+                    var tiempoRestanteProximaCalibracion = fechaProximaCalibracion - hoy.getTime();
                     var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
                     var mesesRestantesProximaCalibracion = tiempoRestanteProximaCalibracion / (1000 * 60 * 60 * 24 * 30);
 
@@ -49,10 +47,10 @@ window.onload = function () {
                     divNotificaciones.appendChild(divAlertaCantidad);
 
                     var icono = document.createElement("img");
-                    icono.style.width = "64px";
-                    icono.style.height = "64px";
+                    icono.style.width = "32px";
+                    icono.style.height = "32px";
 
-                    var titulo = document.createElement("h3");
+                    var titulo = document.createElement("h6");
                     var textoAlerta = document.createElement("p");
 
                     if (cantidad <= 10 && cantidad > 5) {
@@ -60,7 +58,7 @@ window.onload = function () {
                         divAlertaCantidad.style.marginBottom = "10px";
                         icono.src = contexto + "/img/warning_icon.png";
                         divAlertaCantidad.appendChild(icono);
-                        titulo.textContent = "Alerta de Cantidad";
+                        titulo.textContent = "1ª Alerta de Cantidad";
                         divAlertaCantidad.appendChild(titulo);
                         textoAlerta.textContent = "El fungible " + fungible.id + " tiene 10 unidades o menos.";
                         divAlertaCantidad.appendChild(textoAlerta);
@@ -69,7 +67,7 @@ window.onload = function () {
                         divAlertaCantidad.style.marginBottom = "10px";
                         icono.src = contexto + "/img/warning_icon.png";
                         divAlertaCantidad.appendChild(icono);
-                        titulo.textContent = "Alerta de Cantidad";
+                        titulo.textContent = "2ª Alerta de Cantidad";
                         divAlertaCantidad.appendChild(titulo);
                         textoAlerta.textContent = "El fungible " + fungible.id + " tiene 5 unidades o menos.";
                         divAlertaCantidad.appendChild(textoAlerta);
@@ -78,7 +76,7 @@ window.onload = function () {
                         divAlertaCantidad.style.marginBottom = "10px";
                         icono.src = contexto + "/img/warning_shield_icon.png";
                         divAlertaCantidad.appendChild(icono);
-                        titulo.textContent = "Alerta de Cantidad Urgente";
+                        titulo.textContent = "3ª Alerta de Cantidad Urgente";
                         divAlertaCantidad.appendChild(titulo);
                         textoAlerta.textContent = "El fungible " + fungible.id + " no tiene unidades.";
                         divAlertaCantidad.appendChild(textoAlerta);
@@ -103,8 +101,8 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
     divNotificaciones.appendChild(divAlertaProximoMantenimiento);
 
     var icono = document.createElement("img");
-    icono.style.width = "64px";
-    icono.style.height = "64px";
+    icono.style.width = "32px";
+    icono.style.height = "32px";
     if (color === "orange" || color === "yellow") {
         icono.src = contexto + "/img/warning_icon.png";
     } else if (color === "red") {
@@ -112,8 +110,12 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
     }
     divAlertaProximoMantenimiento.appendChild(icono);
 
-    var titulo = document.createElement("h3");
-    titulo.textContent = "Alerta de Mantenimiento";
+    var titulo = document.createElement("h6");
+    if (color === "yellow" || color === "orange") {
+        titulo.textContent = "Próximo mantenimiento dentro de " + fechaProximoMantenimiento + " meses";
+    } else if (color === "red") {
+        titulo.textContent = "Fecha de próximo mantenimiento pasada";
+    }
     divAlertaProximoMantenimiento.appendChild(titulo);
 
     var textoAlerta = document.createElement("p");
@@ -131,8 +133,8 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     divNotificaciones.appendChild(divAlertaProximaCalibracion);
 
     var icono = document.createElement("img");
-    icono.style.width = "64px";
-    icono.style.height = "64px";
+    icono.style.width = "32px";
+    icono.style.height = "32px";
     if (color === "orange" || color === "yellow") {
         icono.src = contexto + "/img/warning_icon.png";
     } else if (color === "red") {
@@ -140,8 +142,12 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     }
     divAlertaProximaCalibracion.appendChild(icono);
 
-    var titulo = document.createElement("h3");
-    titulo.textContent = "Alerta de Calibración";
+    var titulo = document.createElement("h6");
+    if (color === "yellow" || color === "orange") {
+        titulo.textContent = "Próxima calibración dentro de " + fechaProximaCalibracion + " meses";
+    } else if (color === "red") {
+        titulo.textContent = "Fecha de próxima calibración pasada";
+    }
     divAlertaProximaCalibracion.appendChild(titulo);
 
     var textoAlerta = document.createElement("p");
