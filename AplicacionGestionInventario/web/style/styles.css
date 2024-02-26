@@ -34,6 +34,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin-bottom: 10px;
 }
 
+.divAlertaProximaCalibracion, .divAlertaProximoMantenimiento, .divAlertaCantidad {
+    position: relative; /* Añadir posición relativa para que .cerrar-alerta sea posicionado relativo a este contenedor */
+}
+
+.divAlertaProximaCalibracion .cerrar-alerta, .divAlertaProximoMantenimiento .cerrar-alerta, .divAlertaCantidad .cerrar-alerta {
+    position: absolute; /* Posición absoluta para poder mover el botón libremente dentro del contenedor */
+    bottom: 50px; /* Ajustar la distancia desde la parte superior */
+    right: 5px; /* Ajustar la distancia desde la derecha */
+    cursor: pointer;
+}
+
+
 /* Ocultar las flechas en input numérico */
 input[type="number"] {
     -moz-appearance: none; /* Firefox */
@@ -64,19 +76,11 @@ input[type="number"]::-webkit-outer-spin-button {
     color: white; /* Cambiar el color del texto a blanco */
 }
 
-.first-level-warning-toast {
-  background-color: yellow !important; /* Color de fondo */
-  color: black !important; /* Color del texto */
-}
-
-.second-level-warning-toast {
-  background-color: orange !important; /* Color de fondo */
-  color: white !important; /* Color del texto */
-}
-
-.error-toast {
-  background-color: red !important; /* Color de fondo */
-  color: white !important; /* Color del texto */
+.close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
 }
 
 .dataTables_paginate.paging_simple_numbers {

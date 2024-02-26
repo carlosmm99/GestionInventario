@@ -64,8 +64,21 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     divAlertaProximaCalibracion.id = "divAlertaProximaCalibracionEquipo" + equipo.id;
     divAlertaProximaCalibracion.className = "divAlertaProximaCalibracion";
     divAlertaProximaCalibracion.style.backgroundColor = color;
-    divAlertaProximaCalibracion.style.width = "40%";
+    divAlertaProximaCalibracion.style.width = "45%";
     divNotificaciones.appendChild(divAlertaProximaCalibracion);
+
+    // Crear botón de cierre
+    var spanCerrar = document.createElement("span");
+    spanCerrar.className = "cerrar-alerta"; // Clase para seleccionar fácilmente el botón de cierre
+    spanCerrar.innerHTML = "&times;"; // Icono de cerrar
+
+    // Agregar manejador de evento para cerrar la alerta al hacer clic en el botón
+    spanCerrar.onclick = function () {
+        divAlertaProximaCalibracion.remove(); // Eliminar el div de la alerta
+    };
+
+    // Agregar el botón de cierre al div de la alerta
+    divAlertaProximaCalibracion.appendChild(spanCerrar);
 
     var icono = document.createElement("img");
     icono.style.width = "32px";
@@ -106,8 +119,21 @@ function crearAlertaCantidad(fungible, color, mensaje) {
     divAlertaCantidad.id = "divAlertaCantidadFungible" + fungible.id;
     divAlertaCantidad.className = "divAlertaCantidad";
     divAlertaCantidad.style.backgroundColor = color;
-    divAlertaCantidad.style.width = "40%";
+    divAlertaCantidad.style.width = "45%";
     divNotificaciones.appendChild(divAlertaCantidad);
+
+    // Crear botón de cierre
+    var spanCerrar = document.createElement("span");
+    spanCerrar.className = "cerrar-alerta"; // Clase para seleccionar fácilmente el botón de cierre
+    spanCerrar.innerHTML = "&times;"; // Icono de cerrar
+
+    // Agregar manejador de evento para cerrar la alerta al hacer clic en el botón
+    spanCerrar.onclick = function () {
+        divAlertaCantidad.remove(); // Eliminar el div de la alerta
+    };
+
+    // Agregar el botón de cierre al div de la alerta
+    divAlertaCantidad.appendChild(spanCerrar);
 
     var icono = document.createElement("img");
     icono.style.width = "32px";
@@ -148,8 +174,21 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
     divAlertaProximoMantenimiento.id = "divAlertaProximoMantenimientoEquipo" + equipo.id;
     divAlertaProximoMantenimiento.className = "divAlertaProximoMantenimiento";
     divAlertaProximoMantenimiento.style.backgroundColor = color;
-    divAlertaProximoMantenimiento.style.width = "40%";
+    divAlertaProximoMantenimiento.style.width = "45%";
     divNotificaciones.appendChild(divAlertaProximoMantenimiento);
+
+    // Crear botón de cierre
+    var spanCerrar = document.createElement("span");
+    spanCerrar.className = "cerrar-alerta"; // Clase para seleccionar fácilmente el botón de cierre
+    spanCerrar.innerHTML = "&times;"; // Icono de cerrar
+
+    // Agregar manejador de evento para cerrar la alerta al hacer clic en el botón
+    spanCerrar.onclick = function () {
+        divAlertaProximoMantenimiento.remove(); // Eliminar el div de la alerta
+    };
+
+    // Agregar el botón de cierre al div de la alerta
+    divAlertaProximoMantenimiento.appendChild(spanCerrar);
 
     var icono = document.createElement("img");
     icono.style.width = "32px";
