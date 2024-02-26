@@ -34,11 +34,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin-bottom: 10px;
 }
 
-.divAlertaProximaCalibracion, .divAlertaProximoMantenimiento, .divAlertaCantidad {
+.first-level-warning, .second-level-warning, .third-level-warning {
     position: relative; /* Añadir posición relativa para que .cerrar-alerta sea posicionado relativo a este contenedor */
 }
 
-.divAlertaProximaCalibracion .cerrar-alerta, .divAlertaProximoMantenimiento .cerrar-alerta, .divAlertaCantidad .cerrar-alerta {
+.first-level-warning .cerrar-alerta, .second-level-warning .cerrar-alerta, .third-level-warning .cerrar-alerta {
     position: absolute; /* Posición absoluta para poder mover el botón libremente dentro del contenedor */
     bottom: auto; /* Ajustar la distancia desde la parte superior */
     right: 5px; /* Ajustar la distancia desde la derecha */

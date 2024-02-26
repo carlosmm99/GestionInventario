@@ -62,7 +62,6 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
 
     var divAlertaProximaCalibracion = document.createElement("div");
     divAlertaProximaCalibracion.id = "divAlertaProximaCalibracionEquipo" + equipo.id;
-    divAlertaProximaCalibracion.className = "divAlertaProximaCalibracion";
     divAlertaProximaCalibracion.style.backgroundColor = color;
     divAlertaProximaCalibracion.style.width = "45%";
     divNotificaciones.appendChild(divAlertaProximaCalibracion);
@@ -95,10 +94,13 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     titulo.style.display = "inline-block"; // Añade esta línea para hacer el título inline-block
     if (color === "yellow") {
         titulo.textContent = "Próxima calibración en menos de 6 meses";
+        divAlertaProximaCalibracion.className = "first-level-warning";
     } else if (color === "orange") {
         titulo.textContent = "Próxima calibración en menos de 3 meses";
+        divAlertaProximaCalibracion.className = "second-level-warning";
     } else if (color === "red") {
         titulo.textContent = "Próxima calibración pasada";
+        divAlertaProximaCalibracion.className = "third-level-warning";
     }
     divAlertaProximaCalibracion.appendChild(titulo);
 
@@ -117,7 +119,6 @@ function crearAlertaCantidad(fungible, color, mensaje) {
 
     var divAlertaCantidad = document.createElement("div");
     divAlertaCantidad.id = "divAlertaCantidadFungible" + fungible.id;
-    divAlertaCantidad.className = "divAlertaCantidad";
     divAlertaCantidad.style.backgroundColor = color;
     divAlertaCantidad.style.width = "45%";
     divNotificaciones.appendChild(divAlertaCantidad);
@@ -150,10 +151,13 @@ function crearAlertaCantidad(fungible, color, mensaje) {
     titulo.style.display = "inline-block"; // Añade esta línea para hacer el título inline-block
     if (color === "yellow") {
         titulo.textContent = "Primer aviso";
+        divAlertaCantidad.className = "first-level-warning";
     } else if (color === "orange") {
         titulo.textContent = "Segundo aviso";
+        divAlertaCantidad.className = "second-level-warning";
     } else if (color === "red") {
         titulo.textContent = "Tercer aviso";
+        divAlertaCantidad.className = "third-level-warning";
     }
     divAlertaCantidad.appendChild(titulo);
 
@@ -172,7 +176,6 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
 
     var divAlertaProximoMantenimiento = document.createElement("div");
     divAlertaProximoMantenimiento.id = "divAlertaProximoMantenimientoEquipo" + equipo.id;
-    divAlertaProximoMantenimiento.className = "divAlertaProximoMantenimiento";
     divAlertaProximoMantenimiento.style.backgroundColor = color;
     divAlertaProximoMantenimiento.style.width = "45%";
     divNotificaciones.appendChild(divAlertaProximoMantenimiento);
@@ -205,10 +208,13 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
     titulo.style.display = "inline-block"; // Añade esta línea para hacer el título inline-block
     if (color === "yellow") {
         titulo.textContent = "Próximo mantenimiento en menos de 6 meses";
+        divAlertaProximoMantenimiento.className = "first-level-warning";
     } else if (color === "orange") {
         titulo.textContent = "Próximo mantenimiento en menos de 3 meses";
+        divAlertaProximoMantenimiento.className = "second-level-warning";
     } else if (color === "red") {
         titulo.textContent = "Próximo mantenimiento pasado";
+        divAlertaProximoMantenimiento.className = "third-level-warning";
     }
     divAlertaProximoMantenimiento.appendChild(titulo);
 
