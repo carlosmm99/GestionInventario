@@ -16,8 +16,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modelo.Equipo;
 import modelo.Fungible;
 
@@ -64,8 +62,8 @@ public class ObtenerEquiposYFungibles extends HttpServlet {
         List<Fungible> fungibles = c.leerFungibles();
 
         // Convertir los datos a arrays
-        Equipo[] equiposArray = equipos.toArray(new Equipo[equipos.size()]);
-        Fungible[] fungiblesArray = fungibles.toArray(new Fungible[fungibles.size()]);
+        Equipo[] equiposArray = equipos.toArray(Equipo[]::new);
+        Fungible[] fungiblesArray = fungibles.toArray(Fungible[]::new);
 
         // Construir un objeto JSON que contenga ambos arrays
         JsonObject respuestaJson = new JsonObject();
