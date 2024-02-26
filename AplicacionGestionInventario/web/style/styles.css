@@ -18,11 +18,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .modal-content, .modal-header,
 .modal-body, .row, .col-6,
 .modal-footer,
-#toast-container
+#toast-container,
+#divNotificaciones
 {
     overflow: hidden; /* Oculta el contenido que se desborda */
     max-width: 200vh; /* Establece la altura máxima para el contenido */
     max-height: 200vh; /* Establece la altura máxima para el contenido */
+}
+
+#divNotificaciones div {
+    margin: 0 auto;
+    overflow: hidden;
+    max-width: 200vh;
+    max-height: 200vh;
+    margin-bottom: 10px;
 }
 
 /* Ocultar las flechas en input numérico */
