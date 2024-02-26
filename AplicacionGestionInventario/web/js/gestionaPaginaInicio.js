@@ -13,20 +13,12 @@ window.onload = function () {
                 var hoy = new Date();
 
                 equipos.forEach(function (equipo) {
-                    var fechaProximoMantenimiento = new Date(equipo.fechaProximoMantenimiento).getTime();
                     var fechaProximaCalibracion = new Date(equipo.fechaProximaCalibracion).getTime();
-                    var tiempoRestanteProximoMantenimiento = fechaProximoMantenimiento - hoy.getTime();
                     var tiempoRestanteProximaCalibracion = fechaProximaCalibracion - hoy.getTime();
-                    var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
                     var mesesRestantesProximaCalibracion = tiempoRestanteProximaCalibracion / (1000 * 60 * 60 * 24 * 30);
-
-                    if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
-                        crearAlertaMantenimiento(equipo, "yellow", "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
-                    } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
-                        crearAlertaMantenimiento(equipo, "orange", "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
-                    } else if (mesesRestantesProximoMantenimiento < 0) {
-                        crearAlertaMantenimiento(equipo, "red", "El equipo " + equipo.nombre + " necesita mantenimiento urgente.");
-                    }
+                    var fechaProximoMantenimiento = new Date(equipo.fechaProximoMantenimiento).getTime();
+                    var tiempoRestanteProximoMantenimiento = fechaProximoMantenimiento - hoy.getTime();
+                    var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
 
                     if (mesesRestantesProximaCalibracion < 6 && mesesRestantesProximaCalibracion >= 3) {
                         crearAlertaCalibracion(equipo, "yellow", "El equipo " + equipo.nombre + " necesita calibración en menos de 6 meses.");
@@ -34,6 +26,14 @@ window.onload = function () {
                         crearAlertaCalibracion(equipo, "orange", "El equipo " + equipo.nombre + " necesita calibración en menos de 3 meses.");
                     } else if (mesesRestantesProximaCalibracion < 0) {
                         crearAlertaCalibracion(equipo, "red", "El equipo " + equipo.nombre + " necesita calibración urgente.");
+                    }
+
+                    if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
+                        crearAlertaMantenimiento(equipo, "yellow", "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
+                    } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
+                        crearAlertaMantenimiento(equipo, "orange", "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
+                    } else if (mesesRestantesProximoMantenimiento < 0) {
+                        crearAlertaMantenimiento(equipo, "red", "El equipo " + equipo.nombre + " necesita mantenimiento urgente.");
                     }
                 });
 
