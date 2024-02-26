@@ -40,8 +40,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 .divAlertaProximaCalibracion .cerrar-alerta, .divAlertaProximoMantenimiento .cerrar-alerta, .divAlertaCantidad .cerrar-alerta {
     position: absolute; /* Posición absoluta para poder mover el botón libremente dentro del contenedor */
-    bottom: 50px; /* Ajustar la distancia desde la parte superior */
-    right: 5px; /* Ajustar la distancia desde la derecha */
+    bottom: 55px; /* Ajustar la distancia desde la parte inferior */
+    left: 490px; /* Ajustar la distancia desde la izquierda */
     cursor: pointer;
 }
 
