@@ -49,6 +49,42 @@ window.onload = function () {
                     }
                 });
 
+                // Agrupar los divs creados por color en tres listas diferentes
+                var yellowAlerts = document.querySelectorAll('.first-level-warning, .second-level-warning');
+                var orangeAlerts = document.querySelectorAll('.second-level-warning, .third-level-warning');
+                var redAlerts = document.querySelectorAll('.third-level-warning');
+
+                // Convertir las listas NodeList a Arrays para usar el método sort()
+                yellowAlerts = Array.from(yellowAlerts);
+                orangeAlerts = Array.from(orangeAlerts);
+                redAlerts = Array.from(redAlerts);
+
+                // Ordenar las listas según el color
+                redAlerts.sort(function (a, b) {
+                    return getColorIndex(a) - getColorIndex(b);
+                });
+                orangeAlerts.sort(function (a, b) {
+                    return getColorIndex(a) - getColorIndex(b);
+                });
+                yellowAlerts.sort(function (a, b) {
+                    return getColorIndex(a) - getColorIndex(b);
+                });
+
+                // Vaciar el contenedor de notificaciones
+                var divNotificaciones = document.getElementById("divNotificaciones");
+                divNotificaciones.innerHTML = '';
+
+                // Agregar los divs ordenados al contenedor
+                redAlerts.forEach(function (alert) {
+                    divNotificaciones.appendChild(alert);
+                });
+                orangeAlerts.forEach(function (alert) {
+                    divNotificaciones.appendChild(alert);
+                });
+                yellowAlerts.forEach(function (alert) {
+                    divNotificaciones.appendChild(alert);
+                });
+
             } else {
                 console.error('Hubo un error en la solicitud.');
             }
@@ -105,7 +141,6 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     divAlertaProximaCalibracion.appendChild(titulo);
 
     // Añade un salto de línea después del título
-
     var br = document.createElement("br");
     divAlertaProximaCalibracion.appendChild(br);
 
@@ -162,7 +197,6 @@ function crearAlertaCantidad(fungible, color, mensaje) {
     divAlertaCantidad.appendChild(titulo);
 
     // Añade un salto de línea después del título
-
     var br = document.createElement("br");
     divAlertaCantidad.appendChild(br);
 
@@ -219,11 +253,23 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
     divAlertaProximoMantenimiento.appendChild(titulo);
 
     // Añade un salto de línea después del título
-
     var br = document.createElement("br");
     divAlertaProximoMantenimiento.appendChild(br);
 
     var textoAlerta = document.createElement("p");
     textoAlerta.textContent = mensaje;
     divAlertaProximoMantenimiento.appendChild(textoAlerta);
+}
+
+// Función para obtener el índice del color
+function getColorIndex(element) {
+    var color = element.style.backgroundColor;
+    if (color === "red") {
+        return 2;
+    } else if (color === "orange") {
+        return 1;
+    } else if (color === "yellow") {
+        return 0;
+    }
+    return -1; // Si no es ninguno de los colores definidos
 }
