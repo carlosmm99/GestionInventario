@@ -22,15 +22,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 #divNotificaciones
 {
     overflow: hidden; /* Oculta el contenido que se desborda */
-    max-width: 200vh; /* Establece la altura máxima para el contenido */
-    max-height: 200vh; /* Establece la altura máxima para el contenido */
+    /*max-width: 200vh; /* Establece la anchura máxima para el contenido */
+    /*max-height: 200vh; /* Establece la altura máxima para el contenido */
 }
 
 #divNotificaciones div {
     margin: 0 auto;
     overflow: hidden;
-    max-width: 200vh;
-    max-height: 200vh;
+/*    max-width: 200vh;
+    max-height: 200vh;*/
     margin-bottom: 10px;
 }
 
