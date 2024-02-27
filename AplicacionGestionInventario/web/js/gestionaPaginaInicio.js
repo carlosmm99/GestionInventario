@@ -50,14 +50,14 @@ window.onload = function () {
                 });
 
                 // Agrupar los divs creados por color en tres listas diferentes
-                var yellowAlerts = document.querySelectorAll('.first-level-warning, .second-level-warning');
-                var orangeAlerts = document.querySelectorAll('.second-level-warning, .third-level-warning');
+                var yellowAlerts = document.querySelectorAll('.first-level-warning');
+                var orangeAlerts = document.querySelectorAll('.second-level-warning');
                 var redAlerts = document.querySelectorAll('.third-level-warning');
 
                 // Convertir las listas NodeList a Arrays para usar el método sort()
-                yellowAlerts = Array.from(yellowAlerts);
-                orangeAlerts = Array.from(orangeAlerts);
                 redAlerts = Array.from(redAlerts);
+                orangeAlerts = Array.from(orangeAlerts);
+                yellowAlerts = Array.from(yellowAlerts);
 
                 // Ordenar las listas según el color
                 redAlerts.sort(function (a, b) {
