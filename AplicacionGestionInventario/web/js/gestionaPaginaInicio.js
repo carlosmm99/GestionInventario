@@ -21,19 +21,19 @@ window.onload = function () {
                     var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
 
                     if (mesesRestantesProximaCalibracion < 6 && mesesRestantesProximaCalibracion >= 3) {
-                        crearAlertaCalibracion(equipo, "yellow", "El equipo " + equipo.nombre + " necesita calibración en menos de 6 meses.");
+                        crearAlertaCalibracion(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 6 meses.");
                     } else if (mesesRestantesProximaCalibracion < 3 && mesesRestantesProximaCalibracion >= 0) {
-                        crearAlertaCalibracion(equipo, "orange", "El equipo " + equipo.nombre + " necesita calibración en menos de 3 meses.");
+                        crearAlertaCalibracion(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 3 meses.");
                     } else if (mesesRestantesProximaCalibracion < 0) {
-                        crearAlertaCalibracion(equipo, "red", "El equipo " + equipo.nombre + " necesita calibración urgente.");
+                        crearAlertaCalibracion(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración urgente.");
                     }
 
                     if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
-                        crearAlertaMantenimiento(equipo, "yellow", "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
+                        crearAlertaMantenimiento(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
                     } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
-                        crearAlertaMantenimiento(equipo, "orange", "El equipo " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
+                        crearAlertaMantenimiento(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 3 meses.");
                     } else if (mesesRestantesProximoMantenimiento < 0) {
-                        crearAlertaMantenimiento(equipo, "red", "El equipo " + equipo.nombre + " necesita mantenimiento urgente.");
+                        crearAlertaMantenimiento(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración urgente.");
                     }
                 });
 
@@ -41,11 +41,11 @@ window.onload = function () {
                     var cantidad = fungible.cantidad;
 
                     if (cantidad <= 10 && cantidad > 5) {
-                        crearAlertaCantidad(fungible, "yellow", "El fungible con id " + fungible.id + " tiene 10 unidades o menos");
+                        crearAlertaCantidad(fungible, "yellow", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 10 unidades o menos.");
                     } else if (cantidad <= 5 && cantidad > 0) {
-                        crearAlertaCantidad(fungible, "orange", "El fungible con id " + fungible.id + " tiene 5 unidades o menos");
+                        crearAlertaCantidad(fungible, "orange", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 5 unidades o menos.");
                     } else if (cantidad === 0) {
-                        crearAlertaCantidad(fungible, "red", "El fungible con id " + fungible.id + " no tiene unidades");
+                        crearAlertaCantidad(fungible, "red", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " no tiene unidades.");
                     }
                 });
 
@@ -191,7 +191,7 @@ function crearAlertaCantidad(fungible, color, mensaje) {
         titulo.textContent = "Quedan 5 unidades o menos";
         divAlertaCantidad.className = "second-level-warning";
     } else if (color === "red") {
-        titulo.textContent = "No quedan unidades";
+        titulo.textContent = "Sin unidades";
         divAlertaCantidad.className = "third-level-warning";
     }
     divAlertaCantidad.appendChild(titulo);
