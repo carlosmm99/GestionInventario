@@ -185,13 +185,13 @@ function crearAlertaCantidad(fungible, color, mensaje) {
     var titulo = document.createElement("h6");
     titulo.style.display = "inline-block"; // Añade esta línea para hacer el título inline-block
     if (color === "yellow") {
-        titulo.textContent = "Primer aviso";
+        titulo.textContent = "Quedan 10 unidades o menos";
         divAlertaCantidad.className = "first-level-warning";
     } else if (color === "orange") {
-        titulo.textContent = "Segundo aviso";
+        titulo.textContent = "Quedan 5 unidades o menos";
         divAlertaCantidad.className = "second-level-warning";
     } else if (color === "red") {
-        titulo.textContent = "Tercer aviso";
+        titulo.textContent = "No quedan unidades";
         divAlertaCantidad.className = "third-level-warning";
     }
     divAlertaCantidad.appendChild(titulo);
