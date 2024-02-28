@@ -5,6 +5,8 @@
 
 /* global ultimoNumFungible, tablaFungibles, cantidadFungibles, usuario, rol */
 
+var id = localStorage.getItem('id');
+
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaMarca = $("#tablaFungibles thead th#celdaEncabezadoMarcaFungible").index();
@@ -87,6 +89,22 @@ $(document).ready(function () {
         order: []
     });
 
+    // Verificar si id no es nulo
+    if (id !== null) {
+        // Buscar la fila con el id correspondiente en la tabla
+        var filaEditar = $("#tablaFungibles tbody tr[data-idfungible='" + id + "']");
+        // Verificar si se encontró la fila
+        if (filaEditar.length > 0) {
+            // Configurar el modal para editar la fila encontrada
+            configurarModal(filaEditar, 'Editar');
+            // Mostrar el modal
+            $('#modalFungibles').modal('show');
+            $("[name='btnEditar']").on("click", function () {
+                localStorage.removeItem('id');
+            });
+        }
+    }
+
     $("#btnAgregarFungible").on("click", function () {
         var accion = 'Agregar';
         configurarModal(null, accion);
@@ -143,7 +161,8 @@ $(document).ready(function () {
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
             $(".modal-title").text("Agregar fungible");
-            $("#tituloEliminar").hide();
+            $("#titulo").hide();
+            $("#titulo").text("");
 
             $("#filasFormulario #columnaNumFungible #txtNumFungible").val(ultimoNumFungible);
             $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
@@ -181,7 +200,8 @@ $(document).ready(function () {
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Información del fungible");
-                $("#tituloEliminar").hide();
+                $("#titulo").hide();
+                $("#titulo").text("");
 
                 $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
                 $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
@@ -203,7 +223,8 @@ $(document).ready(function () {
             } else if (accion === 'Editar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Editar fungible");
-                $("#tituloEliminar").hide();
+                $("#titulo").hide();
+                $("#titulo").text("");
 
                 if (usuario !== null) {
                     if (rol === 1) {
@@ -236,7 +257,8 @@ $(document).ready(function () {
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Confirmar acción");
-                $("#tituloEliminar").show();
+                $("#titulo").show();
+                $("#titulo").text("¿Seguro que deseas eliminar este fungible?");
 
                 $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
                 $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);

@@ -1,6 +1,7 @@
 /* global contexto */
 
 window.onload = function () {
+    localStorage.removeItem('id');
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'ObtenerEquiposYFungibles', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -146,6 +147,11 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
 
     var textoAlerta = document.createElement("p");
     textoAlerta.textContent = mensaje;
+    textoAlerta.onclick = function () {
+        window.location.href = contexto + "/GestionEquipos";
+        id = equipo.id;
+        localStorage.setItem('id', equipo.id);
+    };
     divAlertaProximaCalibracion.appendChild(textoAlerta);
 }
 
@@ -202,6 +208,11 @@ function crearAlertaCantidad(fungible, color, mensaje) {
 
     var textoAlerta = document.createElement("p");
     textoAlerta.textContent = mensaje;
+    textoAlerta.onclick = function () {
+        window.location.href = contexto + "/GestionFungibles";
+        localStorage.setItem('id', fungible.id);
+
+    };
     divAlertaCantidad.appendChild(textoAlerta);
 }
 
@@ -258,6 +269,10 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
 
     var textoAlerta = document.createElement("p");
     textoAlerta.textContent = mensaje;
+    textoAlerta.onclick = function () {
+        window.location.href = contexto + "/GestionEquipos";
+        localStorage.setItem('id', equipo.id);
+    };
     divAlertaProximoMantenimiento.appendChild(textoAlerta);
 }
 

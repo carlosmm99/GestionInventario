@@ -139,7 +139,8 @@ $(document).ready(function () {
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
             $(".modal-title").text("Agregar herramienta");
-            $("#tituloEliminar").hide();
+            $("#titulo").hide();
+            $("#titulo").text("");
 
             $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(ultimoNumHerramienta);
             $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val("");
@@ -176,7 +177,8 @@ $(document).ready(function () {
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Información de la herramienta");
-                $("#tituloEliminar").hide();
+                $("#titulo").hide();
+                $("#titulo").text("");
 
                 $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
                 $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
@@ -197,7 +199,8 @@ $(document).ready(function () {
             } else if (accion === 'Editar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Editar herramienta");
-                $("#tituloEliminar").hide();
+                $("#titulo").hide();
+                $("#titulo").text("");
 
                 $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", false);
                 $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", false);
@@ -218,7 +221,8 @@ $(document).ready(function () {
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Confirmar acción");
-                $("#tituloEliminar").show();
+                $("#titulo").show();
+                $("#titulo").text("¿Seguro que deseas eliminar esta herramienta?");
 
                 $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
                 $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);

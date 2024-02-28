@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumEquipo, tablaEquipos, cantidadEquipos */
+/* global ultimoNumEquipo, tablaEquipos, cantidadEquipos, usuario, rol */
+
+var id = localStorage.getItem('id');
 
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
@@ -87,6 +89,22 @@ $(document).ready(function () {
         order: []
     });
 
+    // Verificar si id no es nulo
+    if (id !== null) {
+        // Buscar la fila con el id correspondiente en la tabla
+        var filaEditar = $("#tablaEquipos tbody tr[data-idequipo='" + id + "']");
+        // Verificar si se encontró la fila
+        if (filaEditar.length > 0) {
+            // Configurar el modal para editar la fila encontrada
+            configurarModal(filaEditar, 'Editar');
+            // Mostrar el modal
+            $("#modalEquipos").modal('show');
+            $("[name='btnEditar']").on("click", function () {
+                localStorage.removeItem('id');
+            });
+        }
+    }
+
     // Configurar el modal al hacer clic en el botón "Agregar"
     $("#btnAgregarEquipo").on("click", function () {
         var accion = 'Agregar';
@@ -125,7 +143,8 @@ $(document).ready(function () {
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
             $(".modal-title").text("Agregar equipo");
-            $("#tituloEliminar").hide();
+            $("#titulo").hide();
+            $("#titulo").text("");
 
             $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
             $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").val("");
@@ -175,7 +194,8 @@ $(document).ready(function () {
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Información del equipo");
-                $("#tituloEliminar").hide();
+                $("#titulo").hide();
+                $("#titulo").text("");
 
                 $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
                 $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
@@ -200,32 +220,63 @@ $(document).ready(function () {
             } else if (accion === 'Editar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Editar equipo");
-                $("#tituloEliminar").hide();
 
-                $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", false);
-                $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", false);
-                $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", false);
-                $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", false);
-                $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").prop("readonly", false);
-                $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").prop("readonly", false);
-                $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").prop("readonly", false);
-                $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", false);
-                $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
-                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+                if (usuario !== null) {
+                    if (rol === 1) {
+                        $("#titulo").hide();
+                        $("#titulo").text("");
 
-                // Poner visibles los campos
-                $("#filasFormulario").show();
+                        $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", false);
+                        $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", false);
+                        $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", false);
+                        $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", false);
+                        $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").prop("readonly", false);
+                        $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").prop("readonly", false);
+                        $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").prop("readonly", false);
+                        $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", false);
+                        $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
+                        $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
 
-                $("[name='btnAgregar']").hide();
-                $("[name='btnAgregar']").prop("disabled", true);
-                $("[name='btnEditar']").show();
-                $("[name='btnEditar']").prop("disabled", false);
-                $("[name='btnEliminar']").hide();
-                $("[name='btnEliminar']").prop("disabled", true);
+                        // Poner visibles los campos
+                        $("#filasFormulario").show();
+
+                        $("[name='btnAgregar']").hide();
+                        $("[name='btnAgregar']").prop("disabled", true);
+                        $("[name='btnEditar']").show();
+                        $("[name='btnEditar']").prop("disabled", false);
+                        $("[name='btnEliminar']").hide();
+                        $("[name='btnEliminar']").prop("disabled", true);
+                    } else {
+                        $("#titulo").show();
+                        $("#titulo").text("Para editar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
+
+                        $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
+                        $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
+                        $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", true);
+                        $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", true);
+                        $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").prop("readonly", true);
+                        $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").prop("readonly", true);
+                        $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").prop("readonly", true);
+                        $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
+                        $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                        $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+
+                        // Poner visibles los campos
+                        $("#filasFormulario").hide();
+
+                        $("[name='btnAgregar']").hide();
+                        $("[name='btnAgregar']").prop("disabled", true);
+                        $("[name='btnEditar']").hide();
+                        $("[name='btnEditar']").prop("disabled", true);
+                        $("[name='btnEliminar']").hide();
+                        $("[name='btnEliminar']").prop("disabled", true);
+                    }
+                }
             } else if (accion === 'Eliminar') {// Cambiar el texto del título del modal
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Confirmar acción");
-                $("#tituloEliminar").show();
+                $("#titulo").show();
+                $("#titulo").text("¿Seguro que deseas eliminar este equipo?");
 
                 $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
                 $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
