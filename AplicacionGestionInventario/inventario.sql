@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-02-2024 a las 08:26:29
+-- Tiempo de generación: 28-02-2024 a las 13:11:43
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -36,17 +36,18 @@ CREATE TABLE `equipos` (
   `fecha_ultima_calibracion` date NOT NULL,
   `fecha_proxima_calibracion` date NOT NULL,
   `fecha_ultimo_mantenimiento` date NOT NULL,
-  `fecha_proximo_mantenimiento` date NOT NULL
+  `fecha_proximo_mantenimiento` date NOT NULL,
+  `imagen` blob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `equipos`
 --
 
-INSERT INTO `equipos` (`id`, `num_inventario`, `nombre`, `fecha_compra`, `fabricante`, `fecha_ultima_calibracion`, `fecha_proxima_calibracion`, `fecha_ultimo_mantenimiento`, `fecha_proximo_mantenimiento`) VALUES
-(1, 123456, 'Equipo1', '2023-01-01', 'Fabricante1', '2023-01-01', '2024-01-01', '2022-10-01', '2024-01-01'),
-(2, 789012, 'Equipo2', '2023-02-01', 'Fabricante2', '2023-02-01', '2024-02-01', '2022-11-01', '2024-02-01'),
-(3, 798124, 'Equipo3', '2024-02-13', 'HP', '2024-02-06', '2024-11-30', '2022-12-01', '2024-03-01');
+INSERT INTO `equipos` (`id`, `num_inventario`, `nombre`, `fecha_compra`, `fabricante`, `fecha_ultima_calibracion`, `fecha_proxima_calibracion`, `fecha_ultimo_mantenimiento`, `fecha_proximo_mantenimiento`, `imagen`) VALUES
+(1, 123456, 'Equipo1', '2023-01-01', 'Fabricante1', '2023-01-01', '2024-01-01', '2022-10-01', '2024-01-01', NULL),
+(2, 789012, 'Equipo2', '2023-02-01', 'Fabricante2', '2023-02-01', '2024-02-01', '2022-11-01', '2024-02-01', NULL),
+(3, 798124, 'Equipo3', '2024-02-13', 'HP', '2024-02-06', '2024-11-30', '2022-12-01', '2024-03-01', NULL);
 
 -- --------------------------------------------------------
 
@@ -113,18 +114,19 @@ CREATE TABLE `fungibles` (
   `marca` varchar(255) NOT NULL,
   `modelo` varchar(255) NOT NULL,
   `tamanyo` varchar(255) NOT NULL,
-  `cantidad` int(11) NOT NULL
+  `cantidad` int(11) NOT NULL,
+  `imagen` blob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `fungibles`
 --
 
-INSERT INTO `fungibles` (`id`, `marca`, `modelo`, `tamanyo`, `cantidad`) VALUES
-(1, 'Marca1', 'Modelo1', 'Tamano1', 25),
-(2, 'Marca2', 'Modelo2', 'Tamano2', 8),
-(3, 'Marca3', 'Modelo3', 'Tamano3', 4),
-(4, 'Prueba', 'Prueba', '250x250', 0);
+INSERT INTO `fungibles` (`id`, `marca`, `modelo`, `tamanyo`, `cantidad`, `imagen`) VALUES
+(1, 'Marca1', 'Modelo1', 'Tamano1', 25, NULL),
+(2, 'Marca2', 'Modelo2', 'Tamano2', 8, NULL),
+(3, 'Marca3', 'Modelo3', 'Tamano3', 4, NULL),
+(4, 'Prueba', 'Prueba', '250x250', 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -159,17 +161,18 @@ CREATE TABLE `herramientas` (
   `marca` varchar(255) NOT NULL,
   `modelo` varchar(255) NOT NULL,
   `fabricante` varchar(255) NOT NULL,
-  `fecha_compra` date NOT NULL
+  `fecha_compra` date NOT NULL,
+  `imagen` blob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `herramientas`
 --
 
-INSERT INTO `herramientas` (`id`, `marca`, `modelo`, `fabricante`, `fecha_compra`) VALUES
-(1, 'Marca1', 'Modelo1', 'Fabricante1', '2023-01-01'),
-(2, 'Marca2', 'Modelo2', 'Fabricante2', '2023-02-01'),
-(3, 'Marca3', 'Modelo3', 'Fabricante3', '2023-03-01');
+INSERT INTO `herramientas` (`id`, `marca`, `modelo`, `fabricante`, `fecha_compra`, `imagen`) VALUES
+(1, 'Marca1', 'Modelo1', 'Fabricante1', '2023-01-01', NULL),
+(2, 'Marca2', 'Modelo2', 'Fabricante2', '2023-02-01', NULL),
+(3, 'Marca3', 'Modelo3', 'Fabricante3', '2023-03-01', NULL);
 
 -- --------------------------------------------------------
 
