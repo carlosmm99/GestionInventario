@@ -99,7 +99,12 @@ $(document).ready(function () {
             configurarModal(filaEditar, 'Editar');
             // Mostrar el modal
             $('#modalFungibles').modal('show');
-            $("[name='btnEditar']").on("click", function () {
+            /**
+             * Configurar manejo de eventos click para que, cuando se hace clic
+             * en el botón de editar o en el de cancelar, se elimine un elemento
+             * específico del almacenamiento local.
+             */
+            $("[name='btnEditar'], [name='btnCancelar']").on("click", function () {
                 localStorage.removeItem('id');
             });
         }
