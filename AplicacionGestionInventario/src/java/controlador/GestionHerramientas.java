@@ -219,7 +219,7 @@ public class GestionHerramientas extends HttpServlet {
         request.setAttribute("ultimoNumHerramienta", ultimoNumHerramienta);
         StringBuilder formHTML = new StringBuilder();
 
-        formHTML.append("<h6 id=\"tituloEliminar\">¿Seguro que deseas eliminar esta herramienta?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
+        formHTML.append("<h6 id=\"titulo\">¿Seguro que deseas eliminar esta herramienta?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
                 .append("<div class=\"row\" id=\"filasFormulario\">")
                 // Columna nº de herramienta
                 .append("<div class=\"col-6\" id=\"columnaNumHerramienta\" style=\"display: none;\">")

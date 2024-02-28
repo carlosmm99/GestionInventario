@@ -223,7 +223,7 @@ public class GestionEquipos extends HttpServlet {
         request.setAttribute("ultimoNumEquipo", ultimoNumEquipo);
         StringBuilder formHTML = new StringBuilder();
 
-        formHTML.append("<h6 id=\"tituloEliminar\">¿Seguro que deseas eliminar este equipo?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
+        formHTML.append("<h6 id=\"titulo\"></h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
                 .append("<div class=\"row\" id=\"filasFormulario\">")
                 // Columna id de equipo
                 .append("<div class=\"col-6\" id=\"columnaNumEquipo\">")
