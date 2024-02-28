@@ -82,6 +82,8 @@
         <script>
             var ultimoNumEquipo = <%= ultimoNumEquipo %>;
             var cantidadEquipos = <%= cantidadEquipos %>;
+            var usuario = "<%= (String) request.getSession().getAttribute("usuario") %>";
+            var rol = <%= (Integer) request.getSession().getAttribute("rol") %>
         </script>
         <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginaEquipos.js"></script>
     </body>
