@@ -7,7 +7,7 @@
 
 var id = localStorage.getItem('id');
 
-$(document).keydown(function(event) {
+$(document).keydown(function (event) {
     if (event.which === 27) { // Verificar si la tecla presionada es la tecla de escape (código 27)
         localStorage.removeItem('id');
     }
@@ -105,18 +105,10 @@ $(document).ready(function () {
             configurarModal(filaEditar, 'Editar');
             // Mostrar el modal
             $('#modalFungibles').modal('show');
-            /**
-             * Configurar manejo de eventos click para que, cuando se hace clic
-             * en el botón de editar o en el de cancelar, se elimine un elemento
-             * específico del almacenamiento local.
-             */
-            $("[name='btnEditar'], [name='btnCancelar'], .btn-close").on("click", function () {
-                localStorage.removeItem('id');
-            });
-
-            $("body, .container").on("click", function (event) {
-                // Verificar si el clic proviene del botón izquierdo del ratón
-                if (event.which === 1) {
+            $("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container").on("click", function (event) {
+                // Verificar si el clic proviene del botón izquierdo del ratón (event.which === 1)
+                // o si es un clic en cualquiera de los elementos seleccionados
+                if (event.which === 1 || $(event.target).is("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container")) {
                     localStorage.removeItem('id');
                 }
             });

@@ -105,18 +105,10 @@ $(document).ready(function () {
             configurarModal(filaEditar, 'Editar');
             // Mostrar el modal
             $("#modalEquipos").modal('show');
-            /**
-             * Configurar manejo de eventos click para que, cuando se hace clic
-             * en el botón de editar o en el de cancelar, se elimine un elemento
-             * específico del almacenamiento local.
-             */
-            $("[name='btnEditar'], [name='btnCancelar'], .btn-close").on("click", function () {
-                localStorage.removeItem('id');
-            });
-
-            $("body, .container").on("click", function (event) {
-                // Verificar si el clic proviene del botón izquierdo del ratón
-                if (event.which === 1) {
+            $("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container").on("click", function (event) {
+                // Verificar si el clic proviene del botón izquierdo del ratón (event.which === 1)
+                // o si es un clic en cualquiera de los elementos seleccionados
+                if (event.which === 1 || $(event.target).is("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container")) {
                     localStorage.removeItem('id');
                 }
             });
