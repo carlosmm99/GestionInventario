@@ -7,6 +7,12 @@
 
 var id = localStorage.getItem('id');
 
+$(document).keydown(function(event) {
+    if (event.which === 27) { // Verificar si la tecla presionada es la tecla de escape (código 27)
+        localStorage.removeItem('id');
+    }
+});
+
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaMarca = $("#tablaFungibles thead th#celdaEncabezadoMarcaFungible").index();
@@ -104,8 +110,15 @@ $(document).ready(function () {
              * en el botón de editar o en el de cancelar, se elimine un elemento
              * específico del almacenamiento local.
              */
-            $("[name='btnEditar'], [name='btnCancelar']").on("click", function () {
+            $("[name='btnEditar'], [name='btnCancelar'], .btn-close").on("click", function () {
                 localStorage.removeItem('id');
+            });
+
+            $("body, .container").on("click", function (event) {
+                // Verificar si el clic proviene del botón izquierdo del ratón
+                if (event.which === 1) {
+                    localStorage.removeItem('id');
+                }
             });
         }
     }
