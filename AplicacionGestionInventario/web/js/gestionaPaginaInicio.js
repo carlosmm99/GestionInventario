@@ -31,9 +31,9 @@ window.onload = function () {
                     if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
                         crearAlertaMantenimiento(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
                     } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
-                        crearAlertaMantenimiento(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 3 meses.");
+                        crearAlertaMantenimiento(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
                     } else if (mesesRestantesProximoMantenimiento < 0) {
-                        crearAlertaMantenimiento(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración urgente.");
+                        crearAlertaMantenimiento(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento urgente.");
                     }
                 });
 
