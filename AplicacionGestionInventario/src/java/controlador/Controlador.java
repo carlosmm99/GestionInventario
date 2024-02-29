@@ -96,7 +96,8 @@ public class Controlador {
                 Date fechaProximaCalibracion = rs.getDate("fecha_proxima_calibracion");
                 Date fechaUltimoMantenimiento = rs.getDate("fecha_ultimo_mantenimiento");
                 Date fechaProximoMantenimiento = rs.getDate("fecha_proximo_mantenimiento");
-                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento));
+                String foto = rs.getString("foto");
+                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento, foto));
             }
             return equipos;
         } catch (SQLException ex) {
@@ -174,8 +175,8 @@ public class Controlador {
         }
 
         int filasAfectadas;
-        String sql = "INSERT INTO equipos (num_inventario, nombre, fecha_compra, fabricante, fecha_ultima_calibracion, fecha_proxima_calibracion, fecha_ultimo_mantenimiento, fecha_proximo_mantenimiento)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO equipos (num_inventario, nombre, fecha_compra, fabricante, fecha_ultima_calibracion, fecha_proxima_calibracion, fecha_ultimo_mantenimiento, fecha_proximo_mantenimiento, foto)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -190,6 +191,7 @@ public class Controlador {
             ps.setDate(6, new Date(e.getFechaProximaCalibracion().getTime()));
             ps.setDate(7, new Date(e.getFechaUltimoMantenimiento().getTime()));
             ps.setDate(8, new Date(e.getFechaProximoMantenimiento().getTime()));
+            ps.setString(9, e.getFoto());
             filasAfectadas = ps.executeUpdate();
 
             // Obtener el ID del equipo recién insertado
@@ -304,7 +306,7 @@ public class Controlador {
             ps.setInt(1, idEquipo);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Equipo(idEquipo, rs.getInt("num_inventario"), rs.getString("nombre"), rs.getDate("fecha_compra"), rs.getString("fabricante"), rs.getDate("fecha_ultima_calibracion"), rs.getDate("fecha_proxima_calibracion"), rs.getDate("fecha_ultimo_mantenimiento"), rs.getDate("fecha_proximo_mantenimiento"));
+                return new Equipo(idEquipo, rs.getInt("num_inventario"), rs.getString("nombre"), rs.getDate("fecha_compra"), rs.getString("fabricante"), rs.getDate("fecha_ultima_calibracion"), rs.getDate("fecha_proxima_calibracion"), rs.getDate("fecha_ultimo_mantenimiento"), rs.getDate("fecha_proximo_mantenimiento"), rs.getString("foto"));
             }
         } catch (SQLException ex) {
             return null;
@@ -765,7 +767,8 @@ public class Controlador {
                 Date fechaProximaCalibracion = rs.getDate("e.fecha_proxima_calibracion");
                 Date fechaUltimoMantenimiento = rs.getDate("e.fecha_ultimo_mantenimiento");
                 Date fechaProximoMantenimiento = rs.getDate("e.fecha_proximo_mantenimiento");
-                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento));
+                String foto = rs.getString("foto");
+                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento, foto));
             }
             return equipos;
         } catch (SQLException ex) {
@@ -823,7 +826,8 @@ public class Controlador {
                 Date fechaProximaCalibracion = rs.getDate("e.fecha_proxima_calibracion");
                 Date fechaUltimoMantenimiento = rs.getDate("e.fecha_ultimo_mantenimiento");
                 Date fechaProximoMantenimiento = rs.getDate("e.fecha_proximo_mantenimiento");
-                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento));
+                String foto = rs.getString("e.foto");
+                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento, foto));
             }
             return equipos;
         } catch (SQLException ex) {

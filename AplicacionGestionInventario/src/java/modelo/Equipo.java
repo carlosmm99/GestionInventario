@@ -25,11 +25,12 @@ public class Equipo {
     private Date fechaProximoMantenimiento;
     private List<Fungible> fungibles;
     private List<Herramienta> herramientas;
+    private String foto;
 
     public Equipo() {
     }
 
-    public Equipo(int id, int numInventario, String nombre, Date fechaCompra, String fabricante, Date fechaUltimaCalibracion, Date fechaProximaCalibracion, Date fechaUltimoMantenimiento, Date fechaProximoMantenimiento) {
+    public Equipo(int id, int numInventario, String nombre, Date fechaCompra, String fabricante, Date fechaUltimaCalibracion, Date fechaProximaCalibracion, Date fechaUltimoMantenimiento, Date fechaProximoMantenimiento, String foto) {
         this.id = id;
         this.numInventario = numInventario;
         this.nombre = nombre;
@@ -41,6 +42,7 @@ public class Equipo {
         this.fechaProximoMantenimiento = fechaProximoMantenimiento;
         this.fungibles = new ArrayList<>();
         this.herramientas = new ArrayList<>();
+        this.foto = foto;
     }
 
     public int getId() {
@@ -129,6 +131,14 @@ public class Equipo {
 
     public void setHerramientas(List<Herramienta> herramientas) {
         this.herramientas = herramientas;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     @Override
