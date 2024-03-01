@@ -115,6 +115,19 @@ $(document).ready(function () {
         }
     }
 
+
+    $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").change(function () {
+        var file = this.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgEquipo').attr('src', e.target.result);
+                $('#txtFotoEquipo').val(file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     // Configurar el modal al hacer clic en el botón "Agregar"
     $("#btnAgregarEquipo").on("click", function () {
         var accion = 'Agregar';
@@ -168,6 +181,8 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFungibles #selectFungibles").val("");
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
             $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").val("");
+            $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
+            $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
 
             $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", false);
             $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", false);
@@ -179,7 +194,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", false);
             $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
             $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
-            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", false);
+            $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", false);
 
             // Poner visibles los campos
             $("#filasFormulario").show();
@@ -202,7 +217,9 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val(fila.data("fechaproximomantenimiento"));
             $("#filasFormulario #columnaFungibles #selectFungibles").val(fila.data("numfungibles"));
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
-            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").val(fila.data("foto"));
+            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo #imgEquipo").attr("src", fila.data("fotoequipo"));
+            $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val(fila.data("fotoequipo"));
+            $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo #imgEquipo").attr("src", fila.data("fotoequipo"));
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
@@ -220,7 +237,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
+                $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
@@ -250,7 +267,7 @@ $(document).ready(function () {
                         $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", false);
                         $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
-                        $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", false);
+                        $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", false);
 
                         // Poner visibles los campos
                         $("#filasFormulario").show();
@@ -275,7 +292,7 @@ $(document).ready(function () {
                         $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
                         $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                        $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
+                        $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", true);
 
                         // Poner visibles los campos
                         $("#filasFormulario").hide();
@@ -304,7 +321,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
+                $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").hide();
