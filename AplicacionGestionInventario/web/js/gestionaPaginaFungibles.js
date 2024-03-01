@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumFungible, tablaFungibles, cantidadFungibles, usuario, rol */
+/* global ultimoNumFungible, tablaFungibles, cantidadFungibles, usuario, rol, contexto */
 
 var id = localStorage.getItem('id');
 
@@ -115,6 +115,18 @@ $(document).ready(function () {
         }
     }
 
+    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").change(function () {
+        var file = this.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgFungible').attr('src', e.target.result);
+                $('#txtFotoFungible').val(file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     $("#btnAgregarFungible").on("click", function () {
         var accion = 'Agregar';
         configurarModal(null, accion);
@@ -182,6 +194,10 @@ $(document).ready(function () {
             $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
             $("#filasFormulario #columnaEquipos #selectEquipos").val("");
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
+            $("#filasFormulario #columnaFotoFungible #inputFotoFungible").val("");
+            $("#filasFormulario #columnaFotoFungible #imgFungible").attr("src", "#");
+            $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val("");
+
             $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
             $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
             $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
@@ -206,6 +222,9 @@ $(document).ready(function () {
             $("#filasFormulario #columnaCantidad #txtCantidad").val(fila.data("cantidad"));
             $("#filasFormulario #columnaEquipos #selectEquipos").val(fila.data("numequipos"));
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
+            $("#filasFormulario #columnaFotoFungible #inputFotoFungible #imgFungible").attr("src", fila.data("fotoequipo"));
+            $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val(fila.data("fotoequipo"));
+            $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible #imgFungible").attr("src", contexto + "/img2/" + fila.data("fotofungible"));
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
@@ -220,6 +239,7 @@ $(document).ready(function () {
                 $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
@@ -243,12 +263,14 @@ $(document).ready(function () {
                         $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
                         $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+                        $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", false);
                     } else if (rol === 2) {
                         $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
                         $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
                         $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
                         $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                        $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", true);
                     }
                 }
 
@@ -277,6 +299,7 @@ $(document).ready(function () {
                 $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", true);
 
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();

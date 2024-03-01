@@ -86,6 +86,7 @@
             var cantidadFungibles = <%= cantidadFungibles %>;
             var usuario = "<%= (String) request.getSession().getAttribute("usuario") %>";
             var rol = <%= (Integer) request.getSession().getAttribute("rol") %>
+            var contexto = "${pageContext.servletContext.contextPath}";
         </script>
         <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginaFungibles.js"></script>
     </body>

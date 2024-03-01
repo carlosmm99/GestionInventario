@@ -123,7 +123,8 @@ public class Controlador {
                 String modelo = rs.getString("modelo");
                 String tamanyo = rs.getString("tamanyo");
                 int cantidad = rs.getInt("cantidad");
-                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad));
+                String foto = rs.getString("foto");
+                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad, foto));
             }
             return fungibles;
         } catch (SQLException ex) {
@@ -219,8 +220,8 @@ public class Controlador {
 
     int insertarFungible(Fungible f) {
         int filasAfectadas;
-        String sql = "INSERT INTO fungibles (marca, modelo, tamanyo, cantidad)"
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO fungibles (marca, modelo, tamanyo, cantidad, foto)"
+                + "VALUES (?, ?, ?, ?, ?)";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -231,6 +232,7 @@ public class Controlador {
             ps.setString(2, f.getModelo());
             ps.setString(3, f.getTamanyo());
             ps.setInt(4, f.getCantidad());
+            ps.setString(5, f.getFoto());
             filasAfectadas = ps.executeUpdate();
 
             // Obtener el ID del fungible recién insertado
@@ -328,7 +330,7 @@ public class Controlador {
             ps.setInt(1, idFungible);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Fungible(idFungible, rs.getString("marca"), rs.getString("modelo"), rs.getString("tamanyo"), rs.getInt("cantidad"));
+                return new Fungible(idFungible, rs.getString("marca"), rs.getString("modelo"), rs.getString("tamanyo"), rs.getInt("cantidad"), rs.getString("foto"));
             }
         } catch (SQLException ex) {
             return null;
@@ -495,7 +497,7 @@ public class Controlador {
 
     int modificarFungible(Fungible f) {
         int filasAfectadas;
-        String sql = "UPDATE fungibles SET marca = ?, modelo = ?, tamanyo = ?, cantidad = ? WHERE id = ?";
+        String sql = "UPDATE fungibles SET marca = ?, modelo = ?, tamanyo = ?, cantidad = ?, foto = ? WHERE id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -506,7 +508,8 @@ public class Controlador {
             ps.setString(2, f.getModelo());
             ps.setString(3, f.getTamanyo());
             ps.setInt(4, f.getCantidad());
-            ps.setInt(5, f.getId());
+            ps.setString(5, f.getFoto());
+            ps.setInt(6, f.getId());
             filasAfectadas = ps.executeUpdate();
 
             // Verificar si la asociación entre fungibles y equipos existe
@@ -709,7 +712,8 @@ public class Controlador {
                 String modelo = rs.getString("f.modelo");
                 String tamanyo = rs.getString("f.tamanyo");
                 int cantidad = rs.getInt("f.cantidad");
-                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad));
+                String foto = rs.getString("f.foto");
+                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad, foto));
             }
             return fungibles;
         } catch (SQLException ex) {
@@ -855,7 +859,8 @@ public class Controlador {
                 String modelo = rs.getString("f.modelo");
                 String tamanyo = rs.getString("f.tamanyo");
                 int cantidad = rs.getInt("f.cantidad");
-                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad));
+                String foto = rs.getString("f.foto");
+                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad, foto));
             }
             return fungibles;
         } catch (SQLException ex) {

@@ -115,7 +115,6 @@ $(document).ready(function () {
         }
     }
 
-
     $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").change(function () {
         var file = this.files[0];
         if (file) {

@@ -20,11 +20,12 @@ public class Fungible {
     private int cantidad;
     private List<Equipo> equipos;
     private List<Herramienta> herramientas;
+    private String foto;
 
     public Fungible() {
     }
 
-    public Fungible(int id, String marca, String modelo, String tamanyo, int cantidad) {
+    public Fungible(int id, String marca, String modelo, String tamanyo, int cantidad, String foto) {
         this.id = id;
         this.marca = marca;
         this.modelo = modelo;
@@ -32,6 +33,7 @@ public class Fungible {
         this.cantidad = cantidad;
         this.equipos = new ArrayList<>();
         this.herramientas = new ArrayList<>();
+        this.foto = foto;
     }
 
     public int getId() {
@@ -88,6 +90,14 @@ public class Fungible {
 
     public void setHerramientas(List<Herramienta> herramientas) {
         this.herramientas = herramientas;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     @Override
