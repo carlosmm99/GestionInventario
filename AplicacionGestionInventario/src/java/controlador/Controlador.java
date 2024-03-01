@@ -437,7 +437,7 @@ public class Controlador {
         }
 
         int filasAfectadas;
-        String sql = "UPDATE equipos SET num_inventario = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ?, fecha_ultimo_mantenimiento = ?, fecha_proximo_mantenimiento = ? WHERE id = ?";
+        String sql = "UPDATE equipos SET num_inventario = ?, nombre = ?, fecha_compra = ?, fabricante = ?, fecha_ultima_calibracion = ?, fecha_proxima_calibracion = ?, fecha_ultimo_mantenimiento = ?, fecha_proximo_mantenimiento = ?, foto = ? WHERE id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -452,7 +452,8 @@ public class Controlador {
             ps.setDate(6, new Date(e.getFechaProximaCalibracion().getTime()));
             ps.setDate(7, new Date(e.getFechaUltimoMantenimiento().getTime()));
             ps.setDate(8, new Date(e.getFechaProximoMantenimiento().getTime()));
-            ps.setInt(9, e.getId());
+            ps.setString(9, e.getFoto());
+            ps.setInt(10, e.getId());
             filasAfectadas = ps.executeUpdate();
 
             // Verificar si la asociación entre equipos y fungibles existe

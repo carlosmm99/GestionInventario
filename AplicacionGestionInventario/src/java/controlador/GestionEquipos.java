@@ -302,11 +302,11 @@ public class GestionEquipos extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoEquipo\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\" style=\"display: none;\" required>")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\" style=\"display: none;\">")
                 .append("<label for=\"inputFotoEquipo\" id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
                 .append("<img src=\"#\" id=\"imgEquipo\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" style=\"display: none;\" required>")
+                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
@@ -367,7 +367,7 @@ public class GestionEquipos extends HttpServlet {
                         .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\"")
                         .append(" data-numfungibles=\"").append(numFungibles).append("\"")
                         .append(" data-numherramientas=\"").append(numHerramientas).append("\"")
-                        .append(" data-fotoequipo=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\">");
+                        .append(" data-fotoequipo=\"").append(equipo.getFoto()).append("\">");
 
                 if (usuario != null && rol.equals(1)) {
                     tablaHTML.append("<td>")

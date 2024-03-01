@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumEquipo, tablaEquipos, cantidadEquipos, usuario, rol */
+/* global ultimoNumEquipo, tablaEquipos, cantidadEquipos, usuario, rol, contexto */
 
 var id = localStorage.getItem('id');
 
@@ -219,7 +219,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
             $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo #imgEquipo").attr("src", fila.data("fotoequipo"));
             $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val(fila.data("fotoequipo"));
-            $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo #imgEquipo").attr("src", fila.data("fotoequipo"));
+            $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo #imgEquipo").attr("src", contexto + "/img2/" + fila.data("fotoequipo"));
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
