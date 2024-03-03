@@ -126,7 +126,12 @@ public class GestionHerramientas extends HttpServlet {
                 fechaCompra = dateFormat.parse(fechaCompraStr);
                 h.setFechaCompra(fechaCompra);
             }
+            String nombreArchivo = request.getParameter("txtFotoHerramienta");
+            if (nombreArchivo != null) {
+                h.setFoto(nombreArchivo);
+            }
             String[] opcionesEquipos = request.getParameterValues("selectEquipos");
+            String[] opcionesFungibles = request.getParameterValues("selectFungibles");
             if (opcionesEquipos != null) {
                 for (String idEquipo : opcionesEquipos) {
                     Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
@@ -151,7 +156,6 @@ public class GestionHerramientas extends HttpServlet {
                     }
                 }
             }
-            String[] opcionesFungibles = request.getParameterValues("selectFungibles");
             if (opcionesFungibles != null) {
                 for (String idFungible : opcionesFungibles) {
                     Fungible f = c.buscarFungible(Integer.parseInt(idFungible));

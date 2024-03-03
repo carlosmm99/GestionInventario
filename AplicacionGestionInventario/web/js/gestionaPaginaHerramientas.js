@@ -204,6 +204,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
@@ -226,6 +227,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", false);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
+                $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", false);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
@@ -248,6 +250,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", true);
 
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();

@@ -301,7 +301,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", true);
 
                 // Poner invisibles los campos
-                $("#filasFormulario").show();
+                $("#filasFormulario").hide();
 
                 $("[name='btnAgregar']").hide();
                 $("[name='btnAgregar']").prop("disabled", true);
