@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumHerramienta, tablaHerramientas, cantidadHerramientas */
+/* global ultimoNumHerramienta, tablaHerramientas, cantidadHerramientas, contexto */
 
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
@@ -87,6 +87,18 @@ $(document).ready(function () {
         order: []
     });
 
+    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").change(function () {
+        var file = this.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgHerramienta').attr('src', e.target.result);
+                $('#txtFotoHerramienta').val(file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     $("#btnAgregarHerramienta").on("click", function () {
         var accion = 'Agregar';
         configurarModal(null, accion);
@@ -149,6 +161,10 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
             $("#filasFormulario #columnaEquipos #selectEquipos").val("");
             $("#filasFormulario #columnaFungibles #selectFungibles").val("");
+            $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").val("");
+            $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").attr("src", "#");
+            $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val("");
+
             $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", false);
             $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", false);
             $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", false);
@@ -173,6 +189,8 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val(fila.data("fechacompraherramienta"));
             $("#filasFormulario #columnaEquipos #selectEquipos").val(fila.data("numequipos"));
             $("#filasFormulario #columnaFungibles #selectFungibles").val(fila.data("numfungibles"));
+            $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val(fila.data("fotoherramienta"));
+            $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta #imgHerramienta").attr("src", contexto + "/img2/" + fila.data("fotoherramienta"));
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal

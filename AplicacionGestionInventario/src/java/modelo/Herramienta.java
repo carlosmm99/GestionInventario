@@ -21,11 +21,14 @@ public class Herramienta {
     private Date fechaCompra;
     private List<Equipo> equipos;
     private List<Fungible> fungibles;
+    private String foto;
 
     public Herramienta() {
+        this.equipos = new ArrayList<>();
+        this.fungibles = new ArrayList<>();
     }
 
-    public Herramienta(int id, String marca, String modelo, String fabricante, Date fechaCompra) {
+    public Herramienta(int id, String marca, String modelo, String fabricante, Date fechaCompra, String foto) {
         this.id = id;
         this.marca = marca;
         this.modelo = modelo;
@@ -33,6 +36,7 @@ public class Herramienta {
         this.fechaCompra = fechaCompra;
         this.equipos = new ArrayList<>();
         this.fungibles = new ArrayList<>();
+        this.foto = foto;
     }
 
     public int getId() {
@@ -89,6 +93,14 @@ public class Herramienta {
 
     public void setFungibles(List<Fungible> fungibles) {
         this.fungibles = fungibles;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     @Override

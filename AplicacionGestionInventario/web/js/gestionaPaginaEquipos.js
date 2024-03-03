@@ -216,7 +216,6 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val(fila.data("fechaproximomantenimiento"));
             $("#filasFormulario #columnaFungibles #selectFungibles").val(fila.data("numfungibles"));
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
-            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo #imgEquipo").attr("src", fila.data("fotoequipo"));
             $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val(fila.data("fotoequipo"));
             $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo #imgEquipo").attr("src", contexto + "/img2/" + fila.data("fotoequipo"));
 
@@ -323,7 +322,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", true);
 
                 // Poner visibles los campos
-                $("#filasFormulario").hide();
+                $("#filasFormulario").show();
 
                 $("[name='btnAgregar']").hide();
                 $("[name='btnAgregar']").prop("disabled", true);

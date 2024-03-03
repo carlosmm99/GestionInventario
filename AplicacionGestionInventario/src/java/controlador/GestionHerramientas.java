@@ -41,7 +41,7 @@ public class GestionHerramientas extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -68,7 +68,7 @@ public class GestionHerramientas extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -99,14 +99,33 @@ public class GestionHerramientas extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int id = 0;
+        Date fechaCompra = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            int id = Integer.parseInt(request.getParameter("txtNumHerramienta"));
+            Herramienta h = new Herramienta();
+            String idStr = request.getParameter("txtNumHerramienta");
+            if (idStr != null) {
+                id = Integer.parseInt(idStr);
+                h.setId(id);
+            }
             String marca = request.getParameter("txtMarcaHerramienta");
+            if (marca != null) {
+                h.setMarca(marca);
+            }
             String modelo = request.getParameter("txtModeloHerramienta");
+            if (modelo != null) {
+                h.setModelo(modelo);
+            }
             String fabricante = request.getParameter("txtFabricanteHerramienta");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date fechaCompra = dateFormat.parse(request.getParameter("txtFechaCompraHerramienta"));
-            Herramienta h = new Herramienta(id, marca, modelo, fabricante, fechaCompra);
+            if (fabricante != null) {
+                h.setFabricante(fabricante);
+            }
+            String fechaCompraStr = request.getParameter("txtFechaCompraHerramienta");
+            if (fechaCompraStr != null) {
+                fechaCompra = dateFormat.parse(fechaCompraStr);
+                h.setFechaCompra(fechaCompra);
+            }
             String[] opcionesEquipos = request.getParameterValues("selectEquipos");
             if (opcionesEquipos != null) {
                 for (String idEquipo : opcionesEquipos) {
@@ -267,8 +286,17 @@ public class GestionHerramientas extends HttpServlet {
                     .append(fungible.getMarca()).append(" - ").append(fungible.getModelo())
                     .append("</option>");
         }
-        formHTML.append("</select>").append("</div>").append("</div>")
-                .append("<div class=\"modal-footer\">")
+        formHTML.append("</select>").append("</div>");
+        // Columna imagen
+        formHTML.append("<div class=\"col-6\" id=\"columnaFotoHerramienta\">")
+                .append("<label>Foto:</label>")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoHerramienta\" id=\"inputFotoHerramienta\" style=\"display: none;\">")
+                .append("<label for=\"inputFotoHerramienta\" id=\"labelFotoHerramienta\" name=\"labelFotoHerramienta\">")
+                .append("<img src=\"#\" id=\"imgHerramienta\">")
+                .append("</label>")
+                .append("<input type=\"text\" id=\"txtFotoHerramienta\" name=\"txtFotoHerramienta\" readonly=\"true\">")
+                .append("</div>").append("</div>");
+        formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
                 .append("<button type=\"submit\" name=\"btnEditar\" style=\"display: none;\" class=\"btn btn-warning\">Enviar</button>")
                 .append("<button type=\"submit\" name=\"btnEliminar\" style=\"display: none;\" class=\"btn btn-danger\">Confirmar</button>")
@@ -291,9 +319,9 @@ public class GestionHerramientas extends HttpServlet {
                 tablaHTML.append("<th scope=\"col\">Acciones</th>");
             }
 
-            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th>")
-                    .append("<th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th><th scope=\"col\">Modelo</th>")
-                    .append("<th scope=\"col\">Fabricante</th><th scope=\"col\">Fecha de compra</th>");
+            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th><th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th>")
+                    .append("<th scope=\"col\">Modelo</th><th scope=\"col\">Fabricante</th>")
+                    .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Foto</th>");
 
             tablaHTML.append("</tr></thead>");
 
@@ -317,7 +345,8 @@ public class GestionHerramientas extends HttpServlet {
                         .append(" data-fabricanteherramienta=\"").append(herramienta.getFabricante()).append("\"")
                         .append(" data-fechacompraherramienta=\"").append(herramienta.getFechaCompra()).append("\"")
                         .append(" data-numequipos=\"").append(numEquipos).append("\"")
-                        .append(" data-numfungibles=\"").append(numFungibles).append("\">");
+                        .append(" data-numfungibles=\"").append(numFungibles).append("\"")
+                        .append(" data-fotoherramienta=\"").append(herramienta.getFoto()).append("\">");
 
                 if (usuario != null && rol.equals(1)) {
                     tablaHTML.append("<td>")
@@ -330,7 +359,8 @@ public class GestionHerramientas extends HttpServlet {
                         .append("<td>").append(herramienta.getMarca()).append("</td>")
                         .append("<td>").append(herramienta.getModelo()).append("</td>")
                         .append("<td>").append(herramienta.getFabricante()).append("</td>")
-                        .append("<td>").append(herramienta.getFechaCompra()).append("</td>").append("</tr>");
+                        .append("<td>").append(herramienta.getFechaCompra()).append("</td>")
+                        .append("<td>").append("<img src=\"").append(request.getContextPath()).append("/img2/").append(herramienta.getFoto()).append("\">").append("</td>").append("</tr>");
             }
             tablaHTML.append("</tbody>").append("</table>");
         }

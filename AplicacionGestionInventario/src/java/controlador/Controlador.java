@@ -150,7 +150,8 @@ public class Controlador {
                 String modelo = rs.getString("modelo");
                 String fabricante = rs.getString("fabricante");
                 Date fechaCompra = rs.getDate("fecha_compra");
-                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra));
+                String foto = rs.getString("foto");
+                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra, foto));
             }
             return herramientas;
         } catch (SQLException ex) {
@@ -260,8 +261,8 @@ public class Controlador {
 
     int insertarHerramienta(Herramienta h) {
         int filasAfectadas;
-        String sql = "INSERT INTO herramientas (marca, modelo, fabricante, fecha_compra)"
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO herramientas (marca, modelo, fabricante, fecha_compra, foto)"
+                + "VALUES (?, ?, ?, ?, ?)";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -272,6 +273,7 @@ public class Controlador {
             ps.setString(2, h.getModelo());
             ps.setString(3, h.getFabricante());
             ps.setDate(4, new Date(h.getFechaCompra().getTime()));
+            ps.setString(5, h.getFoto());
             filasAfectadas = ps.executeUpdate();
 
             // Obtener el ID de la herramienta recién insertada
@@ -352,7 +354,7 @@ public class Controlador {
             ps.setInt(1, idHerramienta);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Herramienta(idHerramienta, rs.getString("marca"), rs.getString("modelo"), rs.getString("fabricante"), rs.getDate("fecha_compra"));
+                return new Herramienta(idHerramienta, rs.getString("marca"), rs.getString("modelo"), rs.getString("fabricante"), rs.getDate("fecha_compra"), rs.getString("foto"));
             }
         } catch (SQLException ex) {
             return null;
@@ -551,7 +553,7 @@ public class Controlador {
 
     int modificarHerramienta(Herramienta h) {
         int filasAfectadas;
-        String sql = "UPDATE herramientas SET marca = ?, modelo = ?, fabricante = ?, fecha_compra = ? WHERE id = ?";
+        String sql = "UPDATE herramientas SET marca = ?, modelo = ?, fabricante = ?, fecha_compra = ?, foto = ? WHERE id = ?";
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -562,7 +564,8 @@ public class Controlador {
             ps.setString(2, h.getModelo());
             ps.setString(3, h.getFabricante());
             ps.setDate(4, new Date(h.getFechaCompra().getTime()));
-            ps.setInt(5, h.getId());
+            ps.setString(5, h.getFoto());
+            ps.setInt(6, h.getId());
             filasAfectadas = ps.executeUpdate();
 
             // Verificar si la asociación entre herramientas y equipos existe
@@ -741,7 +744,8 @@ public class Controlador {
                 String modelo = rs.getString("h.modelo");
                 String fabricante = rs.getString("h.fabricante");
                 Date fechaCompra = rs.getDate("h.fecha_compra");
-                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra));
+                String foto = rs.getString("h.foto");
+                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra, foto));
             }
             return herramientas;
         } catch (SQLException ex) {
@@ -800,7 +804,8 @@ public class Controlador {
                 String modelo = rs.getString("h.modelo");
                 String fabricante = rs.getString("h.fabricante");
                 Date fechaCompra = rs.getDate("h.fecha_compra");
-                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra));
+                String foto = rs.getString("h.foto");
+                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra, foto));
             }
             return herramientas;
         } catch (SQLException ex) {

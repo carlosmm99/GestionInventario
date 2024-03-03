@@ -23,6 +23,8 @@ public class Fungible {
     private String foto;
 
     public Fungible() {
+        this.equipos = new ArrayList<>();
+        this.herramientas = new ArrayList<>();
     }
 
     public Fungible(int id, String marca, String modelo, String tamanyo, int cantidad, String foto) {

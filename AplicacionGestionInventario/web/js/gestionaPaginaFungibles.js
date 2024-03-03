@@ -222,8 +222,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaCantidad #txtCantidad").val(fila.data("cantidad"));
             $("#filasFormulario #columnaEquipos #selectEquipos").val(fila.data("numequipos"));
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
-            $("#filasFormulario #columnaFotoFungible #inputFotoFungible #imgFungible").attr("src", fila.data("fotoequipo"));
-            $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val(fila.data("fotoequipo"));
+            $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val(fila.data("fotofungible"));
             $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible #imgFungible").attr("src", contexto + "/img2/" + fila.data("fotofungible"));
 
             if (accion === 'Consultar') {
@@ -302,7 +301,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", true);
 
                 // Poner invisibles los campos
-                $("#filasFormulario").hide();
+                $("#filasFormulario").show();
 
                 $("[name='btnAgregar']").hide();
                 $("[name='btnAgregar']").prop("disabled", true);

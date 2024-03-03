@@ -36,7 +36,7 @@ public class GestionFungibles extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -63,7 +63,7 @@ public class GestionFungibles extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -94,95 +94,113 @@ public class GestionFungibles extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int id = 0, cantidad = 0;
+        Fungible f = new Fungible();
         String idStr = request.getParameter("txtNumFungible");
+        if (idStr != null) {
+            id = Integer.parseInt(idStr);
+            f.setId(id);
+        }
         String marca = request.getParameter("txtMarcaFungible");
+        if (marca != null) {
+            f.setMarca(marca);
+        }
         String modelo = request.getParameter("txtModeloFungible");
+        if (modelo != null) {
+            f.setModelo(modelo);
+        }
         String tamanyo = request.getParameter("txtTamanyo");
+        if (tamanyo != null) {
+            f.setTamanyo(tamanyo);
+        }
         String cantidadStr = request.getParameter("txtCantidad");
+        if (cantidadStr != null) {
+            cantidad = Integer.parseInt(cantidadStr);
+            f.setCantidad(cantidad);
+        }
         String nombreArchivo = request.getParameter("txtFotoFungible");
+        if (nombreArchivo != null) {
+            f.setFoto(nombreArchivo);
+        }
         String[] opcionesEquipos = request.getParameterValues("selectEquipos");
         String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
-        if (idStr != null && marca != null && modelo != null
-                && tamanyo != null && cantidadStr != null && nombreArchivo != null) {
-            Fungible f = new Fungible(Integer.parseInt(idStr), marca, modelo, tamanyo, Integer.parseInt(cantidadStr), nombreArchivo);
-            if (opcionesEquipos != null) {
-                for (String idEquipo : opcionesEquipos) {
-                    Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
-                    boolean exists = false;
-                    if (e != null) {
-                        for (Equipo equipo : f.getEquipos()) {
-                            if (equipo.getId() == e.getId()) {
-                                exists = true;
-                                break;
-                            }
+        if (opcionesEquipos != null) {
+            for (String idEquipo : opcionesEquipos) {
+                Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
+                boolean exists = false;
+                if (e != null) {
+                    for (Equipo equipo : f.getEquipos()) {
+                        if (equipo.getId() == e.getId()) {
+                            exists = true;
+                            break;
                         }
-                        for (Fungible fungible : e.getFungibles()) {
-                            if (fungible.getId() == f.getId()) {
-                                exists = true;
-                                break;
-                            }
+                    }
+                    for (Fungible fungible : e.getFungibles()) {
+                        if (fungible.getId() == f.getId()) {
+                            exists = true;
+                            break;
                         }
-                        if (!exists) {
-                            e.getFungibles().add(f);
-                            f.getEquipos().add(e);
-                        }
+                    }
+                    if (!exists) {
+                        e.getFungibles().add(f);
+                        f.getEquipos().add(e);
                     }
                 }
             }
-            if (opcionesHerramientas != null) {
-                for (String idHerramienta : opcionesHerramientas) {
-                    Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
-                    boolean exists = false;
-                    if (h != null) {
-                        for (Herramienta herramienta : f.getHerramientas()) {
-                            if (herramienta.getId() == h.getId()) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        for (Fungible fungible : h.getFungibles()) {
-                            if (fungible.getId() == f.getId()) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            f.getHerramientas().add(h);
-                            h.getFungibles().add(f);
-                        }
-                    }
-                }
-            }
-            int res = 0;
-            String mensaje = "";
-            if (request.getParameter("btnAgregar") != null) {
-                res = c.insertarFungible(f);
-                if (res != 0) {
-                    mensaje = "Fungible con id " + f.getId() + " dado de alta correctamente";
-                } else {
-                    mensaje = "Error al dar de alta el fungible con id " + f.getId();
-                }
-            } else if (request.getParameter("btnEditar") != null) {
-                res = c.modificarFungible(f);
-                if (res != 0) {
-                    mensaje = "Fungible con id " + f.getId() + " modificado correctamente";
-                } else {
-                    mensaje = "Error al modificar el fungible con id " + f.getId();
-                }
-            } else if (request.getParameter("btnEliminar") != null) {
-                res = c.borrarFungible(f);
-                if (res != 0) {
-                    mensaje = "Fungible con id " + f.getId() + " dado de baja correctamente";
-                } else {
-                    mensaje = "Error al dar de baja el fungible con id " + f.getId();
-                }
-            }
-
-            // Establecer atributos para mostrar el cuadro de diálogo y redirigir
-            request.setAttribute("showDialog", true);
-            request.setAttribute("message", mensaje);
-            request.getRequestDispatcher("fungibles.jsp").forward(request, response);
         }
+        if (opcionesHerramientas != null) {
+            for (String idHerramienta : opcionesHerramientas) {
+                Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
+                boolean exists = false;
+                if (h != null) {
+                    for (Herramienta herramienta : f.getHerramientas()) {
+                        if (herramienta.getId() == h.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (Fungible fungible : h.getFungibles()) {
+                        if (fungible.getId() == f.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        f.getHerramientas().add(h);
+                        h.getFungibles().add(f);
+                    }
+                }
+            }
+        }
+        int res = 0;
+        String mensaje = "";
+        if (request.getParameter("btnAgregar") != null) {
+            res = c.insertarFungible(f);
+            if (res != 0) {
+                mensaje = "Fungible con id " + f.getId() + " dado de alta correctamente";
+            } else {
+                mensaje = "Error al dar de alta el fungible con id " + f.getId();
+            }
+        } else if (request.getParameter("btnEditar") != null) {
+            res = c.modificarFungible(f);
+            if (res != 0) {
+                mensaje = "Fungible con id " + f.getId() + " modificado correctamente";
+            } else {
+                mensaje = "Error al modificar el fungible con id " + f.getId();
+            }
+        } else if (request.getParameter("btnEliminar") != null) {
+            res = c.borrarFungible(f);
+            if (res != 0) {
+                mensaje = "Fungible con id " + f.getId() + " dado de baja correctamente";
+            } else {
+                mensaje = "Error al dar de baja el fungible con id " + f.getId();
+            }
+        }
+
+        // Establecer atributos para mostrar el cuadro de diálogo y redirigir
+        request.setAttribute("showDialog", true);
+        request.setAttribute("message", mensaje);
+        request.getRequestDispatcher("fungibles.jsp").forward(request, response);
     }
 
     /**
@@ -268,11 +286,11 @@ public class GestionFungibles extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoFungible\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\" style=\"display: none;\">")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\">")
                 .append("<label for=\"inputFotoFungible\" id=\"labelFotoFungible\" name=\"labelFotoFungible\">")
                 .append("<img src=\"#\" id=\"imgFungible\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\" style=\"display: none;\">")
+                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")

@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +43,7 @@ public class GestionEquipos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -69,7 +70,7 @@ public class GestionEquipos extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -100,104 +101,137 @@ public class GestionEquipos extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int id = 0, numInventario = 0;
+        Date fechaCompraEquipo = null, fechaUltimaCalibracion = null, fechaProximaCalibracion = null, fechaUltimoMantenimiento = null, fechaProximoMantenimiento = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
+            Equipo e = new Equipo();
             String idStr = request.getParameter("txtNumEquipo");
+            if (idStr != null) {
+                id = Integer.parseInt(idStr);
+                e.setId(id);
+            }
             String numInventarioStr = request.getParameter("txtNumInventarioCEDEX");
+            if (numInventarioStr != null) {
+                numInventario = Integer.parseInt(numInventarioStr);
+                e.setNumInventario(numInventario);
+            }
             String nombre = request.getParameter("txtNombreEquipo");
+            if (nombre != null) {
+                e.setNombre(nombre);
+            }
             String fechaCompraEquipoStr = request.getParameter("txtFechaCompraEquipo");
+            if (fechaCompraEquipoStr != null) {
+                fechaCompraEquipo = dateFormat.parse(fechaCompraEquipoStr);
+                e.setFechaCompra(fechaCompraEquipo);
+            }
             String fabricante = request.getParameter("txtFabricanteEquipo");
+            if (fabricante != null) {
+                e.setFabricante(fabricante);
+            }
             String fechaUltimaCalibracionStr = request.getParameter("txtFechaUltimaCalibracion");
+            if (fechaUltimaCalibracionStr != null) {
+                fechaUltimaCalibracion = dateFormat.parse(fechaUltimaCalibracionStr);
+                e.setFechaUltimaCalibracion(fechaUltimaCalibracion);
+            }
             String fechaProximaCalibracionStr = request.getParameter("txtFechaProximaCalibracion");
+            if (fechaProximaCalibracionStr != null) {
+                fechaProximaCalibracion = dateFormat.parse(fechaProximaCalibracionStr);
+                e.setFechaProximaCalibracion(fechaProximaCalibracion);
+            }
             String fechaUltimoMantenimientoStr = request.getParameter("txtFechaUltimoMantenimiento");
+            if (fechaUltimoMantenimientoStr != null) {
+                fechaUltimoMantenimiento = dateFormat.parse(fechaUltimoMantenimientoStr);
+                e.setFechaUltimoMantenimiento(fechaUltimoMantenimiento);
+            }
             String fechaProximoMantenimientoStr = request.getParameter("txtFechaProximoMantenimiento");
+            if (fechaProximoMantenimientoStr != null) {
+                fechaProximoMantenimiento = dateFormat.parse(fechaProximoMantenimientoStr);
+                e.setFechaProximoMantenimiento(fechaProximoMantenimiento);
+            }
             String nombreArchivo = request.getParameter("txtFotoEquipo");
+            if (nombreArchivo != null) {
+                e.setFoto(nombreArchivo);
+            }
             String[] opcionesFungibles = request.getParameterValues("selectFungibles");
             String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
-            if (idStr != null && numInventarioStr != null
-                    && nombre != null && fechaCompraEquipoStr != null
-                    && fabricante != null && fechaUltimaCalibracionStr != null
-                    && fechaProximaCalibracionStr != null && fechaUltimoMantenimientoStr != null
-                    && fechaProximoMantenimientoStr != null && nombreArchivo != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Equipo e = new Equipo(Integer.parseInt(idStr), Integer.parseInt(numInventarioStr), nombre, dateFormat.parse(fechaCompraEquipoStr), fabricante, dateFormat.parse(fechaUltimaCalibracionStr), dateFormat.parse(fechaProximaCalibracionStr), dateFormat.parse(fechaUltimoMantenimientoStr), dateFormat.parse(fechaProximoMantenimientoStr), nombreArchivo);
-                if (opcionesFungibles != null) {
-                    for (String idFungible : opcionesFungibles) {
-                        Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
-                        boolean exists = false;
-                        if (f != null) {
-                            for (Fungible fungible : e.getFungibles()) {
-                                if (fungible.getId() == f.getId()) {
-                                    exists = true;
-                                    break;
-                                }
+            if (opcionesFungibles != null) {
+                for (String idFungible : opcionesFungibles) {
+                    Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
+                    boolean exists = false;
+                    if (f != null) {
+                        for (Fungible fungible : e.getFungibles()) {
+                            if (fungible.getId() == f.getId()) {
+                                exists = true;
+                                break;
                             }
-                            for (Equipo equipo : f.getEquipos()) {
-                                if (equipo.getId() == e.getId()) {
-                                    exists = true;
-                                    break;
-                                }
+                        }
+                        for (Equipo equipo : f.getEquipos()) {
+                            if (equipo.getId() == e.getId()) {
+                                exists = true;
+                                break;
                             }
-                            if (!exists) {
-                                e.getFungibles().add(f);
-                                f.getEquipos().add(e);
-                            }
+                        }
+                        if (!exists) {
+                            e.getFungibles().add(f);
+                            f.getEquipos().add(e);
                         }
                     }
                 }
-                if (opcionesHerramientas != null) {
-                    for (String idHerramienta : opcionesHerramientas) {
-                        Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
-                        boolean exists = false;
-                        if (h != null) {
-                            for (Herramienta herramienta : e.getHerramientas()) {
-                                if (herramienta.getId() == h.getId()) {
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            for (Equipo equipo : h.getEquipos()) {
-                                if (equipo.getId() == h.getId()) {
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (!exists) {
-                                e.getHerramientas().add(h);
-                                h.getEquipos().add(e);
-                            }
-                        }
-                    }
-                }
-                int res = 0;
-                String mensaje = "";
-                if (request.getParameter("btnAgregar") != null) {
-                    res = c.insertarEquipo(e);
-                    if (res != 0) {
-                        mensaje = "Equipo con id " + e.getId() + " dado de alta correctamente";
-                    } else {
-                        mensaje = "Error al dar de alta el equipo con id " + e.getId();
-                    }
-                } else if (request.getParameter("btnEditar") != null) {
-                    res = c.modificarEquipo(e);
-                    if (res != 0) {
-                        mensaje = "Equipo con id " + e.getId() + " modificado correctamente";
-                    } else {
-                        mensaje = "Error al modificar el equipo con id " + e.getId();
-                    }
-                } else if (request.getParameter("btnEliminar") != null) {
-                    res = c.borrarEquipo(e);
-                    if (res != 0) {
-                        mensaje = "Equipo con id " + e.getId() + " dado de baja correctamente";
-                    } else {
-                        mensaje = "Error al dar de baja el equipo con id " + e.getId();
-                    }
-                }
-
-                // Establecer atributos para mostrar el cuadro de diálogo y redirigir
-                request.setAttribute("showDialog", true);
-                request.setAttribute("message", mensaje);
-                request.getRequestDispatcher("equipos.jsp").forward(request, response);
             }
+            if (opcionesHerramientas != null) {
+                for (String idHerramienta : opcionesHerramientas) {
+                    Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
+                    boolean exists = false;
+                    if (h != null) {
+                        for (Herramienta herramienta : e.getHerramientas()) {
+                            if (herramienta.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        for (Equipo equipo : h.getEquipos()) {
+                            if (equipo.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            e.getHerramientas().add(h);
+                            h.getEquipos().add(e);
+                        }
+                    }
+                }
+            }
+            int res = 0;
+            String mensaje = "";
+            if (request.getParameter("btnAgregar") != null) {
+                res = c.insertarEquipo(e);
+                if (res != 0) {
+                    mensaje = "Equipo con id " + e.getId() + " dado de alta correctamente";
+                } else {
+                    mensaje = "Error al dar de alta el equipo con id " + e.getId();
+                }
+            } else if (request.getParameter("btnEditar") != null) {
+                res = c.modificarEquipo(e);
+                if (res != 0) {
+                    mensaje = "Equipo con id " + e.getId() + " modificado correctamente";
+                } else {
+                    mensaje = "Error al modificar el equipo con id " + e.getId();
+                }
+            } else if (request.getParameter("btnEliminar") != null) {
+                res = c.borrarEquipo(e);
+                if (res != 0) {
+                    mensaje = "Equipo con id " + e.getId() + " dado de baja correctamente";
+                } else {
+                    mensaje = "Error al dar de baja el equipo con id " + e.getId();
+                }
+            }
+
+            // Establecer atributos para mostrar el cuadro de diálogo y redirigir
+            request.setAttribute("showDialog", true);
+            request.setAttribute("message", mensaje);
+            request.getRequestDispatcher("equipos.jsp").forward(request, response);
         } catch (ParseException ex) {
             Logger.getLogger(GestionEquipos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -306,7 +340,7 @@ public class GestionEquipos extends HttpServlet {
                 .append("<label for=\"inputFotoEquipo\" id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
                 .append("<img src=\"#\" id=\"imgEquipo\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" style=\"display: none;\">")
+                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")

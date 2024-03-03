@@ -84,6 +84,7 @@
         <script>
             var ultimoNumHerramienta = <%= ultimoNumHerramienta %>;
             var cantidadHerramientas = <%= cantidadHerramientas %>;
+            var contexto = "${pageContext.servletContext.contextPath}";
         </script>
         <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginaHerramientas.js"></script>
     </body>

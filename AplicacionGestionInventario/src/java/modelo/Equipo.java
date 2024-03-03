@@ -28,6 +28,8 @@ public class Equipo {
     private String foto;
 
     public Equipo() {
+        this.fungibles = new ArrayList<>();
+        this.herramientas = new ArrayList<>();
     }
 
     public Equipo(int id, int numInventario, String nombre, Date fechaCompra, String fabricante, Date fechaUltimaCalibracion, Date fechaProximaCalibracion, Date fechaUltimoMantenimiento, Date fechaProximoMantenimiento, String foto) {
