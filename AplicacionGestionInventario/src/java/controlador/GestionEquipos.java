@@ -315,8 +315,7 @@ public class GestionEquipos extends HttpServlet {
                 .append("<label for=\"inputFotoEquipo\" id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
                 .append("<img src=\"#\" id=\"imgEquipo\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" style=\"display: none;\">")
-                .append("<span id=\"errorFotoEquipo\" style=\"color: red;\"></span>")
+                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" required style=\"display: none;\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
