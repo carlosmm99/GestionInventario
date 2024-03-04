@@ -36,7 +36,7 @@ public class GestionFungibles extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -63,7 +63,7 @@ public class GestionFungibles extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -122,53 +122,27 @@ public class GestionFungibles extends HttpServlet {
         if (nombreArchivo != null) {
             f.setFoto(nombreArchivo);
         }
+        f.setEquipos(c.obtenerEquiposPorFungible(f));
+        f.setHerramientas(c.obtenerHerramientasPorFungible(f));
         String[] opcionesEquipos = request.getParameterValues("selectEquipos");
         String[] opcionesHerramientas = request.getParameterValues("selectHerramientas");
         if (opcionesEquipos != null) {
             for (String idEquipo : opcionesEquipos) {
                 Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
-                boolean exists = false;
                 if (e != null) {
-                    for (Equipo equipo : f.getEquipos()) {
-                        if (equipo.getId() == e.getId()) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    for (Fungible fungible : e.getFungibles()) {
-                        if (fungible.getId() == f.getId()) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if (!exists) {
-                        e.getFungibles().add(f);
-                        f.getEquipos().add(e);
-                    }
+                    e.setFungibles(c.obtenerFungiblesPorEquipo(e));
+                    e.getFungibles().add(f);
+                    f.getEquipos().add(e);
                 }
             }
         }
         if (opcionesHerramientas != null) {
             for (String idHerramienta : opcionesHerramientas) {
                 Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
-                boolean exists = false;
                 if (h != null) {
-                    for (Herramienta herramienta : f.getHerramientas()) {
-                        if (herramienta.getId() == h.getId()) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    for (Fungible fungible : h.getFungibles()) {
-                        if (fungible.getId() == f.getId()) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if (!exists) {
-                        f.getHerramientas().add(h);
-                        h.getFungibles().add(f);
-                    }
+                    h.setFungibles(c.obtenerFungiblesPorHerramienta(h));
+                    f.getHerramientas().add(h);
+                    h.getFungibles().add(f);
                 }
             }
         }
@@ -286,11 +260,11 @@ public class GestionFungibles extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoFungible\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\">")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\" style=\"display: none;\">")
                 .append("<label for=\"inputFotoFungible\" id=\"labelFotoFungible\" name=\"labelFotoFungible\">")
                 .append("<img src=\"#\" id=\"imgFungible\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\">")
+                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")

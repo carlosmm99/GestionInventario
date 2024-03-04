@@ -41,7 +41,7 @@ public class GestionHerramientas extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -68,7 +68,7 @@ public class GestionHerramientas extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -130,53 +130,27 @@ public class GestionHerramientas extends HttpServlet {
             if (nombreArchivo != null) {
                 h.setFoto(nombreArchivo);
             }
+            h.setEquipos(c.obtenerEquiposPorHerramienta(h));
+            h.setFungibles(c.obtenerFungiblesPorHerramienta(h));
             String[] opcionesEquipos = request.getParameterValues("selectEquipos");
             String[] opcionesFungibles = request.getParameterValues("selectFungibles");
             if (opcionesEquipos != null) {
                 for (String idEquipo : opcionesEquipos) {
                     Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
-                    boolean exists = false;
                     if (e != null) {
-                        for (Equipo equipo : h.getEquipos()) {
-                            if (equipo.getId() == e.getId()) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        for (Herramienta herramienta : e.getHerramientas()) {
-                            if (herramienta.getId() == h.getId()) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            e.getHerramientas().add(h);
-                            h.getEquipos().add(e);
-                        }
+                        e.setHerramientas(c.obtenerHerramientasPorEquipo(e));
+                        e.getHerramientas().add(h);
+                        h.getEquipos().add(e);
                     }
                 }
             }
             if (opcionesFungibles != null) {
                 for (String idFungible : opcionesFungibles) {
                     Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
-                    boolean exists = false;
                     if (f != null) {
-                        for (Fungible fungible : h.getFungibles()) {
-                            if (fungible.getId() == f.getId()) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        for (Herramienta herramienta : f.getHerramientas()) {
-                            if (herramienta.getId() == h.getId()) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            f.getHerramientas().add(h);
-                            h.getFungibles().add(f);
-                        }
+                        f.setHerramientas(c.obtenerHerramientasPorFungible(f));
+                        f.getHerramientas().add(h);
+                        h.getFungibles().add(f);
                     }
                 }
             }
@@ -298,7 +272,7 @@ public class GestionHerramientas extends HttpServlet {
                 .append("<label for=\"inputFotoHerramienta\" id=\"labelFotoHerramienta\" name=\"labelFotoHerramienta\">")
                 .append("<img src=\"#\" id=\"imgHerramienta\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoHerramienta\" name=\"txtFotoHerramienta\" readonly=\"true\">")
+                .append("<input type=\"text\" id=\"txtFotoHerramienta\" name=\"txtFotoHerramienta\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")

@@ -24,8 +24,6 @@ public class Herramienta {
     private String foto;
 
     public Herramienta() {
-        this.equipos = new ArrayList<>();
-        this.fungibles = new ArrayList<>();
     }
 
     public Herramienta(int id, String marca, String modelo, String fabricante, Date fechaCompra, String foto) {
