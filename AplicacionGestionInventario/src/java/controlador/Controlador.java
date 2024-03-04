@@ -461,12 +461,12 @@ public class Controlador {
             filasAfectadas = ps.executeUpdate();
 
             // Verificar si la asociación entre equipos y fungibles existe
-            boolean asociacionFungiblesExiste = verificarAsociacionEquiposFungiblesExistente(e);
+            boolean asociacionFungiblesExiste = !verificarAsociacionEquiposFungiblesExistente(e);
             // Verificar si la asociación entre equipos y herramientas existe
-            boolean asociacionHerramientasExiste = verificarAsociacionEquiposHerramientasExistente(e);
+            boolean asociacionHerramientasExiste = !verificarAsociacionEquiposHerramientasExistente(e);
 
             // Actualizar asociaciones según corresponda
-            if (asociacionFungiblesExiste && asociacionHerramientasExiste) {
+            if (!asociacionFungiblesExiste && !asociacionHerramientasExiste) {
                 // Ambas asociaciones existen
                 for (Fungible f : e.getFungibles()) {
                     filasAfectadas += asociarEquipoFungible(e, f);
@@ -474,12 +474,12 @@ public class Controlador {
                 for (Herramienta h : e.getHerramientas()) {
                     filasAfectadas += asociarEquipoHerramienta(e, h);
                 }
-            } else if (asociacionFungiblesExiste) {
+            } else if (!asociacionFungiblesExiste) {
                 // Solo la asociación con fungibles existe
                 for (Fungible f : e.getFungibles()) {
                     filasAfectadas += asociarEquipoFungible(e, f);
                 }
-            } else if (asociacionHerramientasExiste) {
+            } else if (!asociacionHerramientasExiste) {
                 // Solo la asociación con herramientas existe
                 for (Herramienta h : e.getHerramientas()) {
                     filasAfectadas += asociarEquipoHerramienta(e, h);
@@ -515,12 +515,12 @@ public class Controlador {
             filasAfectadas = ps.executeUpdate();
 
             // Verificar si la asociación entre fungibles y equipos existe
-            boolean asociacionEquiposExiste = verificarAsociacionFungiblesEquiposExistente(f);
+            boolean asociacionEquiposExiste = !verificarAsociacionFungiblesEquiposExistente(f);
             // Verificar si la asociación entre fungibles y herramientas existe
-            boolean asociacionHerramientasExiste = verificarAsociacionFungiblesHerramientasExistente(f);
+            boolean asociacionHerramientasExiste = !verificarAsociacionFungiblesHerramientasExistente(f);
 
             // Actualizar asociaciones según corresponda
-            if (asociacionEquiposExiste && asociacionHerramientasExiste) {
+            if (!asociacionEquiposExiste && !asociacionHerramientasExiste) {
                 // Ambas asociaciones existen
                 for (Equipo e : f.getEquipos()) {
                     filasAfectadas += asociarEquipoFungible(e, f);
@@ -528,12 +528,12 @@ public class Controlador {
                 for (Herramienta h : f.getHerramientas()) {
                     filasAfectadas += asociarFungibleHerramienta(f, h);
                 }
-            } else if (asociacionEquiposExiste) {
+            } else if (!asociacionEquiposExiste) {
                 // Solo la asociación con equipos existe
                 for (Equipo e : f.getEquipos()) {
                     filasAfectadas += asociarEquipoFungible(e, f);
                 }
-            } else if (asociacionHerramientasExiste) {
+            } else if (!asociacionHerramientasExiste) {
                 // Solo la asociación con herramientas existe
                 for (Herramienta h : f.getHerramientas()) {
                     filasAfectadas += asociarFungibleHerramienta(f, h);
@@ -568,32 +568,32 @@ public class Controlador {
             ps.setInt(6, h.getId());
             filasAfectadas = ps.executeUpdate();
 
-            // Verificar si la asociación entre herramientas y equipos existe
-            boolean asociacionEquiposExiste = verificarAsociacionHerramientasEquiposExistente(h);
-            // Verificar si la asociación entre herramientas y fungibles existe
-            boolean asociacionFungiblesExiste = verificarAsociacionHerramientasFungiblesExistente(h);
+            // Verificar si la asociación entre herramientas y equipos no existe
+            boolean asociacionEquiposExiste = !verificarAsociacionHerramientasEquiposExistente(h);
+            // Verificar si la asociación entre herramientas y fungibles no existe
+            boolean asociacionFungiblesExiste = !verificarAsociacionHerramientasFungiblesExistente(h);
 
             // Actualizar asociaciones según corresponda
-            if (asociacionEquiposExiste && asociacionFungiblesExiste) {
-                // Ambas asociaciones existen
+            if (!asociacionEquiposExiste && !asociacionFungiblesExiste) {
+                // Ambas asociaciones no existen
                 for (Equipo e : h.getEquipos()) {
                     filasAfectadas += asociarEquipoHerramienta(e, h);
                 }
                 for (Fungible f : h.getFungibles()) {
                     filasAfectadas += asociarFungibleHerramienta(f, h);
                 }
-            } else if (asociacionEquiposExiste) {
-                // Solo la asociación con equipos existe
+            } else if (!asociacionEquiposExiste) {
+                // Solo la asociación con equipos no existe
                 for (Equipo e : h.getEquipos()) {
                     filasAfectadas += asociarEquipoHerramienta(e, h);
                 }
-            } else if (asociacionFungiblesExiste) {
-                // Solo la asociación con fungibles existe
+            } else if (!asociacionFungiblesExiste) {
+                // Solo la asociación con fungibles no existe
                 for (Fungible f : h.getFungibles()) {
                     filasAfectadas += asociarFungibleHerramienta(f, h);
                 }
             } else {
-                // Ninguna asociación existe
+                // Existen asociaciones
                 filasAfectadas = 0;
             }
 

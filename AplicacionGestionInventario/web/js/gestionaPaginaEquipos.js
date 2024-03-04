@@ -322,7 +322,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", true);
 
                 // Poner visibles los campos
-                $("#filasFormulario").show();
+                $("#filasFormulario").hide();
 
                 $("[name='btnAgregar']").hide();
                 $("[name='btnAgregar']").prop("disabled", true);
