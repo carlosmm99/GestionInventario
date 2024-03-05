@@ -334,7 +334,7 @@ public class GestionEquipos extends HttpServlet {
                 .append("<label>Foto:</label>")
                 .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\" style=\"display: none;\">")
                 .append("<label for=\"inputFotoEquipo\" id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
-                .append("<img src=\"#\" id=\"imgEquipo\">")
+                .append("<img src=\"#\" id=\"imgEquipo\" style=\"width: 100px;\">")
                 .append("</label>")
                 .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" required style=\"display: none;\">")
                 .append("</div>").append("</div>");
@@ -424,7 +424,7 @@ public class GestionEquipos extends HttpServlet {
                     tablaHTML.append("<p>").append(herramienta).append(";</p>");
                 }
                 tablaHTML.append("</td>")
-                        .append("<td><img src=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\"</td></tr>");
+                        .append("<td><img src=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\" style=\"width: 100px;\"></td></tr>");
             }
             tablaHTML.append("</tbody></table>");
         }

@@ -84,7 +84,7 @@ $(document).ready(function () {
                         return styles;
                     })(),
                     exportOptions: {
-                        columns: ':eq(' + indiceColumnaMarca + '), :gt(' + indiceColumnaMarca + ')'
+                        columns: ':eq(' + indiceColumnaMarca + '), :gt(' + indiceColumnaMarca + '):lt(-1)'
                     }
                 }
             ]

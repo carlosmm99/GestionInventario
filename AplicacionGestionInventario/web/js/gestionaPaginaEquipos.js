@@ -84,7 +84,7 @@ $(document).ready(function () {
                         return styles;
                     })(),
                     exportOptions: {
-                        columns: ':eq(' + indiceColumnaID + '), :gt(' + indiceColumnaID + ')'
+                        columns: ':eq(' + indiceColumnaID + '), :gt(' + indiceColumnaID + '):lt(-1)'
                     }
                 }
             ]
