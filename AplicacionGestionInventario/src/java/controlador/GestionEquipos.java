@@ -7,7 +7,6 @@ package controlador;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,7 +31,6 @@ import modelo.Herramienta;
  *
  * @author carlos.mondejar
  */
-@MultipartConfig(maxFileSize = 10485760L) // 10MB máximo de subida ficheros
 public class GestionEquipos extends HttpServlet {
 
     private final Controlador c = new Controlador();
