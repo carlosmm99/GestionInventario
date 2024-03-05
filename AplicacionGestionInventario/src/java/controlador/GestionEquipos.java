@@ -11,14 +11,19 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import modelo.Equipo;
 import modelo.Fungible;
 import modelo.Herramienta;
@@ -102,19 +107,17 @@ public class GestionEquipos extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = 0, numInventario = 0;
-        Date fechaCompraEquipo = null, fechaUltimaCalibracion = null, fechaProximaCalibracion = null, fechaUltimoMantenimiento = null, fechaProximoMantenimiento = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Equipo e = new Equipo();
             String idStr = request.getParameter("txtNumEquipo");
             if (idStr != null) {
-                id = Integer.parseInt(idStr);
+                int id = Integer.parseInt(idStr);
                 e.setId(id);
             }
             String numInventarioStr = request.getParameter("txtNumInventarioCEDEX");
             if (numInventarioStr != null) {
-                numInventario = Integer.parseInt(numInventarioStr);
+                int numInventario = Integer.parseInt(numInventarioStr);
                 e.setNumInventario(numInventario);
             }
             String nombre = request.getParameter("txtNombreEquipo");
@@ -123,7 +126,7 @@ public class GestionEquipos extends HttpServlet {
             }
             String fechaCompraEquipoStr = request.getParameter("txtFechaCompraEquipo");
             if (fechaCompraEquipoStr != null) {
-                fechaCompraEquipo = dateFormat.parse(fechaCompraEquipoStr);
+                Date fechaCompraEquipo = dateFormat.parse(fechaCompraEquipoStr);
                 e.setFechaCompra(fechaCompraEquipo);
             }
             String fabricante = request.getParameter("txtFabricanteEquipo");
@@ -132,27 +135,47 @@ public class GestionEquipos extends HttpServlet {
             }
             String fechaUltimaCalibracionStr = request.getParameter("txtFechaUltimaCalibracion");
             if (fechaUltimaCalibracionStr != null) {
-                fechaUltimaCalibracion = dateFormat.parse(fechaUltimaCalibracionStr);
+                Date fechaUltimaCalibracion = dateFormat.parse(fechaUltimaCalibracionStr);
                 e.setFechaUltimaCalibracion(fechaUltimaCalibracion);
             }
             String fechaProximaCalibracionStr = request.getParameter("txtFechaProximaCalibracion");
             if (fechaProximaCalibracionStr != null) {
-                fechaProximaCalibracion = dateFormat.parse(fechaProximaCalibracionStr);
+                Date fechaProximaCalibracion = dateFormat.parse(fechaProximaCalibracionStr);
                 e.setFechaProximaCalibracion(fechaProximaCalibracion);
             }
             String fechaUltimoMantenimientoStr = request.getParameter("txtFechaUltimoMantenimiento");
             if (fechaUltimoMantenimientoStr != null) {
-                fechaUltimoMantenimiento = dateFormat.parse(fechaUltimoMantenimientoStr);
+                Date fechaUltimoMantenimiento = dateFormat.parse(fechaUltimoMantenimientoStr);
                 e.setFechaUltimoMantenimiento(fechaUltimoMantenimiento);
             }
             String fechaProximoMantenimientoStr = request.getParameter("txtFechaProximoMantenimiento");
             if (fechaProximoMantenimientoStr != null) {
-                fechaProximoMantenimiento = dateFormat.parse(fechaProximoMantenimientoStr);
+                Date fechaProximoMantenimiento = dateFormat.parse(fechaProximoMantenimientoStr);
                 e.setFechaProximoMantenimiento(fechaProximoMantenimiento);
             }
             String nombreArchivo = request.getParameter("txtFotoEquipo");
             if (nombreArchivo != null) {
                 e.setFoto(nombreArchivo);
+                // Obtener las unidades de disco disponibles
+                File[] roots = File.listRoots();
+                // Iterar sobre cada raíz y buscar el archivo
+                for (File root : roots) {
+                    System.out.println(root.toString());
+                    File archivoBuscado = buscarArchivoEnUnidad(root, nombreArchivo);
+                    if (archivoBuscado != null) {
+                        String rutaDestino = getServletContext().getRealPath("/img2/") + File.separator + nombreArchivo;
+                        // Si se encuentra el archivo, moverlo a la ruta especificada
+                        Path destino = Paths.get(rutaDestino);
+                        try {
+                            Files.copy(archivoBuscado.toPath(), destino);
+                            // El archivo se ha movido correctamente
+                        } catch (IOException ex) {
+                            // Error al mover el archivo
+                            ex.printStackTrace();
+                        }
+                        break; // Terminar el bucle si se encuentra el archivo
+                    }
+                }
             }
             e.setFungibles(c.obtenerFungiblesPorEquipo(e));
             e.setHerramientas(c.obtenerHerramientasPorEquipo(e));
@@ -411,5 +434,32 @@ public class GestionEquipos extends HttpServlet {
         request.setAttribute("cantidadEquipos", equipos.size());
 
         return tablaHTML.toString();
+    }
+
+    // Método para buscar el archivo en una unidad de disco específica
+    private File buscarArchivoEnUnidad(File root, String nombreArchivo) {
+        // Verificar si la raíz es un directorio y si es accesible
+        if (root.isDirectory() && root.canRead()) {
+            Queue<File> queue = new LinkedList<>();
+            queue.offer(root); // Agregar la raíz a la cola
+
+            // Bucle de búsqueda en anchura (BFS)
+            while (!queue.isEmpty()) {
+                File directorioActual = queue.poll();
+                File[] archivos = directorioActual.listFiles();
+                if (archivos != null) {
+                    for (File archivo : archivos) {
+                        if (archivo.isDirectory()) {
+                            // Si es un directorio, agregarlo a la cola para explorar sus archivos
+                            queue.offer(archivo);
+                        } else if (archivo.isFile() && archivo.getName().equalsIgnoreCase(nombreArchivo)) {
+                            // Si se encuentra el archivo, devolverlo
+                            return archivo;
+                        }
+                    }
+                }
+            }
+        }
+        return null; // Devolver null si el archivo no se encuentra en la unidad
     }
 }
