@@ -100,11 +100,10 @@ public class GestionFungibles extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = 0, cantidad = 0;
         Fungible f = new Fungible();
         String idStr = request.getParameter("txtNumFungible");
         if (idStr != null) {
-            id = Integer.parseInt(idStr);
+            int id = Integer.parseInt(idStr);
             f.setId(id);
         }
         String marca = request.getParameter("txtMarcaFungible");
@@ -121,7 +120,7 @@ public class GestionFungibles extends HttpServlet {
         }
         String cantidadStr = request.getParameter("txtCantidad");
         if (cantidadStr != null) {
-            cantidad = Integer.parseInt(cantidadStr);
+            int cantidad = Integer.parseInt(cantidadStr);
             f.setCantidad(cantidad);
         }
         String nombreArchivo = request.getParameter("txtFotoFungible");

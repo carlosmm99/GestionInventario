@@ -105,14 +105,12 @@ public class GestionHerramientas extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = 0;
-        Date fechaCompra = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Herramienta h = new Herramienta();
             String idStr = request.getParameter("txtNumHerramienta");
             if (idStr != null) {
-                id = Integer.parseInt(idStr);
+                int id = Integer.parseInt(idStr);
                 h.setId(id);
             }
             String marca = request.getParameter("txtMarcaHerramienta");
@@ -129,7 +127,7 @@ public class GestionHerramientas extends HttpServlet {
             }
             String fechaCompraStr = request.getParameter("txtFechaCompraHerramienta");
             if (fechaCompraStr != null) {
-                fechaCompra = dateFormat.parse(fechaCompraStr);
+                Date fechaCompra = dateFormat.parse(fechaCompraStr);
                 h.setFechaCompra(fechaCompra);
             }
             String nombreArchivo = request.getParameter("txtFotoHerramienta");
