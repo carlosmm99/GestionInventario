@@ -10,11 +10,17 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelo.Equipo;
@@ -129,6 +135,24 @@ public class GestionHerramientas extends HttpServlet {
             String nombreArchivo = request.getParameter("txtFotoHerramienta");
             if (nombreArchivo != null) {
                 h.setFoto(nombreArchivo);
+                // Obtener las unidades de disco disponibles
+                File[] roots = File.listRoots();
+                // Iterar sobre cada raíz y buscar el archivo
+                for (File root : roots) {
+                    File archivoBuscado = buscarArchivoEnUnidad(root, nombreArchivo);
+                    if (archivoBuscado != null) {
+                        String rutaDestino = getServletContext().getRealPath("/img2/") + File.separator + nombreArchivo;
+                        // Si se encuentra el archivo, moverlo a la ruta especificada
+                        Path destino = Paths.get(rutaDestino);
+                        try {
+                            Files.copy(archivoBuscado.toPath(), destino);
+                            // El archivo se ha movido correctamente
+                        } catch (IOException ex) {
+                            // Error al mover el archivo
+                        }
+                        break; // Terminar el bucle si se encuentra el archivo
+                    }
+                }
             }
             h.setEquipos(c.obtenerEquiposPorHerramienta(h));
             h.setFungibles(c.obtenerFungiblesPorHerramienta(h));
@@ -346,5 +370,32 @@ public class GestionHerramientas extends HttpServlet {
         request.setAttribute("cantidadHerramientas", herramientas.size());
 
         return tablaHTML.toString();
+    }
+
+    // Método para buscar el archivo en una unidad de disco específica
+    private File buscarArchivoEnUnidad(File root, String nombreArchivo) {
+        // Verificar si la raíz es un directorio y si es accesible
+        if (root.isDirectory() && root.canRead()) {
+            Queue<File> queue = new LinkedList<>();
+            queue.offer(root); // Agregar la raíz a la cola
+
+            // Bucle de búsqueda en anchura (BFS)
+            while (!queue.isEmpty()) {
+                File directorioActual = queue.poll();
+                File[] archivos = directorioActual.listFiles();
+                if (archivos != null) {
+                    for (File archivo : archivos) {
+                        if (archivo.isDirectory()) {
+                            // Si es un directorio, agregarlo a la cola para explorar sus archivos
+                            queue.offer(archivo);
+                        } else if (archivo.isFile() && archivo.getName().equalsIgnoreCase(nombreArchivo)) {
+                            // Si se encuentra el archivo, devolverlo
+                            return archivo;
+                        }
+                    }
+                }
+            }
+        }
+        return null; // Devolver null si el archivo no se encuentra en la unidad
     }
 }

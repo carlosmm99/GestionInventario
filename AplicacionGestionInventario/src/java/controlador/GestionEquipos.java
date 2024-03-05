@@ -160,7 +160,6 @@ public class GestionEquipos extends HttpServlet {
                 File[] roots = File.listRoots();
                 // Iterar sobre cada raíz y buscar el archivo
                 for (File root : roots) {
-                    System.out.println(root.toString());
                     File archivoBuscado = buscarArchivoEnUnidad(root, nombreArchivo);
                     if (archivoBuscado != null) {
                         String rutaDestino = getServletContext().getRealPath("/img2/") + File.separator + nombreArchivo;
@@ -171,7 +170,6 @@ public class GestionEquipos extends HttpServlet {
                             // El archivo se ha movido correctamente
                         } catch (IOException ex) {
                             // Error al mover el archivo
-                            ex.printStackTrace();
                         }
                         break; // Terminar el bucle si se encuentra el archivo
                     }
