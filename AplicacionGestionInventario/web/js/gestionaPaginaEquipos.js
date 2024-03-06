@@ -193,8 +193,8 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", false);
             $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
             $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", false);
             $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("required", true);
-            $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", false);
 
             // Poner visibles los campos
             $("#filasFormulario").show();
@@ -237,7 +237,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", true);
+                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
@@ -267,7 +267,7 @@ $(document).ready(function () {
                         $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", false);
                         $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
-                        $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", false);
+                        $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", false);
 
                         // Poner visibles los campos
                         $("#filasFormulario").show();
@@ -292,7 +292,7 @@ $(document).ready(function () {
                         $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
                         $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                        $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", true);
+                        $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
 
                         // Poner visibles los campos
                         $("#filasFormulario").hide();
@@ -321,7 +321,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", true);
+                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").hide();

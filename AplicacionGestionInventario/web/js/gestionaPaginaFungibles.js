@@ -204,6 +204,8 @@ $(document).ready(function () {
             $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
             $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
             $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+            $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", false);
+            $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", true);
 
             // Poner visibles los campos
             $("#filasFormulario").show();
