@@ -302,7 +302,7 @@ public class GestionHerramientas extends HttpServlet {
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoHerramienta\">")
                 .append("<label>Foto:</label>")
                 .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoHerramienta\" id=\"inputFotoHerramienta\">")
-                .append("<label for=\"inputFotoHerramienta\" id=\"labelFotoHerramienta\" name=\"labelFotoHerramienta\">")
+                .append("<label id=\"labelFotoHerramienta\" name=\"labelFotoHerramienta\">")
                 .append("<img src=\"#\" id=\"imgHerramienta\">")
                 .append("</label>")
                 .append("<input type=\"text\" id=\"txtFotoHerramienta\" name=\"txtFotoHerramienta\" readonly=\"true\" style=\"display: none;\">")
