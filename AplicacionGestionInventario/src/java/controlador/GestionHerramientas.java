@@ -7,20 +7,17 @@ package controlador;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelo.Equipo;
@@ -31,6 +28,7 @@ import modelo.Herramienta;
  *
  * @author carlos.mondejar
  */
+@MultipartConfig(maxFileSize = 10485760L) // 10MB máximo de subida de ficheros
 public class GestionHerramientas extends HttpServlet {
 
     private final Controlador c = new Controlador();
@@ -130,27 +128,13 @@ public class GestionHerramientas extends HttpServlet {
                 Date fechaCompra = dateFormat.parse(fechaCompraStr);
                 h.setFechaCompra(fechaCompra);
             }
-            String nombreArchivo = request.getParameter("txtFotoHerramienta");
-            if (nombreArchivo != null) {
-                h.setFoto(nombreArchivo);
-                // Obtener las unidades de disco disponibles
-                File[] roots = File.listRoots();
-                // Iterar sobre cada raíz y buscar el archivo
-                for (File root : roots) {
-                    File archivoBuscado = buscarArchivoEnUnidad(root, nombreArchivo);
-                    if (archivoBuscado != null) {
-                        String rutaDestino = getServletContext().getRealPath("/img2/") + File.separator + nombreArchivo;
-                        // Si se encuentra el archivo, moverlo a la ruta especificada
-                        Path destino = Paths.get(rutaDestino);
-                        try {
-                            Files.copy(archivoBuscado.toPath(), destino);
-                            // El archivo se ha movido correctamente
-                        } catch (IOException ex) {
-                            // Error al mover el archivo
-                        }
-                        break; // Terminar el bucle si se encuentra el archivo
-                    }
+            Part parteArchivo = request.getPart("inputFotoHerramienta"); // Recibe la imagen en un objeto de tipo Part
+            if (parteArchivo != null) {
+                if (parteArchivo.getSize() > 0) {
+                    String rutaArchivo = request.getServletContext().getRealPath("/img2");
+                    parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
                 }
+                h.setFoto(request.getParameter("txtFotoHerramienta"));
             }
             h.setEquipos(c.obtenerEquiposPorHerramienta(h));
             h.setFungibles(c.obtenerFungiblesPorHerramienta(h));
@@ -159,25 +143,52 @@ public class GestionHerramientas extends HttpServlet {
             if (opcionesEquipos != null) {
                 for (String idEquipo : opcionesEquipos) {
                     Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
+                    boolean exists = false;
                     if (e != null) {
-                        e.setHerramientas(c.obtenerHerramientasPorEquipo(e));
-                        e.getHerramientas().add(h);
-                        h.getEquipos().add(e);
+                        for (Equipo equipo : h.getEquipos()) {
+                            if (equipo.getId() == e.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        for (Herramienta herramienta : e.getHerramientas()) {
+                            if (herramienta.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            e.getHerramientas().add(h);
+                            h.getEquipos().add(e);
+                        }
                     }
                 }
             }
             if (opcionesFungibles != null) {
                 for (String idFungible : opcionesFungibles) {
                     Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
+                    boolean exists = false;
                     if (f != null) {
-                        f.setHerramientas(c.obtenerHerramientasPorFungible(f));
-                        f.getHerramientas().add(h);
-                        h.getFungibles().add(f);
+                        for (Fungible fungible : h.getFungibles()) {
+                            if (fungible.getId() == f.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        for (Herramienta herramienta : f.getHerramientas()) {
+                            if (herramienta.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            f.getHerramientas().add(h);
+                            h.getFungibles().add(f);
+                        }
                     }
                 }
             }
-
-            int res = 0;
+            int res;
             String mensaje = "";
             if (request.getParameter("btnAgregar") != null) {
                 res = c.insertarHerramienta(h);
@@ -238,7 +249,7 @@ public class GestionHerramientas extends HttpServlet {
         request.setAttribute("ultimoNumHerramienta", ultimoNumHerramienta);
         StringBuilder formHTML = new StringBuilder();
 
-        formHTML.append("<h6 id=\"titulo\">¿Seguro que deseas eliminar esta herramienta?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
+        formHTML.append("<h6 id=\"titulo\">¿Seguro que deseas eliminar esta herramienta?</h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\" enctype=\"multipart/form-data\">")
                 .append("<div class=\"row\" id=\"filasFormulario\">")
                 // Columna nº de herramienta
                 .append("<div class=\"col-6\" id=\"columnaNumHerramienta\" style=\"display: none;\">")
@@ -290,11 +301,11 @@ public class GestionHerramientas extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoHerramienta\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoHerramienta\" id=\"inputFotoHerramienta\" style=\"display: none;\">")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoHerramienta\" id=\"inputFotoHerramienta\">")
                 .append("<label for=\"inputFotoHerramienta\" id=\"labelFotoHerramienta\" name=\"labelFotoHerramienta\">")
                 .append("<img src=\"#\" id=\"imgHerramienta\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoHerramienta\" name=\"txtFotoHerramienta\" readonly=\"true\" required style=\"display: none;\">")
+                .append("<input type=\"text\" id=\"txtFotoHerramienta\" name=\"txtFotoHerramienta\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
@@ -311,7 +322,7 @@ public class GestionHerramientas extends HttpServlet {
         List<Herramienta> herramientas = c.leerHerramientas();
         StringBuilder tablaHTML = new StringBuilder();
 
-        if (herramientas != null || !herramientas.isEmpty()) {
+        if (herramientas != null && !herramientas.isEmpty()) {
             tablaHTML.append("<table id=\"tablaHerramientas\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
@@ -365,35 +376,12 @@ public class GestionHerramientas extends HttpServlet {
             tablaHTML.append("</tbody>").append("</table>");
         }
 
-        request.setAttribute("cantidadHerramientas", herramientas.size());
+        if (herramientas != null) {
+            request.setAttribute("cantidadHerramientas", herramientas.size());
+        } else {
+            request.setAttribute("cantidadHerramientas", 0);
+        }
 
         return tablaHTML.toString();
-    }
-
-    // Método para buscar el archivo en una unidad de disco específica
-    private File buscarArchivoEnUnidad(File root, String nombreArchivo) {
-        // Verificar si la raíz es un directorio y si es accesible
-        if (root.isDirectory() && root.canRead()) {
-            Queue<File> queue = new LinkedList<>();
-            queue.offer(root); // Agregar la raíz a la cola
-
-            // Bucle de búsqueda en anchura (BFS)
-            while (!queue.isEmpty()) {
-                File directorioActual = queue.poll();
-                File[] archivos = directorioActual.listFiles();
-                if (archivos != null) {
-                    for (File archivo : archivos) {
-                        if (archivo.isDirectory()) {
-                            // Si es un directorio, agregarlo a la cola para explorar sus archivos
-                            queue.offer(archivo);
-                        } else if (archivo.isFile() && archivo.getName().equalsIgnoreCase(nombreArchivo)) {
-                            // Si se encuentra el archivo, devolverlo
-                            return archivo;
-                        }
-                    }
-                }
-            }
-        }
-        return null; // Devolver null si el archivo no se encuentra en la unidad
     }
 }

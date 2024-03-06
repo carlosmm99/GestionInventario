@@ -7,17 +7,14 @@ package controlador;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import modelo.Equipo;
 import modelo.Fungible;
 import modelo.Herramienta;
@@ -26,6 +23,7 @@ import modelo.Herramienta;
  *
  * @author carlos.mondejar
  */
+@MultipartConfig(maxFileSize = 10485760L) // 10MB máximo de subida de ficheros
 public class GestionFungibles extends HttpServlet {
 
     private final Controlador c = new Controlador();
@@ -123,27 +121,13 @@ public class GestionFungibles extends HttpServlet {
             int cantidad = Integer.parseInt(cantidadStr);
             f.setCantidad(cantidad);
         }
-        String nombreArchivo = request.getParameter("txtFotoFungible");
-        if (nombreArchivo != null) {
-            f.setFoto(nombreArchivo);
-            // Obtener las unidades de disco disponibles
-            File[] roots = File.listRoots();
-            // Iterar sobre cada raíz y buscar el archivo
-            for (File root : roots) {
-                File archivoBuscado = buscarArchivoEnUnidad(root, nombreArchivo);
-                if (archivoBuscado != null) {
-                    String rutaDestino = getServletContext().getRealPath("/img2/") + File.separator + nombreArchivo;
-                    // Si se encuentra el archivo, moverlo a la ruta especificada
-                    Path destino = Paths.get(rutaDestino);
-                    try {
-                        Files.copy(archivoBuscado.toPath(), destino);
-                        // El archivo se ha movido correctamente
-                    } catch (IOException ex) {
-                        // Error al mover el archivo
-                    }
-                    break; // Terminar el bucle si se encuentra el archivo
-                }
+        Part parteArchivo = request.getPart("inputFotoFungible"); // Recibe la imagen en un objeto de tipo Part
+        if (parteArchivo != null) {
+            if (parteArchivo.getSize() > 0) {
+                String rutaArchivo = request.getServletContext().getRealPath("/img2");
+                parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
             }
+            f.setFoto(request.getParameter("txtFotoFungible"));
         }
         f.setEquipos(c.obtenerEquiposPorFungible(f));
         f.setHerramientas(c.obtenerHerramientasPorFungible(f));
@@ -152,24 +136,52 @@ public class GestionFungibles extends HttpServlet {
         if (opcionesEquipos != null) {
             for (String idEquipo : opcionesEquipos) {
                 Equipo e = c.buscarEquipo(Integer.parseInt(idEquipo));
+                boolean exists = false;
                 if (e != null) {
-                    e.setFungibles(c.obtenerFungiblesPorEquipo(e));
-                    e.getFungibles().add(f);
-                    f.getEquipos().add(e);
+                    for (Equipo equipo : f.getEquipos()) {
+                        if (equipo.getId() == e.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (Fungible fungible : e.getFungibles()) {
+                        if (fungible.getId() == f.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        e.getFungibles().add(f);
+                        f.getEquipos().add(e);
+                    }
                 }
             }
         }
         if (opcionesHerramientas != null) {
             for (String idHerramienta : opcionesHerramientas) {
                 Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
+                boolean exists = false;
                 if (h != null) {
-                    h.setFungibles(c.obtenerFungiblesPorHerramienta(h));
-                    f.getHerramientas().add(h);
-                    h.getFungibles().add(f);
+                    for (Herramienta herramienta : f.getHerramientas()) {
+                        if (herramienta.getId() == h.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (Fungible fungible : h.getFungibles()) {
+                        if (fungible.getId() == f.getId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        f.getHerramientas().add(h);
+                        h.getFungibles().add(f);
+                    }
                 }
             }
         }
-        int res = 0;
+        int res;
         String mensaje = "";
         if (request.getParameter("btnAgregar") != null) {
             res = c.insertarFungible(f);
@@ -227,7 +239,7 @@ public class GestionFungibles extends HttpServlet {
         request.setAttribute("ultimoNumFungible", ultimoNumFungible);
         StringBuilder formHTML = new StringBuilder();
 
-        formHTML.append("<h6 id=\"titulo\"></h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\">")
+        formHTML.append("<h6 id=\"titulo\"></h6><form action=\"").append(request.getRequestURI()).append("\" method=\"post\" role=\"form\" enctype=\"multipart/form-data\">")
                 .append("<div class=\"row\" id=\"filasFormulario\">")
                 // Columna id de fungible
                 .append("<div class=\"col-6\" id=\"columnaNumFungible\" style=\"display: none;\">")
@@ -283,11 +295,11 @@ public class GestionFungibles extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoFungible\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\" style=\"display: none;\">")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\">")
                 .append("<label for=\"inputFotoFungible\" id=\"labelFotoFungible\" name=\"labelFotoFungible\">")
                 .append("<img src=\"#\" id=\"imgFungible\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\" required style=\"display: none;\">")
+                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
@@ -304,7 +316,7 @@ public class GestionFungibles extends HttpServlet {
         List<Fungible> fungibles = c.leerFungibles();
         StringBuilder tablaHTML = new StringBuilder();
 
-        if (fungibles != null || !fungibles.isEmpty()) {
+        if (fungibles != null && !fungibles.isEmpty()) {
             tablaHTML.append("<table id=\"tablaFungibles\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
@@ -362,35 +374,12 @@ public class GestionFungibles extends HttpServlet {
             tablaHTML.append("</tbody></table>");
         }
 
-        request.setAttribute("cantidadFungibles", fungibles.size());
+        if (fungibles != null) {
+            request.setAttribute("cantidadFungibles", fungibles.size());
+        } else {
+            request.setAttribute("cantidadFungibles", 0);
+        }
 
         return tablaHTML.toString();
-    }
-
-    // Método para buscar el archivo en una unidad de disco específica
-    private File buscarArchivoEnUnidad(File root, String nombreArchivo) {
-        // Verificar si la raíz es un directorio y si es accesible
-        if (root.isDirectory() && root.canRead()) {
-            Queue<File> queue = new LinkedList<>();
-            queue.offer(root); // Agregar la raíz a la cola
-
-            // Bucle de búsqueda en anchura (BFS)
-            while (!queue.isEmpty()) {
-                File directorioActual = queue.poll();
-                File[] archivos = directorioActual.listFiles();
-                if (archivos != null) {
-                    for (File archivo : archivos) {
-                        if (archivo.isDirectory()) {
-                            // Si es un directorio, agregarlo a la cola para explorar sus archivos
-                            queue.offer(archivo);
-                        } else if (archivo.isFile() && archivo.getName().equalsIgnoreCase(nombreArchivo)) {
-                            // Si se encuentra el archivo, devolverlo
-                            return archivo;
-                        }
-                    }
-                }
-            }
-        }
-        return null; // Devolver null si el archivo no se encuentra en la unidad
     }
 }

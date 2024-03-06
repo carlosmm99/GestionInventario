@@ -14,16 +14,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelo.Equipo;
@@ -156,11 +151,13 @@ public class GestionEquipos extends HttpServlet {
                 e.setFechaProximoMantenimiento(fechaProximoMantenimiento);
             }
             Part parteArchivo = request.getPart("inputFotoEquipo"); // Recibe la imagen en un objeto de tipo Part
-            String rutaArchivo = request.getServletContext().getRealPath("/img2");
-            String nombreArchivo = parteArchivo.getSubmittedFileName(); // Extrae el nombre original del archivo del objeto Part
-            InputStream is = parteArchivo.getInputStream(); // Stream para modificar columna de tipo BLOB de Mysql
-            parteArchivo.write(rutaArchivo + File.separator + nombreArchivo);  // Guarda en el disco con nombre original
-            e.setFoto(nombreArchivo);
+            if (parteArchivo != null) {
+                if (parteArchivo.getSize() > 0) {
+                    String rutaArchivo = request.getServletContext().getRealPath("/img2");
+                    parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
+                }
+                e.setFoto(request.getParameter("txtFotoEquipo"));
+            }
             e.setFungibles(c.obtenerFungiblesPorEquipo(e));
             e.setHerramientas(c.obtenerHerramientasPorEquipo(e));
             String[] opcionesFungibles = request.getParameterValues("selectFungibles");
@@ -168,24 +165,52 @@ public class GestionEquipos extends HttpServlet {
             if (opcionesFungibles != null) {
                 for (String idFungible : opcionesFungibles) {
                     Fungible f = c.buscarFungible(Integer.parseInt(idFungible));
+                    boolean exists = false;
                     if (f != null) {
-                        f.setEquipos(c.obtenerEquiposPorFungible(f));
-                        e.getFungibles().add(f);
-                        f.getEquipos().add(e);
+                        for (Fungible fungible : e.getFungibles()) {
+                            if (fungible.getId() == f.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        for (Equipo equipo : f.getEquipos()) {
+                            if (equipo.getId() == e.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            e.getFungibles().add(f);
+                            f.getEquipos().add(e);
+                        }
                     }
                 }
             }
             if (opcionesHerramientas != null) {
                 for (String idHerramienta : opcionesHerramientas) {
                     Herramienta h = c.buscarHerramienta(Integer.parseInt(idHerramienta));
+                    boolean exists = false;
                     if (h != null) {
-                        h.setEquipos(c.obtenerEquiposPorHerramienta(h));
-                        e.getHerramientas().add(h);
-                        h.getEquipos().add(e);
+                        for (Herramienta herramienta : e.getHerramientas()) {
+                            if (herramienta.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        for (Equipo equipo : h.getEquipos()) {
+                            if (equipo.getId() == h.getId()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            e.getHerramientas().add(h);
+                            h.getEquipos().add(e);
+                        }
                     }
                 }
             }
-            int res = 0;
+            int res;
             String mensaje = "";
             if (request.getParameter("btnAgregar") != null) {
                 res = c.insertarEquipo(e);
@@ -322,7 +347,7 @@ public class GestionEquipos extends HttpServlet {
                 .append("<label id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
                 .append("<img src=\"#\" id=\"imgEquipo\" style=\"width: 100px;\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\">")
+                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
@@ -339,7 +364,7 @@ public class GestionEquipos extends HttpServlet {
         List<Equipo> equipos = c.leerEquipos();
         StringBuilder tablaHTML = new StringBuilder();
 
-        if (equipos != null || !equipos.isEmpty()) {
+        if (equipos != null && !equipos.isEmpty()) {
             tablaHTML.append("<table id=\"tablaEquipos\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
@@ -415,7 +440,11 @@ public class GestionEquipos extends HttpServlet {
             tablaHTML.append("</tbody></table>");
         }
 
-        request.setAttribute("cantidadEquipos", equipos.size());
+        if (equipos != null) {
+            request.setAttribute("cantidadEquipos", equipos.size());
+        } else {
+            request.setAttribute("cantidadEquipos", 0);
+        }
 
         return tablaHTML.toString();
     }
