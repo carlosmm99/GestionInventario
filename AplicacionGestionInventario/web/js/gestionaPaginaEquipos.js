@@ -193,6 +193,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", false);
             $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
             $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("required", true);
             $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo").prop("disabled", false);
 
             // Poner visibles los campos
@@ -218,6 +219,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
             $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val(fila.data("fotoequipo"));
             $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo #imgEquipo").attr("src", contexto + "/img2/" + fila.data("fotoequipo"));
+            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("required", false);
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal

@@ -7,10 +7,13 @@ package controlador;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +34,7 @@ import modelo.Herramienta;
  *
  * @author carlos.mondejar
  */
+@MultipartConfig(maxFileSize = 10485760L) // 10MB máximo de subida de ficheros
 public class GestionEquipos extends HttpServlet {
 
     private final Controlador c = new Controlador();
@@ -151,28 +155,12 @@ public class GestionEquipos extends HttpServlet {
                 Date fechaProximoMantenimiento = dateFormat.parse(fechaProximoMantenimientoStr);
                 e.setFechaProximoMantenimiento(fechaProximoMantenimiento);
             }
-            String nombreArchivo = request.getParameter("txtFotoEquipo");
-            if (nombreArchivo != null) {
-                e.setFoto(nombreArchivo);
-                // Obtener las unidades de disco disponibles
-                File[] roots = File.listRoots();
-                // Iterar sobre cada raíz y buscar el archivo
-                for (File root : roots) {
-                    File archivoBuscado = buscarArchivoEnUnidad(root, nombreArchivo);
-                    if (archivoBuscado != null) {
-                        String rutaDestino = getServletContext().getRealPath("/img2/") + File.separator + nombreArchivo;
-                        // Si se encuentra el archivo, moverlo a la ruta especificada
-                        Path destino = Paths.get(rutaDestino);
-                        try {
-                            Files.copy(archivoBuscado.toPath(), destino);
-                            // El archivo se ha movido correctamente
-                        } catch (IOException ex) {
-                            // Error al mover el archivo
-                        }
-                        break; // Terminar el bucle si se encuentra el archivo
-                    }
-                }
-            }
+            Part parteArchivo = request.getPart("inputFotoEquipo"); // Recibe la imagen en un objeto de tipo Part
+            String rutaArchivo = request.getServletContext().getRealPath("/img2");
+            String nombreArchivo = parteArchivo.getSubmittedFileName(); // Extrae el nombre original del archivo del objeto Part
+            InputStream is = parteArchivo.getInputStream(); // Stream para modificar columna de tipo BLOB de Mysql
+            parteArchivo.write(rutaArchivo + File.separator + nombreArchivo);  // Guarda en el disco con nombre original
+            e.setFoto(nombreArchivo);
             e.setFungibles(c.obtenerFungiblesPorEquipo(e));
             e.setHerramientas(c.obtenerHerramientasPorEquipo(e));
             String[] opcionesFungibles = request.getParameterValues("selectFungibles");
@@ -330,11 +318,11 @@ public class GestionEquipos extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoEquipo\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\" style=\"display: none;\">")
-                .append("<label for=\"inputFotoEquipo\" id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\">")
+                .append("<label id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
                 .append("<img src=\"#\" id=\"imgEquipo\" style=\"width: 100px;\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" required style=\"display: none;\">")
+                .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
@@ -430,32 +418,5 @@ public class GestionEquipos extends HttpServlet {
         request.setAttribute("cantidadEquipos", equipos.size());
 
         return tablaHTML.toString();
-    }
-
-    // Método para buscar el archivo en una unidad de disco específica
-    private File buscarArchivoEnUnidad(File root, String nombreArchivo) {
-        // Verificar si la raíz es un directorio y si es accesible
-        if (root.isDirectory() && root.canRead()) {
-            Queue<File> queue = new LinkedList<>();
-            queue.offer(root); // Agregar la raíz a la cola
-
-            // Bucle de búsqueda en anchura (BFS)
-            while (!queue.isEmpty()) {
-                File directorioActual = queue.poll();
-                File[] archivos = directorioActual.listFiles();
-                if (archivos != null) {
-                    for (File archivo : archivos) {
-                        if (archivo.isDirectory()) {
-                            // Si es un directorio, agregarlo a la cola para explorar sus archivos
-                            queue.offer(archivo);
-                        } else if (archivo.isFile() && archivo.getName().equalsIgnoreCase(nombreArchivo)) {
-                            // Si se encuentra el archivo, devolverlo
-                            return archivo;
-                        }
-                    }
-                }
-            }
-        }
-        return null; // Devolver null si el archivo no se encuentra en la unidad
     }
 }
