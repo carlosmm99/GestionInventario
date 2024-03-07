@@ -16,6 +16,7 @@ $(document).keydown(function (event) {
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaID = $("#tablaEquipos thead th#celdaEncabezadoIdEquipo").index();
+    var imagenGrande = false;
     tablaEquipos = $("#tablaEquipos").DataTable({
         searching: true,
         select: false,
@@ -131,6 +132,46 @@ $(document).ready(function () {
     $("#btnAgregarEquipo").on("click", function () {
         var accion = 'Agregar';
         configurarModal(null, accion);
+    });
+
+    // Cuando haces clic en la imagen dentro de una fila de la tabla
+    $("#tablaEquipos tbody").on("click", "tr td .foto", function () {
+        // Verificar si la imagen está en tamaño grande
+        if (imagenGrande) {
+            // Cambiar tamaño a pequeño
+            $(this).css("width", "100px"); // Cambia el tamaño a tu preferencia
+            // Quitar sombreado al retirar el ratón de la imagen
+            $(this).css("box-shadow", "none");
+        } else {
+            // Cambiar tamaño a grande
+            $(this).css("width", "300px"); // Cambia el tamaño a tu preferencia
+            // Agregar sombreado al pasar el ratón sobre la imagen
+            $(this).css("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
+        }
+        // Alternar el estado del tamaño de la imagen
+        imagenGrande = !imagenGrande;
+        $(this).css("transition", "width 0.3s");
+    });
+
+    $(".foto").on("click", function (e) {
+        // Detener la propagación del evento para evitar que se muestre el modal
+        e.stopPropagation();
+
+        // Verificar si la imagen está en tamaño grande
+        if (imagenGrande) {
+            // Cambiar tamaño a pequeño
+            $(this).css("width", "100px"); // Cambia el tamaño a tu preferencia
+            // Quitar sombreado al retirar el ratón de la imagen
+            $(this).css("box-shadow", "none");
+        } else {
+            // Cambiar tamaño a grande
+            $(this).css("width", "300px"); // Cambia el tamaño a tu preferencia
+            // Agregar sombreado al pasar el ratón sobre la imagen
+            $(this).css("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
+        }
+        // Alternar el estado del tamaño de la imagen
+        imagenGrande = !imagenGrande;
+        $(this).css("transition", "width 0.3s");
     });
 
     $("#tablaEquipos tbody").on("click", "tr td:not(:first-child)", function () {
