@@ -303,7 +303,7 @@ public class GestionHerramientas extends HttpServlet {
                 .append("<label>Foto:</label>")
                 .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoHerramienta\" id=\"inputFotoHerramienta\">")
                 .append("<label id=\"labelFotoHerramienta\" name=\"labelFotoHerramienta\">")
-                .append("<img src=\"#\" id=\"imgHerramienta\" style=\"width: 100px;\">")
+                .append("<img src=\"#\" id=\"imgHerramienta\" class=\"foto\">")
                 .append("</label>")
                 .append("<input type=\"text\" id=\"txtFotoHerramienta\" name=\"txtFotoHerramienta\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
@@ -371,7 +371,7 @@ public class GestionHerramientas extends HttpServlet {
                         .append("<td>").append(herramienta.getModelo()).append("</td>")
                         .append("<td>").append(herramienta.getFabricante()).append("</td>")
                         .append("<td>").append(herramienta.getFechaCompra()).append("</td>")
-                        .append("<td>").append("<img src=\"").append(request.getContextPath()).append("/img2/").append(herramienta.getFoto()).append("\" style=\"width: 100px;\"></td></tr>");
+                        .append("<td>").append("<img class=\"foto\" src=\"").append(request.getContextPath()).append("/img2/").append(herramienta.getFoto()).append("\"></td></tr>");
             }
             tablaHTML.append("</tbody>").append("</table>");
         }

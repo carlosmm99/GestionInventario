@@ -29,8 +29,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 #divNotificaciones div {
     margin: 0 auto;
     overflow: hidden;
-/*    max-width: 200vh;
-    max-height: 200vh;*/
+    /*    max-width: 200vh;
+        max-height: 200vh;*/
     margin-bottom: 10px;
 }
 
@@ -64,6 +64,15 @@ input[type="number"]::-webkit-outer-spin-button {
 
 #tablaEquipos tbody tr:nth-child(even), #tablaFungibles tbody tr:nth-child(even), #tablaHerramientas tbody tr:nth-child(even) {
     background-color: mediumseagreen;
+}
+
+.foto {
+    width: 300px;
+    transition: width 0.3s; /* Agregamos una transición para que el cambio de tamaño sea suave */
+}
+
+.foto:hover {
+    width: 370px; /* Cambiamos el ancho cuando se pasa el ratón sobre la foto */
 }
 
 #tablaFungibles thead tr #celdaEncabezadoIdFungible, #tablaFungibles tbody tr #celdaIdFungible,

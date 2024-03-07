@@ -345,7 +345,7 @@ public class GestionEquipos extends HttpServlet {
                 .append("<label>Foto:</label>")
                 .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\">")
                 .append("<label id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
-                .append("<img src=\"#\" id=\"imgEquipo\" style=\"width: 100px;\">")
+                .append("<img src=\"#\" id=\"imgEquipo\" class=\"foto\">")
                 .append("</label>")
                 .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
@@ -426,16 +426,16 @@ public class GestionEquipos extends HttpServlet {
                         .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>")
                         .append("<td>").append(equipo.getFechaUltimoMantenimiento()).append("</td>")
                         .append("<td>").append(equipo.getFechaProximoMantenimiento()).append("</td>")
-                        .append("<td>");
+                        .append("<td><br>");
                 for (Fungible fungible : equipo.getFungibles()) {
-                    tablaHTML.append("<p>").append(fungible).append(";</p>");
+                    tablaHTML.append(fungible).append(";<br>");
                 }
-                tablaHTML.append("</td><td>");
+                tablaHTML.append("</td><td><br>");
                 for (Herramienta herramienta : equipo.getHerramientas()) {
-                    tablaHTML.append("<p>").append(herramienta).append(";</p>");
+                    tablaHTML.append(herramienta).append(";<br>");
                 }
                 tablaHTML.append("</td>")
-                        .append("<td><img src=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\" style=\"width: 100px;\"></td></tr>");
+                        .append("<td><img class=\"foto\" src=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\"></td></tr>");
             }
             tablaHTML.append("</tbody></table>");
         }

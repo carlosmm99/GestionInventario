@@ -297,7 +297,7 @@ public class GestionFungibles extends HttpServlet {
                 .append("<label>Foto:</label>")
                 .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\">")
                 .append("<label id=\"labelFotoFungible\" name=\"labelFotoFungible\">")
-                .append("<img src=\"#\" id=\"imgFungible\" style=\"width: 100px;\">")
+                .append("<img src=\"#\" id=\"imgFungible\" class=\"foto\">")
                 .append("</label>")
                 .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
@@ -367,9 +367,7 @@ public class GestionFungibles extends HttpServlet {
                         .append("<td>").append(fungible.getModelo()).append("</td>")
                         .append("<td>").append(fungible.getTamanyo()).append("</td>")
                         .append("<td>").append(fungible.getCantidad()).append("</td>")
-                        .append("<td>").append("<img src=\"")
-                        .append(request.getContextPath()).append("/img2/")
-                        .append(fungible.getFoto()).append("\" style=\"width: 100px;\"></td></tr>");
+                        .append("<td>").append("<img class=\"foto\" src=\"").append(request.getContextPath()).append("/img2/").append(fungible.getFoto()).append("\"></td></tr>");
             }
             tablaHTML.append("</tbody></table>");
         }
