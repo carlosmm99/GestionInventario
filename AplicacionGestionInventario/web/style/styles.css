@@ -73,6 +73,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .foto:hover {
     width: 200px; /* Cambiamos el ancho cuando se pasa el ratón sobre la foto */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Agregamos un borde sombreado al pasar el ratón sobre la foto */
 }
 
 #tablaFungibles thead tr #celdaEncabezadoIdFungible, #tablaFungibles tbody tr #celdaIdFungible,
