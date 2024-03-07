@@ -345,7 +345,7 @@ public class GestionEquipos extends HttpServlet {
                 .append("<label>Foto:</label>")
                 .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\">")
                 .append("<label id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
-                .append("<img src=\"#\" id=\"imgEquipo\" class=\"foto\">")
+                .append("<img src=\"#\" id=\"imgEquipo\">")
                 .append("</label>")
                 .append("<input type=\"text\" id=\"txtFotoEquipo\" name=\"txtFotoEquipo\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");

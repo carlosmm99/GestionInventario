@@ -152,7 +152,7 @@ $(document).ready(function () {
         $(this).css("transition", "width 0.3s");
     });
 
-    $(".foto").on("click", function (e) {
+    $("#filasFormulario #columnaFotoFungible").on("click", "#imgFungible", function (e) {
         // Detener la propagación del evento para evitar que se muestre el modal
         e.stopPropagation();
 
@@ -171,6 +171,37 @@ $(document).ready(function () {
         // Alternar el estado del tamaño de la imagen
         imagenGrande = !imagenGrande;
         $(this).css("transition", "width 0.3s");
+    });
+
+    $(".foto").on("click", function (e) {
+        // Detener la propagación del evento para evitar que se muestre el modal
+        e.stopPropagation();
+
+        // Restaurar el tamaño original y quitar sombreado de todas las imágenes
+        $(".foto").css({
+            "width": "100px",
+            "box-shadow": "none"
+        });
+
+        // Verificar si la imagen actual está en tamaño grande
+        if (!imagenGrande || $(this).css("width") === "100px") {
+            // Cambiar tamaño a grande y agregar sombreado
+            $(this).css({
+                "width": "300px",
+                "box-shadow": "0 0 10px rgba(0, 0, 0, 0.5)"
+            });
+            // Establecer transición solo para la imagen actual
+            $(this).css("transition", "width 0.3s");
+        } else {
+            // Cambiar tamaño a pequeño y quitar sombreado
+            $(this).css({
+                "width": "100px",
+                "box-shadow": "none"
+            });
+        }
+
+        // Alternar el estado del tamaño de la imagen
+        imagenGrande = !imagenGrande;
     });
 
     $("#tablaFungibles tbody").on("click", "tr td:not(:first-child)", function () {
