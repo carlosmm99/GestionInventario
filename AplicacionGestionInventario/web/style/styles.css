@@ -67,12 +67,12 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .foto {
-    width: 300px;
+    width: 200px;
     transition: width 0.3s; /* Agregamos una transición para que el cambio de tamaño sea suave */
 }
 
 .foto:hover {
-    width: 370px; /* Cambiamos el ancho cuando se pasa el ratón sobre la foto */
+    width: 280px; /* Cambiamos el ancho cuando se pasa el ratón sobre la foto */
 }
 
 #tablaFungibles thead tr #celdaEncabezadoIdFungible, #tablaFungibles tbody tr #celdaIdFungible,
