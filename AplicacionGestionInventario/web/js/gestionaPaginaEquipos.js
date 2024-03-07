@@ -179,7 +179,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val("");
             $("#filasFormulario #columnaFungibles #selectFungibles").val("");
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
-            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").val("");
+            $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").attr("src", "");
             $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
             $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
 
@@ -294,7 +294,7 @@ $(document).ready(function () {
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
                         $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
 
-                        // Poner visibles los campos
+                        // Poner invisibles los campos
                         $("#filasFormulario").hide();
 
                         $("[name='btnAgregar']").hide();
@@ -305,7 +305,7 @@ $(document).ready(function () {
                         $("[name='btnEliminar']").prop("disabled", true);
                     }
                 }
-            } else if (accion === 'Eliminar') {// Cambiar el texto del título del modal
+            } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Confirmar acción");
                 $("#titulo").show();
@@ -323,7 +323,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
                 $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
 
-                // Poner visibles los campos
+                // Poner invisibles los campos
                 $("#filasFormulario").hide();
 
                 $("[name='btnAgregar']").hide();

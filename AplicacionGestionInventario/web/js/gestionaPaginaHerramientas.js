@@ -161,7 +161,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
             $("#filasFormulario #columnaEquipos #selectEquipos").val("");
             $("#filasFormulario #columnaFungibles #selectFungibles").val("");
-            $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").val("");
+            $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").attr("src", "");
             $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").attr("src", "#");
             $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val("");
 
@@ -171,6 +171,8 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", false);
             $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
             $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
+            $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", false);
+            $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("required", true);
 
             // Poner visibles los campos
             $("#filasFormulario").show();
@@ -191,6 +193,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaFungibles #selectFungibles").val(fila.data("numfungibles"));
             $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val(fila.data("fotoherramienta"));
             $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta #imgHerramienta").attr("src", contexto + "/img2/" + fila.data("fotoherramienta"));
+            $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("required", false);
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
@@ -204,7 +207,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
-                $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", true);
+                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();

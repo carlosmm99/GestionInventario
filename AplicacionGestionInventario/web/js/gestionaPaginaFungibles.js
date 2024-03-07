@@ -194,7 +194,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
             $("#filasFormulario #columnaEquipos #selectEquipos").val("");
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
-            $("#filasFormulario #columnaFotoFungible #inputFotoFungible").val("");
+            $("#filasFormulario #columnaFotoFungible #inputFotoFungible").attr("src", "");
             $("#filasFormulario #columnaFotoFungible #imgFungible").attr("src", "#");
             $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val("");
 
@@ -226,6 +226,7 @@ $(document).ready(function () {
             $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
             $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val(fila.data("fotofungible"));
             $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible #imgFungible").attr("src", contexto + "/img2/" + fila.data("fotofungible"));
+            $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", false);
 
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
@@ -240,7 +241,7 @@ $(document).ready(function () {
                 $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", true);
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
 
                 // Poner visibles los campos
                 $("#filasFormulario").show();
@@ -264,14 +265,14 @@ $(document).ready(function () {
                         $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
                         $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
-                        $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", false);
+                        $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", false);
                     } else if (rol === 2) {
                         $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
                         $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
                         $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
                         $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                         $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                        $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", true);
+                        $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
                     }
                 }
 
@@ -300,7 +301,7 @@ $(document).ready(function () {
                 $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                $("#filasFormulario #columnaFotoFungible").find("#inputFotoFungible, #labelFotoFungible").prop("disabled", true);
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
 
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();
