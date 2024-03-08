@@ -371,7 +371,7 @@ public class GestionHerramientas extends HttpServlet {
                         .append("<td>").append(herramienta.getModelo()).append("</td>")
                         .append("<td>").append(herramienta.getFabricante()).append("</td>")
                         .append("<td>").append(herramienta.getFechaCompra()).append("</td>")
-                        .append("<td>").append("<img class=\"foto\" src=\"").append(request.getContextPath()).append("/img2/").append(herramienta.getFoto()).append("\"></td></tr>");
+                        .append("<td><img class=\"foto\" id=\"fotoHerramienta").append(herramienta.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(herramienta.getFoto()).append("\"></td></tr>");
             }
             tablaHTML.append("</tbody>").append("</table>");
         }

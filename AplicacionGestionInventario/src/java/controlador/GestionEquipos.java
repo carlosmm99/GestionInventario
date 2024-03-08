@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -435,7 +434,7 @@ public class GestionEquipos extends HttpServlet {
                     tablaHTML.append(herramienta).append(";<br>");
                 }
                 tablaHTML.append("</td>")
-                        .append("<td><img class=\"foto\" src=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\"></td></tr>");
+                        .append("<td><img class=\"foto\" id=\"fotoEquipo").append(equipo.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\"></td></tr>");
             }
             tablaHTML.append("</tbody></table>");
         }

@@ -16,7 +16,6 @@ $(document).keydown(function (event) {
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaMarca = $("#tablaFungibles thead th#celdaEncabezadoMarcaFungible").index();
-    var imagenGrande = false;
     tablaFungibles = $("#tablaFungibles").DataTable({
         searching: true,
         select: false,
@@ -133,28 +132,10 @@ $(document).ready(function () {
         configurarModal(null, accion);
     });
 
-    // Cuando haces clic en la imagen dentro de una fila de la tabla
-    $("#tablaFungibles tbody").on("click", "tr td .foto", function () {
-        // Verificar si la imagen está en tamaño grande
-        if (imagenGrande) {
-            // Cambiar tamaño a pequeño
-            $(this).css("width", "100px"); // Cambia el tamaño a tu preferencia
-            // Quitar sombreado al retirar el ratón de la imagen
-            $(this).css("box-shadow", "none");
-        } else {
-            // Cambiar tamaño a grande
-            $(this).css("width", "300px"); // Cambia el tamaño a tu preferencia
-            // Agregar sombreado al pasar el ratón sobre la imagen
-            $(this).css("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
-        }
-        // Alternar el estado del tamaño de la imagen
-        imagenGrande = !imagenGrande;
-        $(this).css("transition", "width 0.3s");
-    });
-
-    $("#filasFormulario #columnaFotoFungible").on("click", "#imgFungible", function (e) {
-        // Detener la propagación del evento para evitar que se muestre el modal
+    $("#tablaFungibles tbody").on("click", "tr td img[id^='fotoFungible']", function (e) {
         e.stopPropagation();
+        // Obtener el estado actual de la imagen (si está en tamaño grande o no)
+        var imagenGrande = $(this).data("imagengrande") || false;
 
         // Verificar si la imagen está en tamaño grande
         if (imagenGrande) {
@@ -168,40 +149,47 @@ $(document).ready(function () {
             // Agregar sombreado al pasar el ratón sobre la imagen
             $(this).css("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
         }
+
         // Alternar el estado del tamaño de la imagen
         imagenGrande = !imagenGrande;
+
+        // Actualizar el estado de la imagen en el atributo de datos
+        $(this).data("imagengrande", imagenGrande);
+
+        // Agregar transición para suavizar el cambio de tamaño
         $(this).css("transition", "width 0.3s");
     });
 
-    $(".foto").on("click", function (e) {
-        // Detener la propagación del evento para evitar que se muestre el modal
-        e.stopPropagation();
+    $("#filasFormulario #columnaFotoFungible #imgFungible").on("click", function () {
+        // Obtener el estado actual de la imagen (si está en tamaño grande o no)
+        var imagenGrande = $(this).data("imagengrande") || false;
 
-        // Restaurar el tamaño original y quitar sombreado de todas las imágenes
-        $(".foto").css({
-            "width": "100px",
-            "box-shadow": "none"
-        });
-
-        // Verificar si la imagen actual está en tamaño grande
-        if (!imagenGrande || $(this).css("width") === "100px") {
-            // Cambiar tamaño a grande y agregar sombreado
-            $(this).css({
-                "width": "300px",
-                "box-shadow": "0 0 10px rgba(0, 0, 0, 0.5)"
-            });
-            // Establecer transición solo para la imagen actual
-            $(this).css("transition", "width 0.3s");
+        // Verificar si la imagen está en tamaño grande
+        if (imagenGrande) {
+            // Cambiar tamaño a pequeño
+            $(this).css("width", "100px"); // Cambia el tamaño a tu preferencia
+            // Quitar sombreado al retirar el ratón de la imagen
+            $(this).css("box-shadow", "none");
         } else {
-            // Cambiar tamaño a pequeño y quitar sombreado
-            $(this).css({
-                "width": "100px",
-                "box-shadow": "none"
-            });
+            // Cambiar tamaño a grande
+            $(this).css("width", "300px"); // Cambia el tamaño a tu preferencia
+            // Agregar sombreado al pasar el ratón sobre la imagen
+            $(this).css("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
         }
 
         // Alternar el estado del tamaño de la imagen
         imagenGrande = !imagenGrande;
+
+        // Actualizar el estado de la imagen en el atributo de datos
+        $(this).data("imagengrande", imagenGrande);
+
+        // Agregar transición para suavizar el cambio de tamaño
+        $(this).css("transition", "width 0.3s");
+    });
+
+    $('#modalFungibles').on('hidden.bs.modal', function () {
+        // Cambiar el valor de imagenGrande a false
+        $("#filasFormulario #columnaFotoFungible #imgFungible").data("imagengrande", false);
     });
 
     $("#tablaFungibles tbody").on("click", "tr td:not(:first-child)", function () {
@@ -252,6 +240,10 @@ $(document).ready(function () {
     }
 
     function configurarModal(fila, accion) {
+        // Cambiar tamaño a pequeño
+        $("#filasFormulario #columnaFotoFungible #imgFungible").css("width", "100px"); // Cambia el tamaño a tu preferencia
+        // Quitar sombreado al cambiar el tamaño a pequeño
+        $("#filasFormulario #columnaFotoFungible #imgFungible").css("box-shadow", "none");
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
             $(".modal-title").text("Agregar fungible");
@@ -288,6 +280,11 @@ $(document).ready(function () {
             $("[name='btnEditar']").prop("disabled", true);
             $("[name='btnEliminar']").hide();
             $("[name='btnEliminar']").prop("disabled", true);
+
+            // Limpiar el valor del input file cuando se cierre el modal o se cancele la acción de agregar un equipo
+            $('#modalFungibles').on('hidden.bs.modal', function () {
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").val("");
+            });
         } else {
             $("#filasFormulario #columnaNumFungible #txtNumFungible").val(fila.data("idfungible"));
             $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val(fila.data("marcafungible"));

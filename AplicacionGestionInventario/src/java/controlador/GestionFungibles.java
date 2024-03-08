@@ -367,7 +367,7 @@ public class GestionFungibles extends HttpServlet {
                         .append("<td>").append(fungible.getModelo()).append("</td>")
                         .append("<td>").append(fungible.getTamanyo()).append("</td>")
                         .append("<td>").append(fungible.getCantidad()).append("</td>")
-                        .append("<td>").append("<img class=\"foto\" src=\"").append(request.getContextPath()).append("/img2/").append(fungible.getFoto()).append("\"></td></tr>");
+                        .append("<td><img class=\"foto\" id=\"fotoFungible").append(fungible.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(fungible.getFoto()).append("\"></td></tr>");
             }
             tablaHTML.append("</tbody></table>");
         }

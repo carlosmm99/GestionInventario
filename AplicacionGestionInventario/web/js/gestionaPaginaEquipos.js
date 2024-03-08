@@ -16,7 +16,6 @@ $(document).keydown(function (event) {
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaID = $("#tablaEquipos thead th#celdaEncabezadoIdEquipo").index();
-    var imagenGrande = false;
     tablaEquipos = $("#tablaEquipos").DataTable({
         searching: true,
         select: false,
@@ -134,8 +133,11 @@ $(document).ready(function () {
         configurarModal(null, accion);
     });
 
-    // Cuando haces clic en la imagen dentro de una fila de la tabla
-    $("#tablaEquipos tbody").on("click", "tr td .foto", function () {
+    $("#tablaEquipos tbody").on("click", "tr td img[id^='fotoEquipo']", function (e) {
+        e.stopPropagation();
+        // Obtener el estado actual de la imagen (si está en tamaño grande o no)
+        var imagenGrande = $(this).data("imagengrande") || false;
+
         // Verificar si la imagen está en tamaño grande
         if (imagenGrande) {
             // Cambiar tamaño a pequeño
@@ -148,14 +150,20 @@ $(document).ready(function () {
             // Agregar sombreado al pasar el ratón sobre la imagen
             $(this).css("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
         }
+
         // Alternar el estado del tamaño de la imagen
         imagenGrande = !imagenGrande;
+
+        // Actualizar el estado de la imagen en el atributo de datos
+        $(this).data("imagengrande", imagenGrande);
+
+        // Agregar transición para suavizar el cambio de tamaño
         $(this).css("transition", "width 0.3s");
     });
 
-    $("#filasFormulario #columnaFotoEquipo").on("click", "#imgEquipo", function (e) {
-        // Detener la propagación del evento para evitar que se muestre el modal
-        e.stopPropagation();
+    $("#filasFormulario #columnaFotoEquipo #imgEquipo").on("click", function () {
+        // Obtener el estado actual de la imagen (si está en tamaño grande o no)
+        var imagenGrande = $(this).data("imagengrande") || false;
 
         // Verificar si la imagen está en tamaño grande
         if (imagenGrande) {
@@ -169,30 +177,20 @@ $(document).ready(function () {
             // Agregar sombreado al pasar el ratón sobre la imagen
             $(this).css("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
         }
+
         // Alternar el estado del tamaño de la imagen
         imagenGrande = !imagenGrande;
+
+        // Actualizar el estado de la imagen en el atributo de datos
+        $(this).data("imagengrande", imagenGrande);
+
+        // Agregar transición para suavizar el cambio de tamaño
         $(this).css("transition", "width 0.3s");
     });
 
-    $(".foto").on("click", function (e) {
-        // Detener la propagación del evento para evitar que se muestre el modal
-        e.stopPropagation();
-
-        // Verificar si la imagen está en tamaño grande
-        if (imagenGrande) {
-            // Cambiar tamaño a pequeño
-            $(this).css("width", "100px"); // Cambia el tamaño a tu preferencia
-            // Quitar sombreado al retirar el ratón de la imagen
-            $(this).css("box-shadow", "none");
-        } else {
-            // Cambiar tamaño a grande
-            $(this).css("width", "300px"); // Cambia el tamaño a tu preferencia
-            // Agregar sombreado al pasar el ratón sobre la imagen
-            $(this).css("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
-        }
-        // Alternar el estado del tamaño de la imagen
-        imagenGrande = !imagenGrande;
-        $(this).css("transition", "width 0.3s");
+    $('#modalEquipos').on('hidden.bs.modal', function () {
+        // Cambiar el valor de imagenGrande a false
+        $("#filasFormulario #columnaFotoEquipo #imgEquipo").data("imagengrande", false);
     });
 
     $("#tablaEquipos tbody").on("click", "tr td:not(:first-child)", function () {
@@ -224,6 +222,10 @@ $(document).ready(function () {
     }
 
     function configurarModal(fila, accion) {
+        // Cambiar tamaño a pequeño
+        $("#filasFormulario #columnaFotoEquipo #imgEquipo").css("width", "100px"); // Cambia el tamaño a tu preferencia
+        // Quitar sombreado al cambiar el tamaño a pequeño
+        $("#filasFormulario #columnaFotoEquipo #imgEquipo").css("box-shadow", "none");
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
             $(".modal-title").text("Agregar equipo");
@@ -267,6 +269,11 @@ $(document).ready(function () {
             $("[name='btnEditar']").prop("disabled", true);
             $("[name='btnEliminar']").hide();
             $("[name='btnEliminar']").prop("disabled", true);
+
+            // Limpiar el valor del input file cuando se cierre el modal o se cancele la acción de agregar un equipo
+            $('#modalEquipos').on('hidden.bs.modal', function () {
+                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").val("");
+            });
         } else {
             $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(fila.data("idequipo"));
             $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").val(fila.data("numinventariocedex"));
