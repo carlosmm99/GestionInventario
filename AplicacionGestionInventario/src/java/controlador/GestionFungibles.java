@@ -40,7 +40,7 @@ public class GestionFungibles extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -67,7 +67,7 @@ public class GestionFungibles extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -123,28 +123,30 @@ public class GestionFungibles extends HttpServlet {
         }
         Part parteArchivo = request.getPart("inputFotoFungible"); // Recibe la imagen en un objeto de tipo Part
         if (parteArchivo != null) {
-                if (parteArchivo.getSize() > 0 && parteArchivo.getContentType().startsWith("image/")) {
-                    String rutaArchivo = request.getServletContext().getRealPath("/img2");
-                    parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
-                    f.setFoto(parteArchivo.getSubmittedFileName());
-                } else if (parteArchivo.getSize() <= 0) { // Verifica si el tamaño del archivo es menor o igual a 0
-                    // Obtiene la extensión de la imagen
-                    String fotoFungible = request.getParameter("txtFotoFungible");
-                    String extension = fotoFungible.substring(fotoFungible.lastIndexOf(".") + 1);
-                    // Verifica si la extensión es de imagen
-                    if (extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jfif")
-                            || extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
-                            || extension.equalsIgnoreCase("svg") || extension.equalsIgnoreCase("png")
-                            || extension.equalsIgnoreCase("webp") || extension.equalsIgnoreCase("svgz")
-                            || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
-                            || extension.equalsIgnoreCase("ico") || extension.equalsIgnoreCase("xbm")
-                            || extension.equalsIgnoreCase("dib") || extension.equalsIgnoreCase("pip")
-                            || extension.equalsIgnoreCase("apng") || extension.equalsIgnoreCase("tif")
-                            || extension.equalsIgnoreCase("pjpeg") || extension.equalsIgnoreCase("avif")) {
-                        f.setFoto(fotoFungible);
-                    }
+            if (parteArchivo.getSize() > 0 && parteArchivo.getContentType().startsWith("image/")) {
+                String rutaArchivo = request.getServletContext().getRealPath("/img2");
+                parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
+                f.setFoto(parteArchivo.getSubmittedFileName());
+            } else if (parteArchivo.getSize() <= 0) { // Verifica si el tamaño del archivo es menor o igual a 0
+                // Obtiene la extensión de la imagen
+                String fotoFungible = request.getParameter("txtFotoFungible");
+                String extension = fotoFungible.substring(fotoFungible.lastIndexOf(".") + 1);
+                // Verifica si la extensión es de imagen
+                if (extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jfif")
+                        || extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                        || extension.equalsIgnoreCase("svg") || extension.equalsIgnoreCase("png")
+                        || extension.equalsIgnoreCase("webp") || extension.equalsIgnoreCase("svgz")
+                        || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
+                        || extension.equalsIgnoreCase("ico") || extension.equalsIgnoreCase("xbm")
+                        || extension.equalsIgnoreCase("dib") || extension.equalsIgnoreCase("pip")
+                        || extension.equalsIgnoreCase("apng") || extension.equalsIgnoreCase("tif")
+                        || extension.equalsIgnoreCase("pjpeg") || extension.equalsIgnoreCase("avif")) {
+                    f.setFoto(fotoFungible);
                 }
             }
+        } else {
+            f.setFoto(request.getParameter("txtFotoFungible"));
+        }
         f.setEquipos(c.obtenerEquiposPorFungible(f));
         f.setHerramientas(c.obtenerHerramientasPorFungible(f));
         String[] opcionesEquipos = request.getParameterValues("selectEquipos");
@@ -315,7 +317,7 @@ public class GestionFungibles extends HttpServlet {
                 .append("<label id=\"labelFotoFungible\" name=\"labelFotoFungible\">")
                 .append("<img src=\"#\" id=\"imgFungible\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\" style=\"display: none;\">")
+                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
