@@ -317,7 +317,7 @@ public class GestionFungibles extends HttpServlet {
                 .append("<label id=\"labelFotoFungible\" name=\"labelFotoFungible\">")
                 .append("<img src=\"#\" id=\"imgFungible\">")
                 .append("</label>")
-                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\">")
+                .append("<input type=\"text\" id=\"txtFotoFungible\" name=\"txtFotoFungible\" readonly=\"true\" style=\"display: none;\">")
                 .append("</div>").append("</div>");
         formHTML.append("<div class=\"modal-footer\">")
                 .append("<button type=\"submit\" name=\"btnAgregar\" class=\"btn btn-success\">Enviar</button>")
