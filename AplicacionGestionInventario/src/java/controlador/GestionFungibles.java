@@ -123,12 +123,28 @@ public class GestionFungibles extends HttpServlet {
         }
         Part parteArchivo = request.getPart("inputFotoFungible"); // Recibe la imagen en un objeto de tipo Part
         if (parteArchivo != null) {
-            if (parteArchivo.getSize() > 0) {
-                String rutaArchivo = request.getServletContext().getRealPath("/img2");
-                parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
+                if (parteArchivo.getSize() > 0 && parteArchivo.getContentType().startsWith("image/")) {
+                    String rutaArchivo = request.getServletContext().getRealPath("/img2");
+                    parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
+                    f.setFoto(parteArchivo.getSubmittedFileName());
+                } else if (parteArchivo.getSize() <= 0) { // Verifica si el tamaño del archivo es menor o igual a 0
+                    // Obtiene la extensión de la imagen
+                    String fotoFungible = request.getParameter("txtFotoFungible");
+                    String extension = fotoFungible.substring(fotoFungible.lastIndexOf(".") + 1);
+                    // Verifica si la extensión es de imagen
+                    if (extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jfif")
+                            || extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            || extension.equalsIgnoreCase("svg") || extension.equalsIgnoreCase("png")
+                            || extension.equalsIgnoreCase("webp") || extension.equalsIgnoreCase("svgz")
+                            || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
+                            || extension.equalsIgnoreCase("ico") || extension.equalsIgnoreCase("xbm")
+                            || extension.equalsIgnoreCase("dib") || extension.equalsIgnoreCase("pip")
+                            || extension.equalsIgnoreCase("apng") || extension.equalsIgnoreCase("tif")
+                            || extension.equalsIgnoreCase("pjpeg") || extension.equalsIgnoreCase("avif")) {
+                        f.setFoto(fotoFungible);
+                    }
+                }
             }
-            f.setFoto(request.getParameter("txtFotoFungible"));
-        }
         f.setEquipos(c.obtenerEquiposPorFungible(f));
         f.setHerramientas(c.obtenerHerramientasPorFungible(f));
         String[] opcionesEquipos = request.getParameterValues("selectEquipos");
@@ -295,7 +311,7 @@ public class GestionFungibles extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoFungible\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\">")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoFungible\" id=\"inputFotoFungible\" accept=\"image/*\">")
                 .append("<label id=\"labelFotoFungible\" name=\"labelFotoFungible\">")
                 .append("<img src=\"#\" id=\"imgFungible\">")
                 .append("</label>")

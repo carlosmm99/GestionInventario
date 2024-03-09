@@ -45,7 +45,7 @@ public class GestionEquipos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -72,7 +72,7 @@ public class GestionEquipos extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -151,11 +151,27 @@ public class GestionEquipos extends HttpServlet {
             }
             Part parteArchivo = request.getPart("inputFotoEquipo"); // Recibe la imagen en un objeto de tipo Part
             if (parteArchivo != null) {
-                if (parteArchivo.getSize() > 0) {
+                if (parteArchivo.getSize() > 0 && parteArchivo.getContentType().startsWith("image/")) {
                     String rutaArchivo = request.getServletContext().getRealPath("/img2");
                     parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
+                    e.setFoto(parteArchivo.getSubmittedFileName());
+                } else if (parteArchivo.getSize() <= 0) { // Verifica si el tamaño del archivo es menor o igual a 0
+                    // Obtiene la extensión de la imagen
+                    String fotoEquipo = request.getParameter("txtFotoEquipo");
+                    String extension = fotoEquipo.substring(fotoEquipo.lastIndexOf(".") + 1);
+                    // Verifica si la extensión es de imagen
+                    if (extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jfif")
+                            || extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            || extension.equalsIgnoreCase("svg") || extension.equalsIgnoreCase("png")
+                            || extension.equalsIgnoreCase("webp") || extension.equalsIgnoreCase("svgz")
+                            || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
+                            || extension.equalsIgnoreCase("ico") || extension.equalsIgnoreCase("xbm")
+                            || extension.equalsIgnoreCase("dib") || extension.equalsIgnoreCase("pip")
+                            || extension.equalsIgnoreCase("apng") || extension.equalsIgnoreCase("tif")
+                            || extension.equalsIgnoreCase("pjpeg") || extension.equalsIgnoreCase("avif")) {
+                        e.setFoto(fotoEquipo);
+                    }
                 }
-                e.setFoto(request.getParameter("txtFotoEquipo"));
             }
             e.setFungibles(c.obtenerFungiblesPorEquipo(e));
             e.setHerramientas(c.obtenerHerramientasPorEquipo(e));
@@ -342,7 +358,7 @@ public class GestionEquipos extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoEquipo\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\">")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoEquipo\" id=\"inputFotoEquipo\" accept=\"image/*\">")
                 .append("<label id=\"labelFotoEquipo\" name=\"labelFotoEquipo\">")
                 .append("<img src=\"#\" id=\"imgEquipo\">")
                 .append("</label>")

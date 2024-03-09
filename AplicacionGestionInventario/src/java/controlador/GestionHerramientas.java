@@ -59,7 +59,7 @@ public class GestionHerramientas extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the codh.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -130,11 +130,27 @@ public class GestionHerramientas extends HttpServlet {
             }
             Part parteArchivo = request.getPart("inputFotoHerramienta"); // Recibe la imagen en un objeto de tipo Part
             if (parteArchivo != null) {
-                if (parteArchivo.getSize() > 0) {
+                if (parteArchivo.getSize() > 0 && parteArchivo.getContentType().startsWith("image/")) {
                     String rutaArchivo = request.getServletContext().getRealPath("/img2");
                     parteArchivo.write(rutaArchivo + File.separator + parteArchivo.getSubmittedFileName()); // Guarda en el disco con nombre original
+                    h.setFoto(parteArchivo.getSubmittedFileName());
+                } else if (parteArchivo.getSize() <= 0) { // Verifica si el tamaño del archivo es menor o igual a 0
+                    // Obtiene la extensión de la imagen
+                    String fotoHerramienta = request.getParameter("txtFotoHerramienta");
+                    String extension = fotoHerramienta.substring(fotoHerramienta.lastIndexOf(".") + 1);
+                    // Verifica si la extensión es de imagen
+                    if (extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jfif")
+                            || extension.equalsIgnoreCase("bmp") || extension.equalsIgnoreCase("gif")
+                            || extension.equalsIgnoreCase("svg") || extension.equalsIgnoreCase("png")
+                            || extension.equalsIgnoreCase("webp") || extension.equalsIgnoreCase("svgz")
+                            || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
+                            || extension.equalsIgnoreCase("ico") || extension.equalsIgnoreCase("xbm")
+                            || extension.equalsIgnoreCase("dib") || extension.equalsIgnoreCase("pip")
+                            || extension.equalsIgnoreCase("apng") || extension.equalsIgnoreCase("tif")
+                            || extension.equalsIgnoreCase("pjpeg") || extension.equalsIgnoreCase("avif")) {
+                        h.setFoto(fotoHerramienta);
+                    }
                 }
-                h.setFoto(request.getParameter("txtFotoHerramienta"));
             }
             h.setEquipos(c.obtenerEquiposPorHerramienta(h));
             h.setFungibles(c.obtenerFungiblesPorHerramienta(h));
@@ -146,7 +162,7 @@ public class GestionHerramientas extends HttpServlet {
                     boolean exists = false;
                     if (e != null) {
                         for (Equipo equipo : h.getEquipos()) {
-                            if (equipo.getId() == e.getId()) {
+                            if (equipo.getId() == h.getId()) {
                                 exists = true;
                                 break;
                             }
@@ -301,7 +317,7 @@ public class GestionHerramientas extends HttpServlet {
         // Columna imagen
         formHTML.append("<div class=\"col-6\" id=\"columnaFotoHerramienta\">")
                 .append("<label>Foto:</label>")
-                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoHerramienta\" id=\"inputFotoHerramienta\">")
+                .append("<input type=\"file\" class=\"form-control\" name=\"inputFotoHerramienta\" id=\"inputFotoHerramienta\" accept=\"image/*\">")
                 .append("<label id=\"labelFotoHerramienta\" name=\"labelFotoHerramienta\">")
                 .append("<img src=\"#\" id=\"imgHerramienta\">")
                 .append("</label>")
