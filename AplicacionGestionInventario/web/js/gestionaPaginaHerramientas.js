@@ -8,7 +8,6 @@
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaMarca = $("#tablaHerramientas thead th#celdaEncabezadoMarcaFungible").index();
-    var imagenGrande = false;
     tablaHerramientas = $("#tablaHerramientas").DataTable({
         searching: true,
         select: false,
