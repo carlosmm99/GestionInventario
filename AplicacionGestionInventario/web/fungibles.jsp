@@ -84,8 +84,8 @@
         <script>
             var ultimoNumFungible = <%= ultimoNumFungible %>;
             var cantidadFungibles = <%= cantidadFungibles %>;
-            var usuario = "<%= (String) request.getSession().getAttribute("usuario") %>";
-            var rol = <%= (Integer) request.getSession().getAttribute("rol") %>
+            var usuario = <%= request.getSession().getAttribute("usuario") != null ? "\"" + request.getSession().getAttribute("usuario") + "\"" : "null" %>;
+            var rol = <%= request.getSession().getAttribute("rol") != null ? (Integer) request.getSession().getAttribute("rol") : "null" %>;
             var contexto = "${pageContext.servletContext.contextPath}";
         </script>
         <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginaFungibles.js"></script>
