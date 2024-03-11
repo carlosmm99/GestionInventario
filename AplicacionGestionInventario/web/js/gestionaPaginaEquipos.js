@@ -198,6 +198,7 @@ $(document).ready(function () {
     $('#modalEquipos').on('hidden.bs.modal', function () {
         // Cambiar el valor de imagenGrande a false
         $("#filasFormulario #columnaFotoEquipo #imgEquipo").data("imagengrande", false);
+        localStorage.removeItem('id');
     });
 
     $("#tablaEquipos tbody").on("click", "tr td:not(:first-child)", function () {
@@ -323,6 +324,44 @@ $(document).ready(function () {
             } else {
                 $("#titulo").show();
                 $("#titulo").text("Para agregar un equipo debes iniciar sesión");
+
+                $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
+                $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").val("");
+                $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").val("");
+                $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").val("");
+                $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").val("");
+                $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").val("");
+                $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").val("");
+                $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").val("");
+                $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val("");
+                $("#filasFormulario #columnaFungibles #selectFungibles").val("");
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
+                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").attr("src", "");
+                $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
+                $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
+
+                $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
+                $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
+                $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", true);
+                $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", true);
+                $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").prop("readonly", true);
+                $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").prop("readonly", true);
+                $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").prop("readonly", true);
+                $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
+                $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
+                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("required", true);
+
+                // Poner invisibles los campos
+                $("#filasFormulario").hide();
+
+                $("[name='btnAgregar']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
+                $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
+                $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             }
 
             // Limpiar el valor del input file cuando se cierre el modal o se cancele la acción de agregar un equipo
@@ -348,8 +387,6 @@ $(document).ready(function () {
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Información del equipo");
-                $("#titulo").hide();
-                $("#titulo").text("");
 
                 $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
                 $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
@@ -363,8 +400,17 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
                 $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
 
-                // Poner visibles los campos
-                $("#filasFormulario").show();
+                if (usuario !== null) {
+                    $("#titulo").hide();
+                    $("#titulo").text("");
+                    // Poner visibles los campos
+                    $("#filasFormulario").show();
+                } else {
+                    $("#titulo").show();
+                    $("#titulo").text("Para ver la información del equipo debes iniciar sesión.");
+                    // Poner invisibles los campos
+                    $("#filasFormulario").hide();
+                }
 
                 $("[name='btnAgregar']").hide();
                 $("[name='btnAgregar']").prop("disabled", true);
@@ -431,12 +477,33 @@ $(document).ready(function () {
                 } else {
                     $("#titulo").show();
                     $("#titulo").text("Para editar el equipo con id " + fila.data("idequipo") + " debes iniciar sesión.");
+
+                    $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
+                    $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
+                    $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").prop("readonly", true);
+                    $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").prop("readonly", true);
+                    $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").prop("readonly", true);
+                    $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").prop("readonly", true);
+                    $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").prop("readonly", true);
+                    $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").prop("readonly", true);
+                    $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                    $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                    $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("disabled", true);
+
+                    // Poner invisibles los campos
+                    $("#filasFormulario").hide();
+
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Confirmar acción");
                 $("#titulo").show();
-                $("#titulo").text("¿Seguro que deseas eliminar este equipo?");
 
                 $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").prop("readonly", true);
                 $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").prop("readonly", true);
@@ -453,12 +520,33 @@ $(document).ready(function () {
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();
 
-                $("[name='btnAgregar']").hide();
-                $("[name='btnAgregar']").prop("disabled", true);
-                $("[name='btnEditar']").hide();
-                $("[name='btnEditar']").prop("disabled", true);
-                $("[name='btnEliminar']").show();
-                $("[name='btnEliminar']").prop("disabled", false);
+                if (usuario !== null) {
+                    if (rol === 1) {
+                        $("#titulo").text("¿Seguro que deseas eliminar este equipo?");
+                        $("[name='btnAgregar']").hide();
+                        $("[name='btnAgregar']").prop("disabled", true);
+                        $("[name='btnEditar']").hide();
+                        $("[name='btnEditar']").prop("disabled", true);
+                        $("[name='btnEliminar']").show();
+                        $("[name='btnEliminar']").prop("disabled", false);
+                    } else if (rol === 2) {
+                        $("#titulo").text("Para eliminar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
+                        $("[name='btnAgregar']").hide();
+                        $("[name='btnAgregar']").prop("disabled", true);
+                        $("[name='btnEditar']").hide();
+                        $("[name='btnEditar']").prop("disabled", true);
+                        $("[name='btnEliminar']").show();
+                        $("[name='btnEliminar']").prop("disabled", true);
+                    }
+                } else {
+                    $("#titulo").text("Para eliminar el equipo con id " + fila.data("idequipo") + " debes iniciar sesión.");
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").show();
+                    $("[name='btnEliminar']").hide("disabled", true);
+                }
             }
         }
     }

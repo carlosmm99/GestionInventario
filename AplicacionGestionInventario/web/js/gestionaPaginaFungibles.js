@@ -197,6 +197,7 @@ $(document).ready(function () {
     $('#modalFungibles').on('hidden.bs.modal', function () {
         // Cambiar el valor de imagenGrande a false
         $("#filasFormulario #columnaFotoFungible #imgFungible").data("imagengrande", false);
+        localStorage.removeItem('id');
     });
 
     $("#tablaFungibles tbody").on("click", "tr td:not(:first-child)", function () {
@@ -263,7 +264,7 @@ $(document).ready(function () {
                     $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
                     $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
                     $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
-                    $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", false);
+                    $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", false);
                     $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
                     $("#filasFormulario #columnaEquipos #selectEquipos").val("");
                     $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
@@ -297,7 +298,7 @@ $(document).ready(function () {
                     $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
                     $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
                     $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
-                    $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
+                    $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", true);
                     $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
                     $("#filasFormulario #columnaEquipos #selectEquipos").val("");
                     $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
@@ -314,7 +315,7 @@ $(document).ready(function () {
                     $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
                     $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", true);
 
-                    // Poner visibles los campos
+                    // Poner invisibles los campos
                     $("#filasFormulario").hide();
 
                     $("[name='btnAgregar']").hide();
@@ -327,6 +328,37 @@ $(document).ready(function () {
             } else {
                 $("#titulo").show();
                 $("#titulo").text("Para agregar un fungible debes iniciar sesión.");
+
+                $("#filasFormulario #columnaNumFungible #txtNumFungible").val(ultimoNumFungible);
+                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
+                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
+                $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
+                $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", true);
+                $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
+                $("#filasFormulario #columnaEquipos #selectEquipos").val("");
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").attr("src", "");
+                $("#filasFormulario #columnaFotoFungible #imgFungible").attr("src", "#");
+                $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val("");
+
+                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
+                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
+                $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
+                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
+                $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", true);
+
+                // Poner invisibles los campos
+                $("#filasFormulario").hide();
+
+                $("[name='btnAgregar']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
+                $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
+                $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             }
 
             // Limpiar el valor del input file cuando se cierre el modal o se cancele la acción de agregar un equipo
@@ -348,20 +380,26 @@ $(document).ready(function () {
             if (accion === 'Consultar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Información del fungible");
-                $("#titulo").hide();
-                $("#titulo").text("");
 
                 $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
                 $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
                 $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
-                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
-                $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
+                $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
                 $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
 
-                // Poner visibles los campos
-                $("#filasFormulario").show();
+                if (usuario !== null) {
+                    $("#titulo").hide();
+                    $("#titulo").text("");
+                    // Poner visibles los campos
+                    $("#filasFormulario").show();
+                } else {
+                    $("#titulo").show();
+                    $("#titulo").text("Para ver la información del fungible debes iniciar sesión");
+                    // Poner invisibles los campos
+                    $("#filasFormulario").hide();
+                }
 
                 $("[name='btnAgregar']").hide();
                 $("[name='btnAgregar']").prop("disabled", true);
@@ -392,8 +430,7 @@ $(document).ready(function () {
                         $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
                     }
 
-                    $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
-                    $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", false);
+                    $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", false);
 
                     // Poner visibles los campos
                     $("#filasFormulario").show();
@@ -406,7 +443,27 @@ $(document).ready(function () {
                     $("[name='btnEliminar']").prop("disabled", true);
                 } else {
                     $("#titulo").show();
-                    $("#titulo").text("Para editar el fungible con id " + fila.data("id") + " debes iniciar sesión.");
+                    $("#titulo").text("Para editar el fungible con id " + fila.data("idfungible") + " debes iniciar sesión.");
+
+                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
+                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
+                    $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
+                    $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", true);
+                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                    $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
+                    $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
+                    $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", false);
+
+                    // Poner invisibles los campos
+                    $("#filasFormulario").hide();
+
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
@@ -416,14 +473,13 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
                 $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
                 $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
-                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
-                $("#filasFormulario .minus, #filasFormulario .plus").prop("disabled", true);
+                $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", true);
                 $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
                 $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
 
                 // Poner invisibles los campos
-                $("#filasFormulario").hide();
+                $("#filasFormulario").show();
 
                 if (usuario !== null) {
                     if (rol === 1) {
@@ -436,7 +492,7 @@ $(document).ready(function () {
                         $("[name='btnEliminar']").show();
                         $("[name='btnEliminar']").prop("disabled", false);
                     } else if (rol === 2) {
-                        $("#titulo").text("Para eliminar el fungible con id " + fila.data("idfungible") + " debes iniciar sesión");
+                        $("#titulo").text("Para eliminar el fungible con id " + fila.data("idfungible") + " debes ser administrador.");
 
                         $("[name='btnAgregar']").hide();
                         $("[name='btnAgregar']").prop("disabled", true);
@@ -445,6 +501,15 @@ $(document).ready(function () {
                         $("[name='btnEliminar']").hide();
                         $("[name='btnEliminar']").prop("disabled", true);
                     }
+                } else {
+                    $("#titulo").text("Para eliminar el fungible con id " + fila.data("idfungible") + " debes iniciar sesión");
+
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             }
         }

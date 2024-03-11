@@ -1,7 +1,9 @@
 /* global contexto */
 
 window.onload = function () {
-    localStorage.removeItem('id');
+    $(".nav-link").on("click", function () {
+        localStorage.removeItem('id');
+    });
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'ObtenerEquiposYFungibles', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
