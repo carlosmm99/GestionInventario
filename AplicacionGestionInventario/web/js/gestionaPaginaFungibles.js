@@ -479,7 +479,7 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
 
                 // Poner invisibles los campos
-                $("#filasFormulario").show();
+                $("#filasFormulario").hide();
 
                 if (usuario !== null) {
                     if (rol === 1) {
