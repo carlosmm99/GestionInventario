@@ -75,6 +75,25 @@ input[type="number"]::-webkit-outer-spin-button {
     color: black;
 }
 
+.table tbody tr:nth-child(even):hover td {
+    color: white; /* Cambiar el color del texto a blanco */
+}
+
+#tablaEquipos tbody tr:nth-child(even) .child:hover,
+#tablaFungibles tbody tr:nth-child(even) .child:hover,
+#tablaHerramientas tbody tr:nth-child(even) .child:hover {
+    background-color: mediumseagreen;
+    color: white;
+}
+
+.table tbody tr:nth-child(even) .sorting_1 {
+    color: black;
+}
+
+.table tbody tr:nth-child(even):hover .sorting_1 {
+    color: black;
+}
+
 #imgEquipo, #imgFungible, #imgHerramienta, .foto {
     width: 100px;
 }
