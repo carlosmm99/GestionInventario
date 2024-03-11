@@ -73,9 +73,9 @@ $(document).ready(function () {
                                 var styleConfig = {
                                     cells: 's' + cell,
                                     style: {
-//                                        font: {
-//                                            color: 'FFFFFF'
-//                                        },
+                                        font: {
+                                            color: 'FFFFFF'
+                                        },
                                         fill: {
                                             pattern: {
                                                 color: '3CB371' // Código de color para "mediumseagreen"
