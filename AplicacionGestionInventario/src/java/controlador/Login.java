@@ -95,7 +95,7 @@ public class Login extends HttpServlet {
                     // Almacena el nombre del usuario y el rol en la sesión
                     request.getSession().setAttribute("usuario", u.getUsuario());
                     request.getSession().setAttribute("rol", u.getRol());
-                    request.getSession().setMaxInactiveInterval(3600); // 1 hora
+                    request.getSession().setMaxInactiveInterval(1800); // 30 minutos
                     response.sendRedirect(request.getContextPath() + "/Inicio");
                 } else {
                     rd.include(request, response);
