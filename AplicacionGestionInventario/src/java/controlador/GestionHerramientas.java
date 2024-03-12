@@ -339,63 +339,60 @@ public class GestionHerramientas extends HttpServlet {
         StringBuilder tablaHTML = new StringBuilder();
 
         if (herramientas != null && !herramientas.isEmpty()) {
-            tablaHTML.append("<table id=\"tablaHerramientas\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
-                    .append("<thead><tr>");
+            if (usuario != null) {
+                tablaHTML.append("<table id=\"tablaHerramientas\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
+                        .append("<thead><tr>");
 
-            if (usuario != null && rol.equals(1)) {
-                tablaHTML.append("<th scope=\"col\">Acciones</th>");
+                if (rol.equals(1)) {
+                    tablaHTML.append("<th scope=\"col\">Acciones</th>");
+                }
+
+                tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th><th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th>")
+                        .append("<th scope=\"col\">Modelo</th><th scope=\"col\">Fabricante</th>")
+                        .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Foto</th>");
+
+                tablaHTML.append("</tr></thead>");
+
+                tablaHTML.append("<tbody>");
+                for (Herramienta herramienta : herramientas) {
+                    List<Equipo> equipos = c.obtenerEquiposPorHerramienta(herramienta);
+                    List<Integer> numEquipos = new ArrayList<>();
+                    for (Equipo equipo : equipos) {
+                        numEquipos.add(equipo.getId());
+                    }
+                    List<Fungible> fungibles = c.obtenerFungiblesPorHerramienta(herramienta);
+                    List<Integer> numFungibles = new ArrayList<>();
+                    for (Fungible fungible : fungibles) {
+                        numFungibles.add(fungible.getId());
+                    }
+                    tablaHTML.append("<tr id=fila_").append(herramienta.getId()).append("\"")
+                            .append(" data-action=\"Consultar\"")
+                            .append(" data-idherramienta=\"").append(herramienta.getId()).append("\"")
+                            .append(" data-marcaherramienta=\"").append(herramienta.getMarca()).append("\"")
+                            .append(" data-modeloherramienta=\"").append(herramienta.getModelo()).append("\"")
+                            .append(" data-fabricanteherramienta=\"").append(herramienta.getFabricante()).append("\"")
+                            .append(" data-fechacompraherramienta=\"").append(herramienta.getFechaCompra()).append("\"")
+                            .append(" data-numequipos=\"").append(numEquipos).append("\"")
+                            .append(" data-numfungibles=\"").append(numFungibles).append("\"")
+                            .append(" data-fotoherramienta=\"").append(herramienta.getFoto()).append("\">");
+
+                    if (rol.equals(1)) {
+                        tablaHTML.append("<td>")
+                                .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
+                                .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
+                                .append("</td>");
+                    }
+
+                    tablaHTML.append("<td id=\"celdaIdHerramienta\">").append(herramienta.getId()).append("</td>")
+                            .append("<td>").append(herramienta.getMarca()).append("</td>")
+                            .append("<td>").append(herramienta.getModelo()).append("</td>")
+                            .append("<td>").append(herramienta.getFabricante()).append("</td>")
+                            .append("<td>").append(herramienta.getFechaCompra()).append("</td>")
+                            .append("<td><img class=\"foto\" id=\"fotoHerramienta").append(herramienta.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(herramienta.getFoto()).append("\"></td></tr>");
+                }
+                tablaHTML.append("</tbody>").append("</table>");
+                request.setAttribute("cantidadHerramientas", herramientas.size());
             }
-
-            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th><th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th>")
-                    .append("<th scope=\"col\">Modelo</th><th scope=\"col\">Fabricante</th>")
-                    .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Foto</th>");
-
-            tablaHTML.append("</tr></thead>");
-
-            tablaHTML.append("<tbody>");
-            for (Herramienta herramienta : herramientas) {
-                List<Equipo> equipos = c.obtenerEquiposPorHerramienta(herramienta);
-                List<Integer> numEquipos = new ArrayList<>();
-                for (Equipo equipo : equipos) {
-                    numEquipos.add(equipo.getId());
-                }
-                List<Fungible> fungibles = c.obtenerFungiblesPorHerramienta(herramienta);
-                List<Integer> numFungibles = new ArrayList<>();
-                for (Fungible fungible : fungibles) {
-                    numFungibles.add(fungible.getId());
-                }
-                tablaHTML.append("<tr id=fila_").append(herramienta.getId()).append("\"")
-                        .append(" data-action=\"Consultar\"")
-                        .append(" data-idherramienta=\"").append(herramienta.getId()).append("\"")
-                        .append(" data-marcaherramienta=\"").append(herramienta.getMarca()).append("\"")
-                        .append(" data-modeloherramienta=\"").append(herramienta.getModelo()).append("\"")
-                        .append(" data-fabricanteherramienta=\"").append(herramienta.getFabricante()).append("\"")
-                        .append(" data-fechacompraherramienta=\"").append(herramienta.getFechaCompra()).append("\"")
-                        .append(" data-numequipos=\"").append(numEquipos).append("\"")
-                        .append(" data-numfungibles=\"").append(numFungibles).append("\"")
-                        .append(" data-fotoherramienta=\"").append(herramienta.getFoto()).append("\">");
-
-                if (usuario != null && rol.equals(1)) {
-                    tablaHTML.append("<td>")
-                            .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
-                            .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
-                            .append("</td>");
-                }
-
-                tablaHTML.append("<td id=\"celdaIdHerramienta\">").append(herramienta.getId()).append("</td>")
-                        .append("<td>").append(herramienta.getMarca()).append("</td>")
-                        .append("<td>").append(herramienta.getModelo()).append("</td>")
-                        .append("<td>").append(herramienta.getFabricante()).append("</td>")
-                        .append("<td>").append(herramienta.getFechaCompra()).append("</td>")
-                        .append("<td><img class=\"foto\" id=\"fotoHerramienta").append(herramienta.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(herramienta.getFoto()).append("\"></td></tr>");
-            }
-            tablaHTML.append("</tbody>").append("</table>");
-        }
-
-        if (herramientas != null) {
-            request.setAttribute("cantidadHerramientas", herramientas.size());
-        } else {
-            request.setAttribute("cantidadHerramientas", 0);
         }
 
         return tablaHTML.toString();

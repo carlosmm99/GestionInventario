@@ -40,7 +40,7 @@ public class GestionFungibles extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -67,7 +67,7 @@ public class GestionFungibles extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -335,65 +335,57 @@ public class GestionFungibles extends HttpServlet {
         StringBuilder tablaHTML = new StringBuilder();
 
         if (fungibles != null && !fungibles.isEmpty()) {
-            tablaHTML.append("<table id=\"tablaFungibles\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
-                    .append("<thead><tr>");
-
             if (usuario != null) {
-                tablaHTML.append("<th scope=\"col\">Acciones</th>");
-            }
+                tablaHTML.append("<table id=\"tablaFungibles\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
+                        .append("<thead><tr>");
 
-            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdFungible\">ID</th><th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th>")
-                    .append("<th scope=\"col\">Modelo</th><th scope=\"col\">Tamaño</th>")
-                    .append("<th scope=\"col\">Cantidad</th><th scope=\"col\">Foto</th>");
+                tablaHTML.append("<th scope=\"col\">Acciones</th>")
+                        .append("<th scope=\"col\" id=\"celdaEncabezadoIdFungible\">ID</th><th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th>")
+                        .append("<th scope=\"col\">Modelo</th><th scope=\"col\">Tamaño</th>")
+                        .append("<th scope=\"col\">Cantidad</th><th scope=\"col\">Foto</th>");
 
-            tablaHTML.append("</tr></thead>");
+                tablaHTML.append("</tr></thead>");
 
-            tablaHTML.append("<tbody>");
-            for (Fungible fungible : fungibles) {
-                List<Equipo> equipos = c.obtenerEquiposPorFungible(fungible);
-                List<Integer> numEquipos = new ArrayList<>();
-                for (Equipo equipo : equipos) {
-                    numEquipos.add(equipo.getId());
-                }
-                List<Herramienta> herramientas = c.obtenerHerramientasPorFungible(fungible);
-                List<Integer> numHerramientas = new ArrayList<>();
-                for (Herramienta herramienta : herramientas) {
-                    numHerramientas.add(herramienta.getId());
-                }
-                tablaHTML.append("<tr id=fila_").append(fungible.getId()).append("\"")
-                        .append(" data-action=\"Consultar\"")
-                        .append(" data-idfungible=\"").append(fungible.getId()).append("\"")
-                        .append(" data-marcafungible=\"").append(fungible.getMarca()).append("\"")
-                        .append(" data-modelofungible=\"").append(fungible.getModelo()).append("\"")
-                        .append(" data-tamanyo=\"").append(fungible.getTamanyo()).append("\"")
-                        .append(" data-cantidad=\"").append(fungible.getCantidad()).append("\"")
-                        .append(" data-numequipos=\"").append(numEquipos).append("\"")
-                        .append(" data-numherramientas=\"").append(numHerramientas).append("\"")
-                        .append(" data-fotofungible=\"").append(fungible.getFoto()).append("\">");
+                tablaHTML.append("<tbody>");
+                for (Fungible fungible : fungibles) {
+                    List<Equipo> equipos = c.obtenerEquiposPorFungible(fungible);
+                    List<Integer> numEquipos = new ArrayList<>();
+                    for (Equipo equipo : equipos) {
+                        numEquipos.add(equipo.getId());
+                    }
+                    List<Herramienta> herramientas = c.obtenerHerramientasPorFungible(fungible);
+                    List<Integer> numHerramientas = new ArrayList<>();
+                    for (Herramienta herramienta : herramientas) {
+                        numHerramientas.add(herramienta.getId());
+                    }
+                    tablaHTML.append("<tr id=fila_").append(fungible.getId()).append("\"")
+                            .append(" data-action=\"Consultar\"")
+                            .append(" data-idfungible=\"").append(fungible.getId()).append("\"")
+                            .append(" data-marcafungible=\"").append(fungible.getMarca()).append("\"")
+                            .append(" data-modelofungible=\"").append(fungible.getModelo()).append("\"")
+                            .append(" data-tamanyo=\"").append(fungible.getTamanyo()).append("\"")
+                            .append(" data-cantidad=\"").append(fungible.getCantidad()).append("\"")
+                            .append(" data-numequipos=\"").append(numEquipos).append("\"")
+                            .append(" data-numherramientas=\"").append(numHerramientas).append("\"")
+                            .append(" data-fotofungible=\"").append(fungible.getFoto()).append("\">");
 
-                tablaHTML.append("<td>");
-                if (usuario != null) {
-                    tablaHTML.append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;");
+                    tablaHTML.append("<td>")
+                            .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;");
                     if (rol.equals(1)) {
                         tablaHTML.append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;");
                     }
+                    tablaHTML.append("</td>");
+
+                    tablaHTML.append("<td id=\"celdaIdFungible\">").append(fungible.getId()).append("</td>")
+                            .append("<td>").append(fungible.getMarca()).append("</td>")
+                            .append("<td>").append(fungible.getModelo()).append("</td>")
+                            .append("<td>").append(fungible.getTamanyo()).append("</td>")
+                            .append("<td>").append(fungible.getCantidad()).append("</td>")
+                            .append("<td><img class=\"foto\" id=\"fotoFungible").append(fungible.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(fungible.getFoto()).append("\"></td></tr>");
                 }
-                tablaHTML.append("</td>");
-
-                tablaHTML.append("<td id=\"celdaIdFungible\">").append(fungible.getId()).append("</td>")
-                        .append("<td>").append(fungible.getMarca()).append("</td>")
-                        .append("<td>").append(fungible.getModelo()).append("</td>")
-                        .append("<td>").append(fungible.getTamanyo()).append("</td>")
-                        .append("<td>").append(fungible.getCantidad()).append("</td>")
-                        .append("<td><img class=\"foto\" id=\"fotoFungible").append(fungible.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(fungible.getFoto()).append("\"></td></tr>");
+                tablaHTML.append("</tbody></table>");
+                request.setAttribute("cantidadFungibles", fungibles.size());
             }
-            tablaHTML.append("</tbody></table>");
-        }
-
-        if (fungibles != null) {
-            request.setAttribute("cantidadFungibles", fungibles.size());
-        } else {
-            request.setAttribute("cantidadFungibles", 0);
         }
 
         return tablaHTML.toString();

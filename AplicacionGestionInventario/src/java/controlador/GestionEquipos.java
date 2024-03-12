@@ -45,7 +45,7 @@ public class GestionEquipos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -72,7 +72,7 @@ public class GestionEquipos extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
@@ -380,85 +380,82 @@ public class GestionEquipos extends HttpServlet {
         StringBuilder tablaHTML = new StringBuilder();
 
         if (equipos != null && !equipos.isEmpty()) {
-            tablaHTML.append("<table id=\"tablaEquipos\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
-                    .append("<thead><tr>");
+            if (usuario != null) {
+                tablaHTML.append("<table id=\"tablaEquipos\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
+                        .append("<thead><tr>");
 
-            if (usuario != null && rol.equals(1)) {
-                tablaHTML.append("<th scope=\"col\">Acciones</th>");
+                if (rol.equals(1)) {
+                    tablaHTML.append("<th scope=\"col\">Acciones</th>");
+                }
+
+                tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdEquipo\">ID</th><th scope=\"col\">Nº inventario CEDEX</th>")
+                        .append("<th scope=\"col\">Nombre</th><th scope=\"col\">Fecha de compra</th>")
+                        .append("<th scope=\"col\">Fabricante</th><th scope=\"col\">Fecha última calibración</th>")
+                        .append("<th scope=\"col\">Fecha próxima calibración</th><th scope=\"col\">Fecha último mantenimiento</th>")
+                        .append("<th scope=\"col\">Fecha próximo mantenimiento</th><th scope=\"col\">Listado de fungibles del equipo</th>")
+                        .append("<th scope=\"col\">Listado de herramientas del equipo</th><th scope=\"col\">Foto</th>");
+
+                tablaHTML.append("</tr></thead>");
+
+                tablaHTML.append("<tbody>");
+                for (Equipo equipo : equipos) {
+                    List<Fungible> fungibles = c.obtenerFungiblesPorEquipo(equipo);
+                    List<Integer> numFungibles = new ArrayList<>();
+                    for (Fungible fungible : fungibles) {
+                        numFungibles.add(fungible.getId());
+                    }
+                    List<Herramienta> herramientas = c.obtenerHerramientasPorEquipo(equipo);
+                    List<Integer> numHerramientas = new ArrayList<>();
+                    for (Herramienta herramienta : herramientas) {
+                        numHerramientas.add(herramienta.getId());
+                    }
+                    equipo.setFungibles(fungibles);
+                    equipo.setHerramientas(herramientas);
+                    tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
+                            .append(" data-action=\"Consultar\"")
+                            .append(" data-idequipo=\"").append(equipo.getId()).append("\"")
+                            .append(" data-numinventariocedex=\"").append(equipo.getNumInventario()).append("\"")
+                            .append(" data-nombre=\"").append(equipo.getNombre()).append("\"")
+                            .append(" data-fechacompraequipo=\"").append(equipo.getFechaCompra()).append("\"")
+                            .append(" data-fabricanteequipo=\"").append(equipo.getFabricante()).append("\"")
+                            .append(" data-fechaultimacalibracion=\"").append(equipo.getFechaUltimaCalibracion()).append("\"")
+                            .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\"")
+                            .append(" data-fechaultimomantenimiento=\"").append(equipo.getFechaUltimoMantenimiento()).append("\"")
+                            .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\"")
+                            .append(" data-numfungibles=\"").append(numFungibles).append("\"")
+                            .append(" data-numherramientas=\"").append(numHerramientas).append("\"")
+                            .append(" data-fotoequipo=\"").append(equipo.getFoto()).append("\">");
+
+                    if (rol.equals(1)) {
+                        tablaHTML.append("<td>")
+                                .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
+                                .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Eliminar\" name=\"btnEliminarTrabajo\">Eliminar</button>&nbsp;")
+                                .append("</td>");
+                    }
+
+                    tablaHTML.append("<td>").append(equipo.getId()).append("</td>")
+                            .append("<td>").append(equipo.getNumInventario()).append("</td>")
+                            .append("<td>").append(equipo.getNombre()).append("</td>")
+                            .append("<td>").append(equipo.getFechaCompra()).append("</td>")
+                            .append("<td>").append(equipo.getFabricante()).append("</td>")
+                            .append("<td>").append(equipo.getFechaUltimaCalibracion()).append("</td>")
+                            .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>")
+                            .append("<td>").append(equipo.getFechaUltimoMantenimiento()).append("</td>")
+                            .append("<td>").append(equipo.getFechaProximoMantenimiento()).append("</td>")
+                            .append("<td><br>");
+                    for (Fungible fungible : equipo.getFungibles()) {
+                        tablaHTML.append(fungible).append(";<br>");
+                    }
+                    tablaHTML.append("</td><td><br>");
+                    for (Herramienta herramienta : equipo.getHerramientas()) {
+                        tablaHTML.append(herramienta).append(";<br>");
+                    }
+                    tablaHTML.append("</td>")
+                            .append("<td><img class=\"foto\" id=\"fotoEquipo").append(equipo.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\"></td></tr>");
+                }
+                tablaHTML.append("</tbody></table>");
+                request.setAttribute("cantidadEquipos", equipos.size());
             }
-
-            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdEquipo\">ID</th><th scope=\"col\">Nº inventario CEDEX</th>")
-                    .append("<th scope=\"col\">Nombre</th><th scope=\"col\">Fecha de compra</th>")
-                    .append("<th scope=\"col\">Fabricante</th><th scope=\"col\">Fecha última calibración</th>")
-                    .append("<th scope=\"col\">Fecha próxima calibración</th><th scope=\"col\">Fecha último mantenimiento</th>")
-                    .append("<th scope=\"col\">Fecha próximo mantenimiento</th><th scope=\"col\">Listado de fungibles del equipo</th>")
-                    .append("<th scope=\"col\">Listado de herramientas del equipo</th><th scope=\"col\">Foto</th>");
-
-            tablaHTML.append("</tr></thead>");
-
-            tablaHTML.append("<tbody>");
-            for (Equipo equipo : equipos) {
-                List<Fungible> fungibles = c.obtenerFungiblesPorEquipo(equipo);
-                List<Integer> numFungibles = new ArrayList<>();
-                for (Fungible fungible : fungibles) {
-                    numFungibles.add(fungible.getId());
-                }
-                List<Herramienta> herramientas = c.obtenerHerramientasPorEquipo(equipo);
-                List<Integer> numHerramientas = new ArrayList<>();
-                for (Herramienta herramienta : herramientas) {
-                    numHerramientas.add(herramienta.getId());
-                }
-                equipo.setFungibles(fungibles);
-                equipo.setHerramientas(herramientas);
-                tablaHTML.append("<tr id=fila_").append(equipo.getId()).append("\"")
-                        .append(" data-action=\"Consultar\"")
-                        .append(" data-idequipo=\"").append(equipo.getId()).append("\"")
-                        .append(" data-numinventariocedex=\"").append(equipo.getNumInventario()).append("\"")
-                        .append(" data-nombre=\"").append(equipo.getNombre()).append("\"")
-                        .append(" data-fechacompraequipo=\"").append(equipo.getFechaCompra()).append("\"")
-                        .append(" data-fabricanteequipo=\"").append(equipo.getFabricante()).append("\"")
-                        .append(" data-fechaultimacalibracion=\"").append(equipo.getFechaUltimaCalibracion()).append("\"")
-                        .append(" data-fechaproximacalibracion=\"").append(equipo.getFechaProximaCalibracion()).append("\"")
-                        .append(" data-fechaultimomantenimiento=\"").append(equipo.getFechaUltimoMantenimiento()).append("\"")
-                        .append(" data-fechaproximomantenimiento=\"").append(equipo.getFechaProximoMantenimiento()).append("\"")
-                        .append(" data-numfungibles=\"").append(numFungibles).append("\"")
-                        .append(" data-numherramientas=\"").append(numHerramientas).append("\"")
-                        .append(" data-fotoequipo=\"").append(equipo.getFoto()).append("\">");
-
-                if (usuario != null && rol.equals(1)) {
-                    tablaHTML.append("<td>")
-                            .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
-                            .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Eliminar\" name=\"btnEliminarTrabajo\">Eliminar</button>&nbsp;")
-                            .append("</td>");
-                }
-
-                tablaHTML.append("<td>").append(equipo.getId()).append("</td>")
-                        .append("<td>").append(equipo.getNumInventario()).append("</td>")
-                        .append("<td>").append(equipo.getNombre()).append("</td>")
-                        .append("<td>").append(equipo.getFechaCompra()).append("</td>")
-                        .append("<td>").append(equipo.getFabricante()).append("</td>")
-                        .append("<td>").append(equipo.getFechaUltimaCalibracion()).append("</td>")
-                        .append("<td>").append(equipo.getFechaProximaCalibracion()).append("</td>")
-                        .append("<td>").append(equipo.getFechaUltimoMantenimiento()).append("</td>")
-                        .append("<td>").append(equipo.getFechaProximoMantenimiento()).append("</td>")
-                        .append("<td><br>");
-                for (Fungible fungible : equipo.getFungibles()) {
-                    tablaHTML.append(fungible).append(";<br>");
-                }
-                tablaHTML.append("</td><td><br>");
-                for (Herramienta herramienta : equipo.getHerramientas()) {
-                    tablaHTML.append(herramienta).append(";<br>");
-                }
-                tablaHTML.append("</td>")
-                        .append("<td><img class=\"foto\" id=\"fotoEquipo").append(equipo.getId()).append("\" src=\"").append(request.getContextPath()).append("/img2/").append(equipo.getFoto()).append("\"></td></tr>");
-            }
-            tablaHTML.append("</tbody></table>");
-        }
-
-        if (equipos != null) {
-            request.setAttribute("cantidadEquipos", equipos.size());
-        } else {
-            request.setAttribute("cantidadEquipos", 0);
         }
 
         return tablaHTML.toString();
