@@ -7,12 +7,7 @@ package controlador;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import modelo.Equipo;
-import modelo.Fungible;
-import modelo.Herramienta;
-import modelo.Usuario;
+import modelo.*;
 
 /**
  *
@@ -87,17 +82,7 @@ public class Controlador {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                int numIdentificacion = rs.getInt("num_inventario");
-                String nombre = rs.getString("nombre");
-                Date fechaCompra = rs.getDate("fecha_compra");
-                String fabricante = rs.getString("fabricante");
-                Date fechaUltimaCalibracion = rs.getDate("fecha_ultima_calibracion");
-                Date fechaProximaCalibracion = rs.getDate("fecha_proxima_calibracion");
-                Date fechaUltimoMantenimiento = rs.getDate("fecha_ultimo_mantenimiento");
-                Date fechaProximoMantenimiento = rs.getDate("fecha_proximo_mantenimiento");
-                String foto = rs.getString("foto");
-                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento, foto));
+                equipos.add(new Equipo(rs.getInt("id"), rs.getInt("num_inventario"), rs.getString("nombre"), rs.getDate("fecha_compra"), rs.getString("fabricante"), rs.getDate("fecha_ultima_calibracion"), rs.getDate("fecha_proxima_calibracion"), rs.getDate("fecha_ultimo_mantenimiento"), rs.getDate("fecha_proximo_mantenimiento"), rs.getString("foto")));
             }
             return equipos;
         } catch (SQLException ex) {
@@ -118,13 +103,7 @@ public class Controlador {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String marca = rs.getString("marca");
-                String modelo = rs.getString("modelo");
-                String tamanyo = rs.getString("tamanyo");
-                int cantidad = rs.getInt("cantidad");
-                String foto = rs.getString("foto");
-                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad, foto));
+                fungibles.add(new Fungible(rs.getInt("id"), rs.getString("marca"), rs.getString("modelo"), rs.getString("tamanyo"), rs.getInt("cantidad"), rs.getString("foto")));
             }
             return fungibles;
         } catch (SQLException ex) {
@@ -145,13 +124,7 @@ public class Controlador {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String marca = rs.getString("marca");
-                String modelo = rs.getString("modelo");
-                String fabricante = rs.getString("fabricante");
-                Date fechaCompra = rs.getDate("fecha_compra");
-                String foto = rs.getString("foto");
-                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra, foto));
+                herramientas.add(new Herramienta(rs.getInt("id"), rs.getString("marca"), rs.getString("modelo"), rs.getString("fabricante"), rs.getDate("fecha_compra"), rs.getString("foto")));
             }
             return herramientas;
         } catch (SQLException ex) {
@@ -602,17 +575,10 @@ public class Controlador {
             ps.setInt(1, e.getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("f.id");
-                String marca = rs.getString("f.marca");
-                String modelo = rs.getString("f.modelo");
-                String tamanyo = rs.getString("f.tamanyo");
-                int cantidad = rs.getInt("f.cantidad");
-                String foto = rs.getString("f.foto");
-                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad, foto));
+                fungibles.add(new Fungible(rs.getInt("f.id"), rs.getString("f.marca"), rs.getString("f.modelo"), rs.getString("f.tamanyo"), rs.getInt("f.cantidad"), rs.getString("f.foto")));
             }
             return fungibles;
         } catch (SQLException ex) {
-            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } finally {
             desconectar();
@@ -631,13 +597,7 @@ public class Controlador {
             ps.setInt(1, e.getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("h.id");
-                String marca = rs.getString("h.marca");
-                String modelo = rs.getString("h.modelo");
-                String fabricante = rs.getString("h.fabricante");
-                Date fechaCompra = rs.getDate("h.fecha_compra");
-                String foto = rs.getString("h.foto");
-                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra, foto));
+                herramientas.add(new Herramienta(rs.getInt("h.id"), rs.getString("h.marca"), rs.getString("h.modelo"), rs.getString("h.fabricante"), rs.getDate("h.fecha_compra"), rs.getString("h.foto")));
             }
             return herramientas;
         } catch (SQLException ex) {
@@ -659,17 +619,7 @@ public class Controlador {
             ps.setInt(1, f.getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("e.id");
-                int numIdentificacion = rs.getInt("e.num_inventario");
-                String nombre = rs.getString("e.nombre");
-                Date fechaCompra = rs.getDate("e.fecha_compra");
-                String fabricante = rs.getString("e.fabricante");
-                Date fechaUltimaCalibracion = rs.getDate("e.fecha_ultima_calibracion");
-                Date fechaProximaCalibracion = rs.getDate("e.fecha_proxima_calibracion");
-                Date fechaUltimoMantenimiento = rs.getDate("e.fecha_ultimo_mantenimiento");
-                Date fechaProximoMantenimiento = rs.getDate("e.fecha_proximo_mantenimiento");
-                String foto = rs.getString("foto");
-                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento, foto));
+                equipos.add(new Equipo(rs.getInt("e.id"), rs.getInt("e.num_inventario"), rs.getString("e.nombre"), rs.getDate("e.fecha_compra"), rs.getString("e.fabricante"), rs.getDate("e.fecha_ultima_calibracion"), rs.getDate("e.fecha_proxima_calibracion"), rs.getDate("e.fecha_ultimo_mantenimiento"), rs.getDate("e.fecha_proximo_mantenimiento"), rs.getString("foto")));
             }
             return equipos;
         } catch (SQLException ex) {
@@ -691,13 +641,7 @@ public class Controlador {
             ps.setInt(1, f.getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("h.id");
-                String marca = rs.getString("h.marca");
-                String modelo = rs.getString("h.modelo");
-                String fabricante = rs.getString("h.fabricante");
-                Date fechaCompra = rs.getDate("h.fecha_compra");
-                String foto = rs.getString("h.foto");
-                herramientas.add(new Herramienta(id, marca, modelo, fabricante, fechaCompra, foto));
+                herramientas.add(new Herramienta(rs.getInt("h.id"), rs.getString("h.marca"), rs.getString("h.modelo"), rs.getString("h.fabricante"), rs.getDate("h.fecha_compra"), rs.getString("h.foto")));
             }
             return herramientas;
         } catch (SQLException ex) {
@@ -719,17 +663,7 @@ public class Controlador {
             ps.setInt(1, h.getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("e.id");
-                int numIdentificacion = rs.getInt("e.num_inventario");
-                String nombre = rs.getString("e.nombre");
-                Date fechaCompra = rs.getDate("e.fecha_compra");
-                String fabricante = rs.getString("e.fabricante");
-                Date fechaUltimaCalibracion = rs.getDate("e.fecha_ultima_calibracion");
-                Date fechaProximaCalibracion = rs.getDate("e.fecha_proxima_calibracion");
-                Date fechaUltimoMantenimiento = rs.getDate("e.fecha_ultimo_mantenimiento");
-                Date fechaProximoMantenimiento = rs.getDate("e.fecha_proximo_mantenimiento");
-                String foto = rs.getString("e.foto");
-                equipos.add(new Equipo(id, numIdentificacion, nombre, fechaCompra, fabricante, fechaUltimaCalibracion, fechaProximaCalibracion, fechaUltimoMantenimiento, fechaProximoMantenimiento, foto));
+                equipos.add(new Equipo(rs.getInt("e.id"), rs.getInt("e.num_inventario"), rs.getString("e.nombre"), rs.getDate("e.fecha_compra"), rs.getString("e.fabricante"), rs.getDate("e.fecha_ultima_calibracion"), rs.getDate("e.fecha_proxima_calibracion"), rs.getDate("e.fecha_ultimo_mantenimiento"), rs.getDate("e.fecha_proximo_mantenimiento"), rs.getString("e.foto")));
             }
             return equipos;
         } catch (SQLException ex) {
@@ -751,17 +685,10 @@ public class Controlador {
             ps.setInt(1, h.getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("f.id");
-                String marca = rs.getString("f.marca");
-                String modelo = rs.getString("f.modelo");
-                String tamanyo = rs.getString("f.tamanyo");
-                int cantidad = rs.getInt("f.cantidad");
-                String foto = rs.getString("f.foto");
-                fungibles.add(new Fungible(id, marca, modelo, tamanyo, cantidad, foto));
+                fungibles.add(new Fungible(rs.getInt("f.id"), rs.getString("f.marca"), rs.getString("f.modelo"), rs.getString("f.tamanyo"), rs.getInt("f.cantidad"), rs.getString("f.foto")));
             }
             return fungibles;
         } catch (SQLException ex) {
-            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } finally {
             desconectar();
