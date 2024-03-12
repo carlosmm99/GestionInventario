@@ -109,7 +109,7 @@ $(document).ready(function () {
         // Verificar si se encontró la fila
         if (filaEditar.length > 0) {
             // Configurar el modal para editar la fila encontrada
-            configurarModal(filaEditar, 'Agregar');
+            configurarModal(filaEditar, 'Editar');
             // Mostrar el modal
             $("#modalEquipos").modal('show');
             $("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container").on("click", function (event) {
