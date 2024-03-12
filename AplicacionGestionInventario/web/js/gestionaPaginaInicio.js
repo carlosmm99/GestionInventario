@@ -1,99 +1,101 @@
-/* global contexto */
+/* global usuario, contexto */
 
 window.onload = function () {
-    $(".nav-link").on("click", function () {
-        localStorage.removeItem('id');
-    });
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'ObtenerEquiposYFungibles', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                var data = JSON.parse(xhr.responseText);
-                var equipos = data.equipos;
-                var fungibles = data.fungibles;
-                var hoy = new Date();
+    if (usuario !== null) {
+        $(".nav-link").on("click", function () {
+            localStorage.removeItem('id');
+        });
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'ObtenerEquiposYFungibles', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var equipos = data.equipos;
+                    var fungibles = data.fungibles;
+                    var hoy = new Date();
 
-                equipos.forEach(function (equipo) {
-                    var fechaProximaCalibracion = new Date(equipo.fechaProximaCalibracion).getTime();
-                    var tiempoRestanteProximaCalibracion = fechaProximaCalibracion - hoy.getTime();
-                    var mesesRestantesProximaCalibracion = tiempoRestanteProximaCalibracion / (1000 * 60 * 60 * 24 * 30);
-                    var fechaProximoMantenimiento = new Date(equipo.fechaProximoMantenimiento).getTime();
-                    var tiempoRestanteProximoMantenimiento = fechaProximoMantenimiento - hoy.getTime();
-                    var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
+                    equipos.forEach(function (equipo) {
+                        var fechaProximaCalibracion = new Date(equipo.fechaProximaCalibracion).getTime();
+                        var tiempoRestanteProximaCalibracion = fechaProximaCalibracion - hoy.getTime();
+                        var mesesRestantesProximaCalibracion = tiempoRestanteProximaCalibracion / (1000 * 60 * 60 * 24 * 30);
+                        var fechaProximoMantenimiento = new Date(equipo.fechaProximoMantenimiento).getTime();
+                        var tiempoRestanteProximoMantenimiento = fechaProximoMantenimiento - hoy.getTime();
+                        var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
 
-                    if (mesesRestantesProximaCalibracion < 6 && mesesRestantesProximaCalibracion >= 3) {
-                        crearAlertaCalibracion(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 6 meses.");
-                    } else if (mesesRestantesProximaCalibracion < 3 && mesesRestantesProximaCalibracion >= 0) {
-                        crearAlertaCalibracion(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 3 meses.");
-                    } else if (mesesRestantesProximaCalibracion < 0) {
-                        crearAlertaCalibracion(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración urgente.");
-                    }
+                        if (mesesRestantesProximaCalibracion < 6 && mesesRestantesProximaCalibracion >= 3) {
+                            crearAlertaCalibracion(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 6 meses.");
+                        } else if (mesesRestantesProximaCalibracion < 3 && mesesRestantesProximaCalibracion >= 0) {
+                            crearAlertaCalibracion(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 3 meses.");
+                        } else if (mesesRestantesProximaCalibracion < 0) {
+                            crearAlertaCalibracion(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración urgente.");
+                        }
 
-                    if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
-                        crearAlertaMantenimiento(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
-                    } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
-                        crearAlertaMantenimiento(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
-                    } else if (mesesRestantesProximoMantenimiento < 0) {
-                        crearAlertaMantenimiento(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento urgente.");
-                    }
-                });
+                        if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
+                            crearAlertaMantenimiento(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
+                        } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
+                            crearAlertaMantenimiento(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
+                        } else if (mesesRestantesProximoMantenimiento < 0) {
+                            crearAlertaMantenimiento(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento urgente.");
+                        }
+                    });
 
-                fungibles.forEach(function (fungible) {
-                    var cantidad = fungible.cantidad;
+                    fungibles.forEach(function (fungible) {
+                        var cantidad = fungible.cantidad;
 
-                    if (cantidad <= 10 && cantidad > 5) {
-                        crearAlertaCantidad(fungible, "yellow", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 10 unidades o menos.");
-                    } else if (cantidad <= 5 && cantidad > 0) {
-                        crearAlertaCantidad(fungible, "orange", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 5 unidades o menos.");
-                    } else if (cantidad === 0) {
-                        crearAlertaCantidad(fungible, "red", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " no tiene unidades.");
-                    }
-                });
+                        if (cantidad <= 10 && cantidad > 5) {
+                            crearAlertaCantidad(fungible, "yellow", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 10 unidades o menos.");
+                        } else if (cantidad <= 5 && cantidad > 0) {
+                            crearAlertaCantidad(fungible, "orange", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 5 unidades o menos.");
+                        } else if (cantidad === 0) {
+                            crearAlertaCantidad(fungible, "red", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " no tiene unidades.");
+                        }
+                    });
 
-                // Agrupar los divs creados por color en tres listas diferentes
-                var yellowAlerts = document.querySelectorAll('.first-level-warning');
-                var orangeAlerts = document.querySelectorAll('.second-level-warning');
-                var redAlerts = document.querySelectorAll('.third-level-warning');
+                    // Agrupar los divs creados por color en tres listas diferentes
+                    var yellowAlerts = document.querySelectorAll('.first-level-warning');
+                    var orangeAlerts = document.querySelectorAll('.second-level-warning');
+                    var redAlerts = document.querySelectorAll('.third-level-warning');
 
-                // Convertir las listas NodeList a Arrays para usar el método sort()
-                redAlerts = Array.from(redAlerts);
-                orangeAlerts = Array.from(orangeAlerts);
-                yellowAlerts = Array.from(yellowAlerts);
+                    // Convertir las listas NodeList a Arrays para usar el método sort()
+                    redAlerts = Array.from(redAlerts);
+                    orangeAlerts = Array.from(orangeAlerts);
+                    yellowAlerts = Array.from(yellowAlerts);
 
-                // Ordenar las listas según el color
-                redAlerts.sort(function (a, b) {
-                    return getColorIndex(a) - getColorIndex(b);
-                });
-                orangeAlerts.sort(function (a, b) {
-                    return getColorIndex(a) - getColorIndex(b);
-                });
-                yellowAlerts.sort(function (a, b) {
-                    return getColorIndex(a) - getColorIndex(b);
-                });
+                    // Ordenar las listas según el color
+                    redAlerts.sort(function (a, b) {
+                        return getColorIndex(a) - getColorIndex(b);
+                    });
+                    orangeAlerts.sort(function (a, b) {
+                        return getColorIndex(a) - getColorIndex(b);
+                    });
+                    yellowAlerts.sort(function (a, b) {
+                        return getColorIndex(a) - getColorIndex(b);
+                    });
 
-                // Vaciar el contenedor de notificaciones
-                var divNotificaciones = document.getElementById("divNotificaciones");
-                divNotificaciones.innerHTML = '';
+                    // Vaciar el contenedor de notificaciones
+                    var divNotificaciones = document.getElementById("divNotificaciones");
+                    divNotificaciones.innerHTML = '';
 
-                // Agregar los divs ordenados al contenedor
-                redAlerts.forEach(function (alert) {
-                    divNotificaciones.appendChild(alert);
-                });
-                orangeAlerts.forEach(function (alert) {
-                    divNotificaciones.appendChild(alert);
-                });
-                yellowAlerts.forEach(function (alert) {
-                    divNotificaciones.appendChild(alert);
-                });
+                    // Agregar los divs ordenados al contenedor
+                    redAlerts.forEach(function (alert) {
+                        divNotificaciones.appendChild(alert);
+                    });
+                    orangeAlerts.forEach(function (alert) {
+                        divNotificaciones.appendChild(alert);
+                    });
+                    yellowAlerts.forEach(function (alert) {
+                        divNotificaciones.appendChild(alert);
+                    });
 
-            } else {
-                console.error('Hubo un error en la solicitud.');
+                } else {
+                    console.error('Hubo un error en la solicitud.');
+                }
             }
-        }
-    };
-    xhr.send();
+        };
+        xhr.send();
+    }
 };
 
 function crearAlertaCalibracion(equipo, color, mensaje) {
