@@ -39,6 +39,13 @@ $(document).mousedown(function (event) {
 });
 
 $(document).ready(function () {
+    if (usuario !== null) {
+        // Iniciar el temporizador al cargar la página
+        startInactivityTimer();
+
+        // Agregar un evento de click al cuerpo de la página para detectar la actividad del usuario
+        document.body.addEventListener("click", resetInactivityTimer);
+    }
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaMarca = $("#tablaFungibles thead th#celdaEncabezadoMarcaFungible").index();
     tablaFungibles = $("#tablaFungibles").DataTable({
