@@ -3,7 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumHerramienta, tablaHerramientas, cantidadHerramientas, contexto */
+/* global ultimoNumHerramienta, tablaHerramientas, cantidadHerramientas, contexto, tiempoInactividad */
+
+// Agregar un temporizador para detectar la inactividad del usuario
+var inactivityTimer;
+
+function startInactivityTimer() {
+    inactivityTimer = setTimeout(function () {
+        // Mostrar un mensaje emergente de sesión expirada
+        alert("La sesión va a expirar debido a la inactividad");
+        // Aquí puedes redirigir al usuario a la página de inicio de sesión, por ejemplo
+        window.location.href = contexto;
+    }, tiempoInactividad * 1000); // Convertir el tiempo de inactividad de segundos a milisegundos
+}
+
+function resetInactivityTimer() {
+    // Reiniciar el temporizador cada vez que haya actividad del usuario
+    clearTimeout(inactivityTimer);
+    startInactivityTimer();
+}
 
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class

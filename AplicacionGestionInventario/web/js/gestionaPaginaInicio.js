@@ -1,7 +1,30 @@
-/* global usuario, contexto */
+/* global usuario, contexto, tiempoInactividad */
+
+// Agregar un temporizador para detectar la inactividad del usuario
+var inactivityTimer;
+
+function startInactivityTimer() {
+    inactivityTimer = setTimeout(function () {
+        // Mostrar un mensaje emergente de sesión expirada
+        alert("La sesión va a expirar debido a la inactividad");
+        // Aquí puedes redirigir al usuario a la página de inicio de sesión, por ejemplo
+        window.location.href = contexto;
+    }, tiempoInactividad * 1000); // Convertir el tiempo de inactividad de segundos a milisegundos
+}
+
+function resetInactivityTimer() {
+    // Reiniciar el temporizador cada vez que haya actividad del usuario
+    clearTimeout(inactivityTimer);
+    startInactivityTimer();
+}
 
 window.onload = function () {
     if (usuario !== null) {
+        // Iniciar el temporizador al cargar la página
+        startInactivityTimer();
+
+        // Agregar un evento de click al cuerpo de la página para detectar la actividad del usuario
+        document.body.addEventListener("click", resetInactivityTimer);
         $(".nav-link").on("click", function () {
             localStorage.removeItem('id');
         });

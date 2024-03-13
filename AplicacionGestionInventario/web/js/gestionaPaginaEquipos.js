@@ -3,9 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
 
-/* global ultimoNumEquipo, tablaEquipos, cantidadEquipos, usuario, rol, contexto */
+/* global ultimoNumEquipo, tablaEquipos, cantidadEquipos, usuario, rol, contexto, tiempoInactividad */
 
 var id = localStorage.getItem('id');
+
+// Agregar un temporizador para detectar la inactividad del usuario
+var inactivityTimer;
+
+function startInactivityTimer() {
+    inactivityTimer = setTimeout(function () {
+        // Mostrar un mensaje emergente de sesión expirada
+        alert("La sesión va a expirar debido a la inactividad");
+        // Aquí puedes redirigir al usuario a la página de inicio de sesión, por ejemplo
+        window.location.href = contexto;
+    }, tiempoInactividad * 1000); // Convertir el tiempo de inactividad de segundos a milisegundos
+}
+
+function resetInactivityTimer() {
+    // Reiniciar el temporizador cada vez que haya actividad del usuario
+    clearTimeout(inactivityTimer);
+    startInactivityTimer();
+}
 
 $(document).keydown(function (event) {
     if (event.which === 27 || event.which === 8) { // Verificar si la tecla presionada es la tecla de escape (código 27) o la tecla de retroceso (código 8)

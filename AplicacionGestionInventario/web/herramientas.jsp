@@ -87,6 +87,7 @@
             var usuario = <%= request.getSession().getAttribute("usuario") != null ? "\"" + request.getSession().getAttribute("usuario") + "\"" : "null" %>;
             var rol = <%= request.getSession().getAttribute("rol") != null ? (Integer) request.getSession().getAttribute("rol") : "null" %>;
             var contexto = "${pageContext.servletContext.contextPath}";
+            var tiempoInactividad = <%= request.getSession().getMaxInactiveInterval() %>;
         </script>
         <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginaHerramientas.js"></script>
     </body>

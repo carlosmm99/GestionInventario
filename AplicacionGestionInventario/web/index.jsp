@@ -26,6 +26,7 @@
         <script>
             var usuario = <%= request.getSession().getAttribute("usuario") != null ? "\"" + request.getSession().getAttribute("usuario") + "\"" : "null" %>;
             var contexto = "${pageContext.servletContext.contextPath}";
+            var tiempoInactividad = <%= request.getSession().getMaxInactiveInterval() %>;
         </script>
         <script src="${pageContext.servletContext.contextPath}/js/gestionaPaginaInicio.js"></script>
     </body>
