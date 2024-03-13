@@ -176,7 +176,6 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     textoAlerta.textContent = mensaje;
     textoAlerta.onclick = function () {
         window.location.href = contexto + "/GestionEquipos";
-        id = equipo.id;
         localStorage.setItem('id', equipo.id);
     };
     divAlertaProximaCalibracion.appendChild(textoAlerta);
