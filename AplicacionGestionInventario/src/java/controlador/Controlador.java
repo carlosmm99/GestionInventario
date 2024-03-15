@@ -4,6 +4,13 @@
  */
 package controlador;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -408,6 +415,8 @@ public class Controlador {
             }
             psHerramientas.executeBatch();
 
+            generarCopiaDeSeguridad();
+            
             return filasAfectadas;
         } catch (SQLException ex) {
             return 0;
@@ -453,6 +462,8 @@ public class Controlador {
             }
             psHerramientas.executeBatch();
 
+            generarCopiaDeSeguridad();
+
             return filasAfectadas;
         } catch (SQLException ex) {
             return 0;
@@ -497,6 +508,8 @@ public class Controlador {
                 psHerramientas.addBatch();
             }
             psHerramientas.executeBatch();
+
+            generarCopiaDeSeguridad();
 
             return filasAfectadas;
         } catch (SQLException ex) {
@@ -724,5 +737,73 @@ public class Controlador {
 
         // Si hay algún error o las credenciales son inválidas, retornar null
         return null;
+    }
+    
+    private void generarCopiaDeSeguridad() {
+        try {
+            // Ruta del archivo backup.sql
+            String backupSqlPath = System.getProperty("user.home") + "\\Documents\\backupInventario.sql";
+
+            // Verificar si existe un archivo backup.sql
+            File sqlFile = new File(backupSqlPath);
+            if (sqlFile.exists()) {
+                // Cambiar la extensión del archivo existente a .sql.zip
+                File zipFile = new File(System.getProperty("user.home") + "\\Documents\\backupInventario.sql.zip");
+                sqlFile.renameTo(zipFile);
+
+                // Generar un nuevo archivo .sql con el contenido del archivo original
+                File newSqlFile = new File(backupSqlPath);
+                newSqlFile.createNewFile();
+                FileWriter writer = new FileWriter(newSqlFile);
+                BufferedReader reader = new BufferedReader(new FileReader(zipFile));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    writer.write(line + "\n");
+                }
+                writer.close();
+                reader.close();
+
+                // Sobreescribir el contenido del archivo .sql.zip con el nuevo archivo .sql
+                FileOutputStream fos = new FileOutputStream(zipFile);
+                FileInputStream fis = new FileInputStream(newSqlFile);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = fis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
+                }
+                fos.close();
+                fis.close();
+
+                // Realizar la copia de seguridad en el archivo .sql.zip
+                realizarCopiaSeguridad(zipFile);
+            } else {
+                // Si no existe, crear un nuevo archivo .sql
+                sqlFile.createNewFile();
+
+                // Realizar la copia de seguridad en el nuevo archivo .sql
+                realizarCopiaSeguridad(sqlFile);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void realizarCopiaSeguridad(File sqlFile) {
+        try {
+            // Generar una nueva copia de seguridad en el archivo .sql
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                    "C:\\xampp\\mysql\\bin\\mysqldump",
+                    "--user=" + USER,
+                    "--password=" + PASSWORD,
+                    "--host=localhost",
+                    "--port=3306",
+                    "inventario"
+            );
+            processBuilder.redirectOutput(sqlFile);
+            Process process = processBuilder.start();
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
