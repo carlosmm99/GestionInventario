@@ -799,9 +799,6 @@ public class Controlador {
             File xamppCustom = new File("D:\\xampp\\mysql\\bin\\mysqldump.exe");
             if (xamppCustom.exists()) {
                 rutaMysqldump = "D:\\xampp\\mysql\\bin\\mysqldump.exe";
-            } else {
-                // mysqldump no encontrado
-                System.err.println("No se pudo encontrar el archivo mysqldump en las rutas predeterminada ni personalizada.");
             }
         }
         return rutaMysqldump;
@@ -823,9 +820,6 @@ public class Controlador {
                 processBuilder.redirectOutput(sqlFile);
                 Process process = processBuilder.start();
                 process.waitFor();
-            } else {
-                // Manejar la situación cuando mysqldump no se encuentra en ninguna de las rutas
-                System.err.println("No se puede realizar la copia de seguridad porque mysqldump no está instalado.");
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
