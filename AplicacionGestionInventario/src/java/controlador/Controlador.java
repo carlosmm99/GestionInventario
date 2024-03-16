@@ -416,7 +416,7 @@ public class Controlador {
             psHerramientas.executeBatch();
 
             generarCopiaDeSeguridad();
-            
+
             return filasAfectadas;
         } catch (SQLException ex) {
             return 0;
@@ -738,7 +738,7 @@ public class Controlador {
         // Si hay algún error o las credenciales son inválidas, retornar null
         return null;
     }
-    
+
     private void generarCopiaDeSeguridad() {
         try {
             // Ruta del archivo backup.sql
@@ -788,20 +788,45 @@ public class Controlador {
         }
     }
 
+    private String obtenerRutaMysqldump() {
+        String rutaMysqldump = "";
+        // Verificar si el archivo mysqldump existe en la ruta predeterminada
+        File xamppDefault = new File("C:\\xampp\\mysql\\bin\\mysqldump.exe");
+        if (xamppDefault.exists()) {
+            rutaMysqldump = "C:\\xampp\\mysql\\bin\\mysqldump.exe";
+        } else {
+            // Verificar si el archivo mysqldump existe en la ruta personalizada (casa)
+            File xamppCustom = new File("D:\\xampp\\mysql\\bin\\mysqldump.exe");
+            if (xamppCustom.exists()) {
+                rutaMysqldump = "D:\\xampp\\mysql\\bin\\mysqldump.exe";
+            } else {
+                // mysqldump no encontrado
+                System.err.println("No se pudo encontrar el archivo mysqldump en las rutas predeterminada ni personalizada.");
+            }
+        }
+        return rutaMysqldump;
+    }
+
     private void realizarCopiaSeguridad(File sqlFile) {
         try {
-            // Generar una nueva copia de seguridad en el archivo .sql
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    "C:\\xampp\\mysql\\bin\\mysqldump",
-                    "--user=" + USER,
-                    "--password=" + PASSWORD,
-                    "--host=localhost",
-                    "--port=3306",
-                    "inventario"
-            );
-            processBuilder.redirectOutput(sqlFile);
-            Process process = processBuilder.start();
-            process.waitFor();
+            String rutaMysqldump = obtenerRutaMysqldump();
+            if (!rutaMysqldump.isEmpty()) {
+                // Generar una nueva copia de seguridad en el archivo .sql
+                ProcessBuilder processBuilder = new ProcessBuilder(
+                        rutaMysqldump,
+                        "--user=" + USER,
+                        "--password=" + PASSWORD,
+                        "--host=localhost",
+                        "--port=3306",
+                        "inventario"
+                );
+                processBuilder.redirectOutput(sqlFile);
+                Process process = processBuilder.start();
+                process.waitFor();
+            } else {
+                // Manejar la situación cuando mysqldump no se encuentra en ninguna de las rutas
+                System.err.println("No se puede realizar la copia de seguridad porque mysqldump no está instalado.");
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
