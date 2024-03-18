@@ -790,17 +790,28 @@ public class Controlador {
 
     private String obtenerRutaMysqldump() {
         String rutaMysqldump = "";
-        // Verificar si el archivo mysqldump existe en la ruta predeterminada
-        File xamppDefault = new File("C:\\xampp\\mysql\\bin\\mysqldump.exe");
-        if (xamppDefault.exists()) {
-            rutaMysqldump = "C:\\xampp\\mysql\\bin\\mysqldump.exe";
-        } else {
-            // Verificar si el archivo mysqldump existe en la ruta personalizada (casa)
-            File xamppCustom = new File("D:\\xampp\\mysql\\bin\\mysqldump.exe");
-            if (xamppCustom.exists()) {
-                rutaMysqldump = "D:\\xampp\\mysql\\bin\\mysqldump.exe";
+
+        // Obtener la lista de todas las unidades disponibles
+        File[] roots = File.listRoots();
+
+        // Iterar sobre cada unidad
+        for (File root : roots) {
+            // Construir la ruta completa al archivo mysqldump.exe en esta unidad
+            File mysqldumpFile = new File(root, "xampp\\mysql\\bin\\mysqldump.exe");
+
+            // Verificar si el archivo mysqldump existe en esta unidad
+            if (mysqldumpFile.exists()) {
+                rutaMysqldump = mysqldumpFile.getAbsolutePath();
+                break;  // Salir del bucle una vez que se haya encontrado el archivo mysqldump
             }
         }
+
+        // Verificar si se encontró la ruta de mysqldump.exe
+        if (rutaMysqldump.isEmpty()) {
+            // mysqldump no encontrado
+            return null;
+        }
+
         return rutaMysqldump;
     }
 
