@@ -754,24 +754,26 @@ public class Controlador {
                 // Generar un nuevo archivo .sql con el contenido del archivo original
                 File newSqlFile = new File(backupSqlPath);
                 newSqlFile.createNewFile();
-                FileWriter writer = new FileWriter(newSqlFile);
-                BufferedReader reader = new BufferedReader(new FileReader(zipFile));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    writer.write(line + "\n");
+                BufferedReader reader;
+                try (FileWriter writer = new FileWriter(newSqlFile)) {
+                    reader = new BufferedReader(new FileReader(zipFile));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        writer.write(line + "\n");
+                    }
                 }
-                writer.close();
                 reader.close();
 
-                // Sobreescribir el contenido del archivo .sql.zip con el nuevo archivo .sql
-                FileOutputStream fos = new FileOutputStream(zipFile);
-                FileInputStream fis = new FileInputStream(newSqlFile);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = fis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, length);
+                FileInputStream fis;
+                try ( // Sobreescribir el contenido del archivo .sql.zip con el nuevo archivo .sql
+                        FileOutputStream fos = new FileOutputStream(zipFile)) {
+                    fis = new FileInputStream(newSqlFile);
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = fis.read(buffer)) > 0) {
+                        fos.write(buffer, 0, length);
+                    }
                 }
-                fos.close();
                 fis.close();
 
                 // Realizar la copia de seguridad en el archivo .sql.zip
@@ -818,7 +820,7 @@ public class Controlador {
     private void realizarCopiaSeguridad(File sqlFile) {
         try {
             String rutaMysqldump = obtenerRutaMysqldump();
-            if (!rutaMysqldump.isEmpty()) {
+            if (rutaMysqldump != null && !rutaMysqldump.isEmpty()) {
                 // Generar una nueva copia de seguridad en el archivo .sql
                 ProcessBuilder processBuilder = new ProcessBuilder(
                         rutaMysqldump,
