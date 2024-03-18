@@ -336,16 +336,19 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").val("");
             });
         } else {
-            $("#filasFormulario [id^='columna']").each(function () {
-                var dataKey = $(this).data('key');
-                var inputType = $(this).find('input, select').prop('tagName').toLowerCase();
-                var value = fila.data(dataKey);
-                if (inputType === 'input' || inputType === 'select') {
-                    $(this).find(inputType).val(value);
-                } else if (inputType === 'img') {
-                    $(this).find('img').attr("src", contexto + "/img2/" + value);
-                }
-            });
+            $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(fila.data("idequipo"));
+            $("#filasFormulario #columnaNumInventarioCEDEX #txtNumInventarioCEDEX").val(fila.data("numinventariocedex"));
+            $("#filasFormulario #columnaNombreEquipo #txtNombreEquipo").val(fila.data("nombre"));
+            $("#filasFormulario #columnaFechaCompraEquipo #txtFechaCompraEquipo").val(fila.data("fechacompraequipo"));
+            $("#filasFormulario #columnaFabricanteEquipo #txtFabricanteEquipo").val(fila.data("fabricanteequipo"));
+            $("#filasFormulario #columnaFechaUltimaCalibracion #txtFechaUltimaCalibracion").val(fila.data("fechaultimacalibracion"));
+            $("#filasFormulario #columnaFechaProximaCalibracion #txtFechaProximaCalibracion").val(fila.data("fechaproximacalibracion"));
+            $("#filasFormulario #columnaFechaUltimoMantenimiento #txtFechaUltimoMantenimiento").val(fila.data("fechaultimomantenimiento"));
+            $("#filasFormulario #columnaFechaProximoMantenimiento #txtFechaProximoMantenimiento").val(fila.data("fechaproximomantenimiento"));
+            $("#filasFormulario #columnaFungibles #selectFungibles").val(fila.data("numfungibles"));
+            $("#filasFormulario #columnaHerramientas #selectHerramientas").val(fila.data("numherramientas"));
+            $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val(fila.data("fotoequipo"));
+            $("#filasFormulario #columnaFotoEquipo").find("#inputFotoEquipo, #labelFotoEquipo #imgEquipo").attr("src", contexto + "/img2/" + fila.data("fotoequipo"));
             $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").prop("required", false);
 
             if (accion === 'Consultar') {
