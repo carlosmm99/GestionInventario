@@ -127,6 +127,21 @@ $(document).ready(function () {
         order: []
     });
 
+    // Asociar la función al evento resize de la ventana
+    $(window).on('resize', function () {
+        ajustarTabla();
+    });
+
+    // Ajustar la tabla al cargar la página
+    $(document).ready(function () {
+        ajustarTabla();
+    });
+
+    // Función para ajustar la tabla al cambiar el tamaño de la ventana
+    function ajustarTabla() {
+        tablaFungibles.columns.adjust().responsive.recalc();
+    }
+
     // Verificar si id no es nulo
     if (id !== null) {
         // Buscar la fila con el id correspondiente en la tabla

@@ -112,6 +112,21 @@ $(document).ready(function () {
         order: []
     });
 
+    // Asociar la función al evento resize de la ventana
+    $(window).on('resize', function () {
+        ajustarTabla();
+    });
+
+    // Ajustar la tabla al cargar la página
+    $(document).ready(function () {
+        ajustarTabla();
+    });
+
+    // Función para ajustar la tabla al cambiar el tamaño de la ventana
+    function ajustarTabla() {
+        tablaHerramientas.columns.adjust().responsive.recalc();
+    }
+
     $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").change(function () {
         var file = this.files[0];
         if (file) {
