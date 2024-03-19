@@ -174,11 +174,15 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
 
     var textoAlerta = document.createElement("p");
     textoAlerta.textContent = mensaje;
-    textoAlerta.onclick = function () {
-        window.location.href = contexto + "/GestionEquipos";
-        localStorage.setItem('id', equipo.id);
-    };
     divAlertaProximaCalibracion.appendChild(textoAlerta);
+
+    // Agregar manejador de evento para redireccionar y establecer el local storage
+    divAlertaProximaCalibracion.onclick = function (event) {
+        if (event.target !== spanCerrar) { // Verificar que el clic no sea en el botón de cierre
+            window.location.href = contexto + "/GestionEquipos";
+            localStorage.setItem('id', equipo.id);
+        }
+    };
 }
 
 function crearAlertaCantidad(fungible, color, mensaje) {
@@ -234,12 +238,15 @@ function crearAlertaCantidad(fungible, color, mensaje) {
 
     var textoAlerta = document.createElement("p");
     textoAlerta.textContent = mensaje;
-    textoAlerta.onclick = function () {
-        window.location.href = contexto + "/GestionFungibles";
-        localStorage.setItem('id', fungible.id);
-
-    };
     divAlertaCantidad.appendChild(textoAlerta);
+
+    // Agregar manejador de evento para redireccionar y establecer el local storage
+    divAlertaCantidad.onclick = function (event) {
+        if (event.target !== spanCerrar) { // Verificar que el clic no sea en el botón de cierre
+            window.location.href = contexto + "/GestionFungibles";
+            localStorage.setItem('id', fungible.id);
+        }
+    };
 }
 
 function crearAlertaMantenimiento(equipo, color, mensaje) {
@@ -295,11 +302,15 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
 
     var textoAlerta = document.createElement("p");
     textoAlerta.textContent = mensaje;
-    textoAlerta.onclick = function () {
-        window.location.href = contexto + "/GestionEquipos";
-        localStorage.setItem('id', equipo.id);
-    };
     divAlertaProximoMantenimiento.appendChild(textoAlerta);
+
+    // Agregar manejador de evento para redireccionar y establecer el local storage
+    divAlertaProximoMantenimiento.onclick = function (event) {
+        if (event.target !== spanCerrar) { // Verificar que el clic no sea en el botón de cierre
+            window.location.href = contexto + "/GestionEquipos";
+            localStorage.setItem('id', equipo.id);
+        }
+    };
 }
 
 // Función para obtener el índice del color
