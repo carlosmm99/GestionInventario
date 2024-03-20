@@ -43,6 +43,7 @@
             <div class="table-responsive">
                 ${tablaEquipos}
             </div>
+            <%@include file="template/footer.jsp" %>
         </div>
         <!-- Modal -->
         <div class="modal fade" id="modalEquipos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -44,6 +44,7 @@
             <div class="table-responsive">
                 ${tablaFungibles}
             </div>
+            <%@include file="template/footer.jsp" %>
         </div>
         <!-- Modal -->
         <div class="modal fade" id="modalFungibles" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
