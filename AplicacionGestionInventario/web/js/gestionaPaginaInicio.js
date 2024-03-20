@@ -48,19 +48,19 @@ window.onload = function () {
                         var mesesRestantesProximoMantenimiento = tiempoRestanteProximoMantenimiento / (1000 * 60 * 60 * 24 * 30);
 
                         if (mesesRestantesProximaCalibracion < 6 && mesesRestantesProximaCalibracion >= 3) {
-                            crearAlertaCalibracion(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 6 meses.");
+                            crearAlertaCalibracion(equipo, "#ffff00", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 6 meses.");
                         } else if (mesesRestantesProximaCalibracion < 3 && mesesRestantesProximaCalibracion >= 0) {
-                            crearAlertaCalibracion(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 3 meses.");
+                            crearAlertaCalibracion(equipo, "#ffa500", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración en menos de 3 meses.");
                         } else if (mesesRestantesProximaCalibracion < 0) {
-                            crearAlertaCalibracion(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración urgente.");
+                            crearAlertaCalibracion(equipo, "#ff0000", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita calibración urgente.");
                         }
 
                         if (mesesRestantesProximoMantenimiento < 6 && mesesRestantesProximoMantenimiento >= 3) {
-                            crearAlertaMantenimiento(equipo, "yellow", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
+                            crearAlertaMantenimiento(equipo, "#ffff00", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 6 meses.");
                         } else if (mesesRestantesProximoMantenimiento < 3 && mesesRestantesProximoMantenimiento >= 0) {
-                            crearAlertaMantenimiento(equipo, "orange", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
+                            crearAlertaMantenimiento(equipo, "#ffa500", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento en menos de 3 meses.");
                         } else if (mesesRestantesProximoMantenimiento < 0) {
-                            crearAlertaMantenimiento(equipo, "red", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento urgente.");
+                            crearAlertaMantenimiento(equipo, "#ff0000", "El equipo con id " + equipo.id + ", número de inventario " + equipo.numInventario + ", nombre " + equipo.nombre + " necesita mantenimiento urgente.");
                         }
                     });
 
@@ -68,11 +68,11 @@ window.onload = function () {
                         var cantidad = fungible.cantidad;
 
                         if (cantidad <= 10 && cantidad > 5) {
-                            crearAlertaCantidad(fungible, "yellow", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 10 unidades o menos.");
+                            crearAlertaCantidad(fungible, "#ffff00", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 10 unidades o menos.");
                         } else if (cantidad <= 5 && cantidad > 0) {
-                            crearAlertaCantidad(fungible, "orange", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 5 unidades o menos.");
+                            crearAlertaCantidad(fungible, "#ffa500", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " tiene 5 unidades o menos.");
                         } else if (cantidad === 0) {
-                            crearAlertaCantidad(fungible, "red", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " no tiene unidades.");
+                            crearAlertaCantidad(fungible, "#ff0000", "El fungible con id " + fungible.id + ", marca " + fungible.marca + ", modelo " + fungible.modelo + " no tiene unidades.");
                         }
                     });
 
@@ -147,22 +147,22 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     icono.style.width = "32px";
     icono.style.height = "32px";
     icono.style.display = "inline-block"; // Añade esta línea para hacer el icono inline-block
-    if (color === "orange" || color === "yellow") {
+    if (color === "#ffa500" || color === "#ffff00") {
         icono.src = contexto + "/img/warning_icon.png";
-    } else if (color === "red") {
+    } else if (color === "#ff0000") {
         icono.src = contexto + "/img/warning_shield_icon.png";
     }
     divAlertaProximaCalibracion.appendChild(icono);
 
     var titulo = document.createElement("h6");
     titulo.style.display = "inline-block"; // Añade esta línea para hacer el título inline-block
-    if (color === "yellow") {
+    if (color === "#ffff00") {
         titulo.textContent = "Próxima calibración en menos de 6 meses";
         divAlertaProximaCalibracion.className = "first-level-warning";
-    } else if (color === "orange") {
+    } else if (color === "#ffa500") {
         titulo.textContent = "Próxima calibración en menos de 3 meses";
         divAlertaProximaCalibracion.className = "second-level-warning";
-    } else if (color === "red") {
+    } else if (color === "#ff0000") {
         titulo.textContent = "Próxima calibración pasada";
         divAlertaProximaCalibracion.className = "third-level-warning";
     }
@@ -182,6 +182,20 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
             window.location.href = contexto + "/GestionEquipos";
             localStorage.setItem('id', equipo.id);
         }
+    };
+    
+    divAlertaProximaCalibracion.onmouseover = function () {
+        if (divAlertaProximaCalibracion.className === "first-level-warning") {
+            divAlertaProximaCalibracion.style.backgroundColor = "#ffff50";
+        } else if (divAlertaProximaCalibracion.className === "second-level-warning") {
+            divAlertaProximaCalibracion.style.backgroundColor = "#ffa550";
+        } else if (divAlertaProximaCalibracion.className === "third-level-warning") {
+            divAlertaProximaCalibracion.style.backgroundColor = "#ff5050";
+        }
+    };
+    
+    divAlertaProximaCalibracion.onmouseout = function () {
+        divAlertaProximaCalibracion.style.backgroundColor = color;
     };
 }
 
@@ -211,22 +225,22 @@ function crearAlertaCantidad(fungible, color, mensaje) {
     icono.style.width = "32px";
     icono.style.height = "32px";
     icono.style.display = "inline-block"; // Añade esta línea para hacer el icono inline-block
-    if (color === "orange" || color === "yellow") {
+    if (color === "#ffa500" || color === "#ffff00") {
         icono.src = contexto + "/img/warning_icon.png";
-    } else if (color === "red") {
+    } else if (color === "#ff0000") {
         icono.src = contexto + "/img/warning_shield_icon.png";
     }
     divAlertaCantidad.appendChild(icono);
 
     var titulo = document.createElement("h6");
     titulo.style.display = "inline-block"; // Añade esta línea para hacer el título inline-block
-    if (color === "yellow") {
+    if (color === "#ffff00") {
         titulo.textContent = "Quedan 10 unidades o menos";
         divAlertaCantidad.className = "first-level-warning";
-    } else if (color === "orange") {
+    } else if (color === "#ffa500") {
         titulo.textContent = "Quedan 5 unidades o menos";
         divAlertaCantidad.className = "second-level-warning";
-    } else if (color === "red") {
+    } else if (color === "#ff0000") {
         titulo.textContent = "Sin unidades";
         divAlertaCantidad.className = "third-level-warning";
     }
@@ -246,6 +260,20 @@ function crearAlertaCantidad(fungible, color, mensaje) {
             window.location.href = contexto + "/GestionFungibles";
             localStorage.setItem('id', fungible.id);
         }
+    };
+    
+    divAlertaCantidad.onmouseover = function () {
+        if (divAlertaCantidad.className === "first-level-warning") {
+            divAlertaCantidad.style.backgroundColor = "#ffff50";
+        } else if (divAlertaCantidad.className === "second-level-warning") {
+            divAlertaCantidad.style.backgroundColor = "#ffa550";
+        } else if (divAlertaCantidad.className === "third-level-warning") {
+            divAlertaCantidad.style.backgroundColor = "#ff5050";
+        }
+    };
+    
+    divAlertaCantidad.onmouseout = function () {
+        divAlertaCantidad.style.backgroundColor = color;
     };
 }
 
@@ -275,22 +303,22 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
     icono.style.width = "32px";
     icono.style.height = "32px";
     icono.style.display = "inline-block"; // Añade esta línea para hacer el icono inline-block
-    if (color === "orange" || color === "yellow") {
+    if (color === "#ffa500" || color === "#ffff00") {
         icono.src = contexto + "/img/warning_icon.png";
-    } else if (color === "red") {
+    } else if (color === "#ff0000") {
         icono.src = contexto + "/img/warning_shield_icon.png";
     }
     divAlertaProximoMantenimiento.appendChild(icono);
 
     var titulo = document.createElement("h6");
     titulo.style.display = "inline-block"; // Añade esta línea para hacer el título inline-block
-    if (color === "yellow") {
+    if (color === "#ffff00") {
         titulo.textContent = "Próximo mantenimiento en menos de 6 meses";
         divAlertaProximoMantenimiento.className = "first-level-warning";
-    } else if (color === "orange") {
+    } else if (color === "#ffa500") {
         titulo.textContent = "Próximo mantenimiento en menos de 3 meses";
         divAlertaProximoMantenimiento.className = "second-level-warning";
-    } else if (color === "red") {
+    } else if (color === "#ff0000") {
         titulo.textContent = "Próximo mantenimiento pasado";
         divAlertaProximoMantenimiento.className = "third-level-warning";
     }
@@ -311,16 +339,30 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
             localStorage.setItem('id', equipo.id);
         }
     };
+    
+    divAlertaProximoMantenimiento.onmouseover = function () {
+        if (divAlertaProximoMantenimiento.className === "first-level-warning") {
+            divAlertaProximoMantenimiento.style.backgroundColor = "#ffff50";
+        } else if (divAlertaProximoMantenimiento.className === "second-level-warning") {
+            divAlertaProximoMantenimiento.style.backgroundColor = "#ffa550";
+        } else if (divAlertaProximoMantenimiento.className === "third-level-warning") {
+            divAlertaProximoMantenimiento.style.backgroundColor = "#ff5050";
+        }
+    };
+    
+    divAlertaProximoMantenimiento.onmouseout = function () {
+        divAlertaProximoMantenimiento.style.backgroundColor = color;
+    };
 }
 
 // Función para obtener el índice del color
 function getColorIndex(element) {
     var color = element.style.backgroundColor;
-    if (color === "red") {
+    if (color === "#ff0000") {
         return 2;
-    } else if (color === "orange") {
+    } else if (color === "#ffa500") {
         return 1;
-    } else if (color === "yellow") {
+    } else if (color === "#ffff00") {
         return 0;
     }
     return -1; // Si no es ninguno de los colores definidos
