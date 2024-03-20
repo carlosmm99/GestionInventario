@@ -393,6 +393,9 @@ public class GestionHerramientas extends HttpServlet {
                 tablaHTML.append("</tbody>").append("</table>");
                 request.setAttribute("cantidadHerramientas", herramientas.size());
             }
+            tablaHTML.append("<hr><footer>")
+                    .append("<h4>Realizado por: Carlos Mondéjar Morcillo</h4><h4>Última actualización: 20/03/2024</h4>")
+                    .append("</footer>");
         }
 
         return tablaHTML.toString();

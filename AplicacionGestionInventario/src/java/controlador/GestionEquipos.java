@@ -456,6 +456,9 @@ public class GestionEquipos extends HttpServlet {
                 tablaHTML.append("</tbody></table>");
                 request.setAttribute("cantidadEquipos", equipos.size());
             }
+            tablaHTML.append("<hr><footer>")
+                    .append("<h4>Realizado por: Carlos Mondéjar Morcillo</h4><h4>Última actualización: 20/03/2024</h4>")
+                    .append("</footer>");
         }
 
         return tablaHTML.toString();
