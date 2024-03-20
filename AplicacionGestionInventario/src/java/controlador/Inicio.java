@@ -95,9 +95,7 @@ public class Inicio extends HttpServlet {
 
     private String generarDivHTML() {
         StringBuilder divHTML = new StringBuilder();
-        divHTML.append("<div id=\"divNotificaciones\"></div><hr><footer>")
-                .append("<h4>Realizado por: Carlos Mondéjar Morcillo</h4><h4>Última actualización: 20/03/2024</h4>")
-                .append("</footer>");
+        divHTML.append("<div id=\"divNotificaciones\"></div>");
         return divHTML.toString();
     }
 
