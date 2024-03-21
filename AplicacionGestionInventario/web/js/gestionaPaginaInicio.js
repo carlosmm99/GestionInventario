@@ -127,6 +127,7 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     var divAlertaProximaCalibracion = document.createElement("div");
     divAlertaProximaCalibracion.id = "divAlertaProximaCalibracionEquipo" + equipo.id;
     divAlertaProximaCalibracion.style.backgroundColor = color;
+    divAlertaProximaCalibracion.style.borderRadius = "4px";
     divAlertaProximaCalibracion.style.width = "45%";
     divNotificaciones.appendChild(divAlertaProximaCalibracion);
 
@@ -183,7 +184,7 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
             localStorage.setItem('id', equipo.id);
         }
     };
-    
+
     divAlertaProximaCalibracion.onmouseover = function () {
         if (divAlertaProximaCalibracion.className === "first-level-warning") {
             divAlertaProximaCalibracion.style.backgroundColor = "#ffff50";
@@ -192,8 +193,10 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
         } else if (divAlertaProximaCalibracion.className === "third-level-warning") {
             divAlertaProximaCalibracion.style.backgroundColor = "#ff5050";
         }
+        divAlertaProximaCalibracion.style.cursor = "pointer";
+        divAlertaProximaCalibracion.title = contexto + "/GestionEquipos";
     };
-    
+
     divAlertaProximaCalibracion.onmouseout = function () {
         divAlertaProximaCalibracion.style.backgroundColor = color;
     };
@@ -205,6 +208,7 @@ function crearAlertaCantidad(fungible, color, mensaje) {
     var divAlertaCantidad = document.createElement("div");
     divAlertaCantidad.id = "divAlertaCantidadFungible" + fungible.id;
     divAlertaCantidad.style.backgroundColor = color;
+    divAlertaCantidad.style.borderRadius = "4px";
     divAlertaCantidad.style.width = "45%";
     divNotificaciones.appendChild(divAlertaCantidad);
 
@@ -261,7 +265,7 @@ function crearAlertaCantidad(fungible, color, mensaje) {
             localStorage.setItem('id', fungible.id);
         }
     };
-    
+
     divAlertaCantidad.onmouseover = function () {
         if (divAlertaCantidad.className === "first-level-warning") {
             divAlertaCantidad.style.backgroundColor = "#ffff50";
@@ -270,8 +274,10 @@ function crearAlertaCantidad(fungible, color, mensaje) {
         } else if (divAlertaCantidad.className === "third-level-warning") {
             divAlertaCantidad.style.backgroundColor = "#ff5050";
         }
+        divAlertaCantidad.style.cursor = "pointer";
+        divAlertaCantidad.title = contexto + "/GestionFungibles";
     };
-    
+
     divAlertaCantidad.onmouseout = function () {
         divAlertaCantidad.style.backgroundColor = color;
     };
@@ -283,6 +289,7 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
     var divAlertaProximoMantenimiento = document.createElement("div");
     divAlertaProximoMantenimiento.id = "divAlertaProximoMantenimientoEquipo" + equipo.id;
     divAlertaProximoMantenimiento.style.backgroundColor = color;
+    divAlertaProximoMantenimiento.style.borderRadius = "4px";
     divAlertaProximoMantenimiento.style.width = "45%";
     divNotificaciones.appendChild(divAlertaProximoMantenimiento);
 
@@ -339,7 +346,7 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
             localStorage.setItem('id', equipo.id);
         }
     };
-    
+
     divAlertaProximoMantenimiento.onmouseover = function () {
         if (divAlertaProximoMantenimiento.className === "first-level-warning") {
             divAlertaProximoMantenimiento.style.backgroundColor = "#ffff50";
@@ -348,8 +355,10 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
         } else if (divAlertaProximoMantenimiento.className === "third-level-warning") {
             divAlertaProximoMantenimiento.style.backgroundColor = "#ff5050";
         }
+        divAlertaProximoMantenimiento.style.cursor = "pointer";
+        divAlertaProximoMantenimiento.title = contexto + "/GestionEquipos";
     };
-    
+
     divAlertaProximoMantenimiento.onmouseout = function () {
         divAlertaProximoMantenimiento.style.backgroundColor = color;
     };
