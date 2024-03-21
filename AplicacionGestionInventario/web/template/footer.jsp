@@ -8,7 +8,7 @@
 <% if (session.getAttribute("usuario") != null) { %>
 <hr>
 <footer>
-    <h4>Realizado por: Carlos Mondéjar Morcillo</h4>
-    <h4>Última actualización: 20/03/2024</h4>
+    <h6>Realizado por: Carlos Mondéjar Morcillo</h6>
+    <h6>Última actualización: 20/03/2024</h6>
 </footer>
 <% } %>
