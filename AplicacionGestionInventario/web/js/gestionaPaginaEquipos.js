@@ -140,6 +140,8 @@ $(document).ready(function () {
     // Función para ajustar la tabla al cambiar el tamaño de la ventana
     function ajustarTabla() {
         tablaEquipos.columns.adjust().responsive.recalc();
+        $("#tablaEquipos tbody tr td img[id^='fotoEquipo']").css("width", "100px");
+        $("#tablaEquipos tbody tr td img[id^='fotoEquipo']").css("box-shadow", "none");
     }
 
     // Verificar si id no es nulo

@@ -135,6 +135,11 @@ table.dataTable thead tr th {
     border-bottom: 1px solid #ddd;
 }
 
+#tablaEquipos, #tablaFungibles, #tablaHerramientas {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
 .dataTables_length, dataTables_filter {
     clear: both;
     margin-top: 5px; /* Ajusta el espacio según sea necesario */
