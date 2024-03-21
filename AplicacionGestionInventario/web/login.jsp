@@ -35,7 +35,7 @@
                         <input type="password" class="form-control" name="txtContrasenia" id="txtContrasenia" placeholder="Contraseña">
                     </div>
                     <hr>
-                    <button type="submit" name="btnLogin" class="btn btn-primary">Iniciar sesión</button>
+                    <button type="submit" name="btnLogin" class="btn btn-primary form-control">Iniciar sesión</button>
                 </form>
             </div>
         </div>
