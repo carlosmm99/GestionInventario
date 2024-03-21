@@ -125,10 +125,7 @@ $(document).ready(function () {
     // Función para ajustar la tabla al cambiar el tamaño de la ventana
     function ajustarTabla() {
         tablaHerramientas.columns.adjust().responsive.recalc();
-        $("#tablaHerramientas tbody tr td img[id^='fotoHerramienta']").css("width", "100px");
-        $("#tablaHerramientas tbody tr td img[id^='fotoHerramienta']").css("box-shadow", "none");
-        $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").css("width", "100px");
-        $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").css("box-shadow", "none");
+        $("#tablaHerramientas tbody tr td img[id^='fotoHerramienta'], #filasFormulario #columnaFotoHerramienta #imgHerramienta").css({"width": "100px", "box-shadow": "none"});
     }
 
     $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").change(function () {
@@ -244,8 +241,7 @@ $(document).ready(function () {
     // Función para ajustar la tabla al cambiar el tamaño de la ventana
     function ajustarTabla() {
         tablaHerramientas.columns.adjust().responsive.recalc();
-        $("#tablaHerramientas tbody tr td img[id^='fotoHerramienta']").css("width", "100px");
-        $("#tablaHerramientas tbody tr td img[id^='fotoHerramienta']").css("box-shadow", "none");
+        $("#tablaHerramientas tbody tr td img[id^='fotoHerramienta'], #filasFormulario #columnaFotoHerramienta #imgHerramienta").css({"width": "100px", "box-shadow": "none"});
     }
 
     // Función para obtener la fila seleccionada
