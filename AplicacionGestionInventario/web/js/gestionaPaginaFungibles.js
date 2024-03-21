@@ -280,8 +280,7 @@ $(document).ready(function () {
     // Función para ajustar la tabla al cambiar el tamaño de la ventana
     function ajustarTabla() {
         tablaFungibles.columns.adjust().responsive.recalc();
-        $("#tablaFungibles tbody tr td img[id^='fotoFungible']").css("width", "100px");
-        $("#tablaFungibles tbody tr td img[id^='fotoFungible']").css("box-shadow", "none");
+        $("#tablaFungibles tbody tr td img[id^='fotoFungible'], #filasFormulario #columnaFotoFungible #imgFungible").css({"width": "100px", "box-shadow": "none"});
     }
 
     // Función para obtener la fila seleccionada
