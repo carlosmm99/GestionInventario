@@ -195,7 +195,7 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
         } else {
             // Obtener la dirección IP del servidor
             var ipAddress = currentLocation.split('/')[2];
-            titleText = "http://" + ipAddress + ":8080" + contexto + "/GestionEquipos";
+            titleText = "http://" + ipAddress + contexto + "/GestionEquipos";
         }
 
         if (divAlertaProximaCalibracion.className === "first-level-warning") {
@@ -288,7 +288,7 @@ function crearAlertaCantidad(fungible, color, mensaje) {
         } else {
             // Obtener la dirección IP del servidor
             var ipAddress = currentLocation.split('/')[2];
-            titleText = "http://" + ipAddress + ":8080" + contexto + "/GestionFungibles";
+            titleText = "http://" + ipAddress + contexto + "/GestionEquipos";
         }
 
         if (divAlertaCantidad.className === "first-level-warning") {
@@ -381,7 +381,7 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
         } else {
             // Obtener la dirección IP del servidor
             var ipAddress = currentLocation.split('/')[2];
-            titleText = "http://" + ipAddress + ":8080" + contexto + "/GestionFungibles";
+            titleText = "http://" + ipAddress + contexto + "/GestionFungibles";
         }
 
         if (divAlertaProximoMantenimiento.className === "first-level-warning") {
