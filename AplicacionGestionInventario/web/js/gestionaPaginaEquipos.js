@@ -45,6 +45,21 @@ $(document).ready(function () {
 
         // Agregar un evento de click al cuerpo de la página para detectar la actividad del usuario
         document.body.addEventListener("click", resetInactivityTimer);
+
+        // Obtiene la URL actual
+        var url = window.location.pathname;
+
+        // Recorre cada enlace con clase "nav-link"
+        $(".nav-link").each(function () {
+            // Obtiene la URL del enlace
+            var linkUrl = $(this).attr("href");
+
+            // Compara la URL actual con la URL del enlace
+            if (url === linkUrl) {
+                // Agrega la clase "active" al enlace correspondiente
+                $(this).addClass("active");
+            }
+        });
     }
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaID = $("#tablaEquipos thead th#celdaEncabezadoIdEquipo").index();

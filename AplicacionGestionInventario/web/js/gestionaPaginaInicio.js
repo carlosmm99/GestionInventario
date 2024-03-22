@@ -20,6 +20,23 @@ function resetInactivityTimer() {
 
 window.onload = function () {
     if (usuario !== null) {
+        // Obtener la URL actual
+        var currentUrl = window.location.href;
+
+        // Obtener todos los enlaces del menú
+        var menuLinks = document.querySelectorAll(".nav-link");
+
+        // Iterar sobre los enlaces del menú
+        menuLinks.forEach(function (link) {
+            // Obtener la URL del enlace actual
+            var linkUrl = link.getAttribute("href");
+
+            // Verificar si la URL del enlace coincide con la URL actual
+            if (currentUrl.includes(linkUrl)) {
+                // Agregar la clase "active" al elemento
+                link.classList.add("active");
+            }
+        });
         // Iniciar el temporizador al cargar la página
         startInactivityTimer();
 
