@@ -381,7 +381,7 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
         } else {
             // Obtener la dirección IP del servidor
             var ipAddress = currentLocation.split('/')[2];
-            titleText = "http://" + ipAddress + contexto + "/GestionFungibles";
+            titleText = "http://" + ipAddress + contexto + "/GestionEquipos";
         }
 
         if (divAlertaProximoMantenimiento.className === "first-level-warning") {
