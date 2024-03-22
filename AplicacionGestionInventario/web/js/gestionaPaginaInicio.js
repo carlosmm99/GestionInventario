@@ -186,6 +186,18 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
     };
 
     divAlertaProximaCalibracion.onmouseover = function () {
+        var currentLocation = window.location.href;
+        var titleText = "";
+
+        // Verificar si estamos en localhost
+        if (currentLocation.includes("localhost") || currentLocation.includes("127.0.0.1")) {
+            titleText = "http://localhost:8080" + contexto + "/GestionEquipos";
+        } else {
+            // Obtener la dirección IP del servidor
+            var ipAddress = currentLocation.split('/')[2];
+            titleText = "http://" + ipAddress + ":8080" + contexto + "/GestionEquipos";
+        }
+
         if (divAlertaProximaCalibracion.className === "first-level-warning") {
             divAlertaProximaCalibracion.style.backgroundColor = "#ffff50";
         } else if (divAlertaProximaCalibracion.className === "second-level-warning") {
@@ -194,7 +206,7 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
             divAlertaProximaCalibracion.style.backgroundColor = "#ff5050";
         }
         divAlertaProximaCalibracion.style.cursor = "pointer";
-        divAlertaProximaCalibracion.title = contexto + "/GestionEquipos";
+        divAlertaProximaCalibracion.title = titleText;
     };
 
     divAlertaProximaCalibracion.onmouseout = function () {
@@ -267,6 +279,18 @@ function crearAlertaCantidad(fungible, color, mensaje) {
     };
 
     divAlertaCantidad.onmouseover = function () {
+        var currentLocation = window.location.href;
+        var titleText = "";
+
+        // Verificar si estamos en localhost
+        if (currentLocation.includes("localhost") || currentLocation.includes("127.0.0.1")) {
+            titleText = "http://localhost:8080" + contexto + "/GestionEquipos";
+        } else {
+            // Obtener la dirección IP del servidor
+            var ipAddress = currentLocation.split('/')[2];
+            titleText = "http://" + ipAddress + ":8080" + contexto + "/GestionFungibles";
+        }
+
         if (divAlertaCantidad.className === "first-level-warning") {
             divAlertaCantidad.style.backgroundColor = "#ffff50";
         } else if (divAlertaCantidad.className === "second-level-warning") {
@@ -275,7 +299,7 @@ function crearAlertaCantidad(fungible, color, mensaje) {
             divAlertaCantidad.style.backgroundColor = "#ff5050";
         }
         divAlertaCantidad.style.cursor = "pointer";
-        divAlertaCantidad.title = contexto + "/GestionFungibles";
+        divAlertaCantidad.title = titleText;
     };
 
     divAlertaCantidad.onmouseout = function () {
@@ -348,6 +372,18 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
     };
 
     divAlertaProximoMantenimiento.onmouseover = function () {
+        var currentLocation = window.location.href;
+        var titleText = "";
+
+        // Verificar si estamos en localhost
+        if (currentLocation.includes("localhost") || currentLocation.includes("127.0.0.1")) {
+            titleText = "http://localhost:8080" + contexto + "/GestionEquipos";
+        } else {
+            // Obtener la dirección IP del servidor
+            var ipAddress = currentLocation.split('/')[2];
+            titleText = "http://" + ipAddress + ":8080" + contexto + "/GestionFungibles";
+        }
+
         if (divAlertaProximoMantenimiento.className === "first-level-warning") {
             divAlertaProximoMantenimiento.style.backgroundColor = "#ffff50";
         } else if (divAlertaProximoMantenimiento.className === "second-level-warning") {
@@ -356,7 +392,7 @@ function crearAlertaMantenimiento(equipo, color, mensaje) {
             divAlertaProximoMantenimiento.style.backgroundColor = "#ff5050";
         }
         divAlertaProximoMantenimiento.style.cursor = "pointer";
-        divAlertaProximoMantenimiento.title = contexto + "/GestionEquipos";
+        divAlertaProximoMantenimiento.title = titleText;
     };
 
     divAlertaProximoMantenimiento.onmouseout = function () {
