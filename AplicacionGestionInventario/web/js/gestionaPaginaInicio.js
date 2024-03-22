@@ -284,11 +284,11 @@ function crearAlertaCantidad(fungible, color, mensaje) {
 
         // Verificar si estamos en localhost
         if (currentLocation.includes("localhost") || currentLocation.includes("127.0.0.1")) {
-            titleText = "http://localhost:8080" + contexto + "/GestionEquipos";
+            titleText = "http://localhost:8080" + contexto + "/GestionFungibles";
         } else {
             // Obtener la dirección IP del servidor
             var ipAddress = currentLocation.split('/')[2];
-            titleText = "http://" + ipAddress + contexto + "/GestionEquipos";
+            titleText = "http://" + ipAddress + contexto + "/GestionFungibles";
         }
 
         if (divAlertaCantidad.className === "first-level-warning") {
