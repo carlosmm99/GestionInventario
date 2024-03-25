@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-03-2024 a las 14:07:06
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Tiempo de generación: 25-03-2024 a las 19:54:58
+-- Versión del servidor: 10.4.21-MariaDB
+-- Versión de PHP: 8.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -38,19 +38,20 @@ CREATE TABLE `equipos` (
   `fecha_ultimo_mantenimiento` date NOT NULL,
   `fecha_proximo_mantenimiento` date NOT NULL,
   `foto` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `equipos`
 --
 
 INSERT INTO `equipos` (`id`, `num_inventario`, `nombre`, `fecha_compra`, `fabricante`, `fecha_ultima_calibracion`, `fecha_proxima_calibracion`, `fecha_ultimo_mantenimiento`, `fecha_proximo_mantenimiento`, `foto`) VALUES
-(1, 123456, 'Equipo1', '2023-01-01', 'Fabricante1', '2023-01-01', '2024-01-01', '2022-10-01', '2024-01-01', 'excavadora.jpg'),
+(1, 123456, 'Equipo1', '2023-01-01', 'Fabricante1', '2023-01-01', '2024-01-01', '2022-10-01', '2024-09-20', 'excavadora.jpg'),
 (2, 789012, 'Equipo2', '2023-02-01', 'Fabricante2', '2023-02-01', '2024-02-01', '2022-11-01', '2024-02-01', 'excavadora.jpg'),
 (3, 798124, 'Equipo3', '2024-02-13', 'HP', '2024-02-06', '2024-11-30', '2022-12-01', '2024-03-01', 'excavadora.jpg'),
 (4, 740992, 'Equipo4', '2024-03-12', 'Epson', '2023-10-12', '2024-03-25', '2023-11-17', '2024-05-31', 'Epson-3.jpg'),
 (5, 712517, 'Equipo5', '2023-11-15', 'Fabricante1', '2023-08-01', '2024-10-09', '2023-11-07', '2024-03-31', '20221011_caracteristicas_portatil.jpg'),
-(6, 164500, 'Equipo6', '2024-03-11', 'Prueba', '2023-12-06', '2024-03-29', '2024-01-08', '2024-07-19', '20221011_caracteristicas_portatil.jpg');
+(6, 164500, 'Equipo6', '2024-03-11', 'Prueba', '2023-12-06', '2024-03-29', '2024-01-08', '2024-07-19', '20221011_caracteristicas_portatil.jpg'),
+(7, 770591, 'Equipo7', '2024-03-25', 'Fabricante2', '2023-12-04', '2024-08-14', '2023-08-15', '2024-04-29', 'excavadora.jpg');
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,7 @@ INSERT INTO `equipos` (`id`, `num_inventario`, `nombre`, `fecha_compra`, `fabric
 CREATE TABLE `equipos_fungibles` (
   `equipo_id` int(11) NOT NULL,
   `fungible_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `equipos_fungibles`
@@ -85,7 +86,10 @@ INSERT INTO `equipos_fungibles` (`equipo_id`, `fungible_id`) VALUES
 (5, 1),
 (5, 2),
 (6, 1),
-(6, 2);
+(6, 2),
+(6, 4),
+(7, 1),
+(7, 2);
 
 -- --------------------------------------------------------
 
@@ -96,7 +100,7 @@ INSERT INTO `equipos_fungibles` (`equipo_id`, `fungible_id`) VALUES
 CREATE TABLE `equipos_herramientas` (
   `equipo_id` int(11) NOT NULL,
   `herramienta_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `equipos_herramientas`
@@ -114,7 +118,8 @@ INSERT INTO `equipos_herramientas` (`equipo_id`, `herramienta_id`) VALUES
 (3, 3),
 (4, 1),
 (5, 2),
-(6, 2);
+(6, 2),
+(7, 1);
 
 -- --------------------------------------------------------
 
@@ -129,7 +134,7 @@ CREATE TABLE `fungibles` (
   `tamanyo` varchar(255) NOT NULL,
   `cantidad` int(11) NOT NULL,
   `foto` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `fungibles`
@@ -138,8 +143,8 @@ CREATE TABLE `fungibles` (
 INSERT INTO `fungibles` (`id`, `marca`, `modelo`, `tamanyo`, `cantidad`, `foto`) VALUES
 (1, 'Marca1', 'Modelo1', 'Tamano1', 25, 'pilasAAA.jpg'),
 (2, 'Marca2', 'Modelo2', 'Tamano2', 8, 'pilasAAA.jpg'),
-(3, 'Marca3', 'Modelo3', 'Tamano3', 4, 'pilasAAA.jpg'),
-(4, 'Prueba', 'Prueba', '250x250', 0, 'pilasAAA.jpg');
+(3, 'Marca3', 'Modelo3', 'Tamano3', 17, 'pilasAAA.jpg'),
+(4, 'Prueba', 'Prueba', '250x250', 12, 'pilasAAA.jpg');
 
 -- --------------------------------------------------------
 
@@ -150,7 +155,7 @@ INSERT INTO `fungibles` (`id`, `marca`, `modelo`, `tamanyo`, `cantidad`, `foto`)
 CREATE TABLE `fungibles_herramientas` (
   `fungible_id` int(11) NOT NULL,
   `herramienta_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `fungibles_herramientas`
@@ -176,7 +181,7 @@ CREATE TABLE `herramientas` (
   `fabricante` varchar(255) NOT NULL,
   `fecha_compra` date NOT NULL,
   `foto` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `herramientas`
@@ -196,7 +201,7 @@ INSERT INTO `herramientas` (`id`, `marca`, `modelo`, `fabricante`, `fecha_compra
 CREATE TABLE `roles` (
   `cod_rol` int(11) NOT NULL,
   `rol` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `roles`
@@ -216,7 +221,7 @@ CREATE TABLE `usuarios` (
   `usuario` varchar(255) NOT NULL,
   `contrasenia` varchar(255) NOT NULL,
   `rol` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `usuarios`
@@ -294,7 +299,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `equipos`
 --
 ALTER TABLE `equipos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `fungibles`
