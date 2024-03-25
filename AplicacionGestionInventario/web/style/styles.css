@@ -31,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 
 .imagen-hover:hover {
-    filter: brightness(120%);
+    filter: brightness(110%);
 }
 
 #divNotificaciones div {

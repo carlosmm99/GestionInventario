@@ -207,12 +207,8 @@ function crearAlertaCalibracion(equipo, color, mensaje) {
         var titleText = "";
 
         // Verificar si estamos en localhost
-        if (currentLocation.includes("localhost")) {
-            titleText = "http://localhost:8080" + contexto + "/GestionEquipos";
-        } else if (currentLocation.includes("127.")) {
-            // Obtener la dirección IP del servidor
-            var ipAddress = currentLocation.match(/127\.\d{1,3}\.\d{1,3}\.\d{1,3}/)[0];
-            titleText = "http://" + ipAddress + contexto + "/GestionEquipos";
+        if (currentLocation.includes("localhost") || currentLocation.includes("127.")) {
+            titleText = currentLocation.includes("localhost") ? "http://localhost:8080" + contexto + "/GestionEquipos" : currentLocation.includes("127.") ? "http://" + currentLocation.match(/127\.\d{1,3}\.\d{1,3}\.\d{1,3}/)[0] + ":8080" + contexto + "/GestionEquipos" : undefined;
         } else {
             // Obtener la dirección IP del servidor
             var ipAddress = currentLocation.split('/')[2];
