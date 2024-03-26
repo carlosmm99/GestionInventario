@@ -70,12 +70,9 @@ public class GestionFungibles extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
-                Integer rol = (Integer) request.getSession().getAttribute("rol");
-                if (rol.equals(1)) {
-                    String btnAgregar = generarBotonHTML();
-                    request.setAttribute("btnAgregar", btnAgregar);
-                }
-                String tablaFungibles = generarTablaHTML(request, rol);
+                String btnAgregar = generarBotonHTML();
+                request.setAttribute("btnAgregar", btnAgregar);
+                String tablaFungibles = generarTablaHTML(request);
                 request.setAttribute("tablaFungibles", tablaFungibles);
                 String formFungibles = generarFormularioHTML(request);
                 request.setAttribute("formFungibles", formFungibles);
@@ -328,7 +325,7 @@ public class GestionFungibles extends HttpServlet {
         return formHTML.toString();
     }
 
-    private String generarTablaHTML(HttpServletRequest request, Integer rol) {
+    private String generarTablaHTML(HttpServletRequest request) {
         List<Fungible> fungibles = c.leerFungibles();
         StringBuilder tablaHTML = new StringBuilder();
 
@@ -367,11 +364,9 @@ public class GestionFungibles extends HttpServlet {
                         .append(" data-fotofungible=\"").append(fungible.getFoto()).append("\">");
 
                 tablaHTML.append("<td>")
-                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;");
-                if (rol.equals(1)) {
-                    tablaHTML.append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;");
-                }
-                tablaHTML.append("</td>");
+                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
+                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalFungibles\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
+                        .append("</td>");
 
                 tablaHTML.append("<td id=\"celdaIdFungible\">").append(fungible.getId()).append("</td>")
                         .append("<td>").append(fungible.getMarca()).append("</td>")

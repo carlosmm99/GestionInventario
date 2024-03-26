@@ -76,11 +76,9 @@ public class GestionHerramientas extends HttpServlet {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
                 Integer rol = (Integer) request.getSession().getAttribute("rol");
-                if (rol.equals(1)) {
-                    String btnAgregar = generarBotonHTML();
-                    request.setAttribute("btnAgregar", btnAgregar);
-                }
-                String tablaHerramientas = generarTablaHTML(request, rol);
+                String btnAgregar = generarBotonHTML();
+                request.setAttribute("btnAgregar", btnAgregar);
+                String tablaHerramientas = generarTablaHTML(request);
                 request.setAttribute("tablaHerramientas", tablaHerramientas);
                 String formHerramientas = generarFormularioHTML(request);
                 request.setAttribute("formHerramientas", formHerramientas);
@@ -332,7 +330,7 @@ public class GestionHerramientas extends HttpServlet {
         return formHTML.toString();
     }
 
-    private String generarTablaHTML(HttpServletRequest request, Integer rol) {
+    private String generarTablaHTML(HttpServletRequest request) {
         List<Herramienta> herramientas = c.leerHerramientas();
         StringBuilder tablaHTML = new StringBuilder();
 
@@ -340,11 +338,8 @@ public class GestionHerramientas extends HttpServlet {
             tablaHTML.append("<table id=\"tablaHerramientas\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
-            if (rol.equals(1)) {
-                tablaHTML.append("<th scope=\"col\">Acciones</th>");
-            }
-
-            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th><th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th>")
+            tablaHTML.append("<th scope=\"col\">Acciones</th>")
+                    .append("<th scope=\"col\" id=\"celdaEncabezadoIdHerramienta\">ID</th><th scope=\"col\" id=\"celdaEncabezadoMarcaFungible\">Marca</th>")
                     .append("<th scope=\"col\">Modelo</th><th scope=\"col\">Fabricante</th>")
                     .append("<th scope=\"col\">Fecha de compra</th><th scope=\"col\">Foto</th>");
 
@@ -373,14 +368,11 @@ public class GestionHerramientas extends HttpServlet {
                         .append(" data-numfungibles=\"").append(numFungibles).append("\"")
                         .append(" data-fotoherramienta=\"").append(herramienta.getFoto()).append("\">");
 
-                if (rol.equals(1)) {
-                    tablaHTML.append("<td>")
-                            .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
-                            .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
-                            .append("</td>");
-                }
-
-                tablaHTML.append("<td id=\"celdaIdHerramienta\">").append(herramienta.getId()).append("</td>")
+                tablaHTML.append("<td>")
+                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Editar\" name=\"btnEditarFungible\">Editar</button>&nbsp;")
+                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalHerramientas\" data-action=\"Eliminar\" name=\"btnEliminarFungible\">Eliminar</button>&nbsp;")
+                        .append("</td>")
+                        .append("<td id=\"celdaIdHerramienta\">").append(herramienta.getId()).append("</td>")
                         .append("<td>").append(herramienta.getMarca()).append("</td>")
                         .append("<td>").append(herramienta.getModelo()).append("</td>")
                         .append("<td>").append(herramienta.getFabricante()).append("</td>")

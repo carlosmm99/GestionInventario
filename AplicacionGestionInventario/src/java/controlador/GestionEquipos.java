@@ -75,12 +75,9 @@ public class GestionEquipos extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String usuario = (String) request.getSession().getAttribute("usuario");
             if (usuario != null) {
-                Integer rol = (Integer) request.getSession().getAttribute("rol");
-                if (rol.equals(1)) {
-                    String btnAgregar = generarBotonHTML();
-                    request.setAttribute("btnAgregar", btnAgregar);
-                }
-                String tablaEquipos = generarTablaHTML(request, rol);
+                String btnAgregar = generarBotonHTML();
+                request.setAttribute("btnAgregar", btnAgregar);
+                String tablaEquipos = generarTablaHTML(request);
                 request.setAttribute("tablaEquipos", tablaEquipos);
                 String formEquipos = generarFormularioHTML(request);
                 request.setAttribute("formEquipos", formEquipos);
@@ -373,7 +370,7 @@ public class GestionEquipos extends HttpServlet {
         return formHTML.toString();
     }
 
-    private String generarTablaHTML(HttpServletRequest request, Integer rol) {
+    private String generarTablaHTML(HttpServletRequest request) {
         List<Equipo> equipos = c.leerEquipos();
         StringBuilder tablaHTML = new StringBuilder();
 
@@ -381,11 +378,8 @@ public class GestionEquipos extends HttpServlet {
             tablaHTML.append("<table id=\"tablaEquipos\" class=\"table table-bordered table-hover display responsive nowrap\" width=\"100%\">")
                     .append("<thead><tr>");
 
-            if (rol.equals(1)) {
-                tablaHTML.append("<th scope=\"col\">Acciones</th>");
-            }
-
-            tablaHTML.append("<th scope=\"col\" id=\"celdaEncabezadoIdEquipo\">ID</th><th scope=\"col\">Nº inventario CEDEX</th>")
+            tablaHTML.append("<th scope=\"col\">Acciones</th>")
+                    .append("<th scope=\"col\" id=\"celdaEncabezadoIdEquipo\">ID</th><th scope=\"col\">Nº inventario CEDEX</th>")
                     .append("<th scope=\"col\">Nombre</th><th scope=\"col\">Fecha de compra</th>")
                     .append("<th scope=\"col\">Fabricante</th><th scope=\"col\">Fecha última calibración</th>")
                     .append("<th scope=\"col\">Fecha próxima calibración</th><th scope=\"col\">Fecha último mantenimiento</th>")
@@ -423,14 +417,11 @@ public class GestionEquipos extends HttpServlet {
                         .append(" data-numherramientas=\"").append(numHerramientas).append("\"")
                         .append(" data-fotoequipo=\"").append(equipo.getFoto()).append("\">");
 
-                if (rol.equals(1)) {
-                    tablaHTML.append("<td>")
-                            .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
-                            .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Eliminar\" name=\"btnEliminarTrabajo\">Eliminar</button>&nbsp;")
-                            .append("</td>");
-                }
-
-                tablaHTML.append("<td>").append(equipo.getId()).append("</td>")
+                tablaHTML.append("<td>")
+                        .append("<button type=\"button\" class=\"btn btn-warning btnEditar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Editar\" name=\"btnEditarTrabajo\">Editar</button>&nbsp;")
+                        .append("<button type=\"button\" class=\"btn btn-danger btnEliminar\" data-bs-toggle=\"modal\" data-bs-target=\"#modalEquipos\" data-action=\"Eliminar\" name=\"btnEliminarTrabajo\">Eliminar</button>&nbsp;")
+                        .append("</td>")
+                        .append("<td>").append(equipo.getId()).append("</td>")
                         .append("<td>").append(equipo.getNumInventario()).append("</td>")
                         .append("<td>").append(equipo.getNombre()).append("</td>")
                         .append("<td>").append(equipo.getFechaCompra()).append("</td>")
