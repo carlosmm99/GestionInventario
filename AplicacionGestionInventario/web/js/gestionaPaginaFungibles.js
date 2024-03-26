@@ -344,6 +344,40 @@ $(document).ready(function () {
                     $("[name='btnEditar']").prop("disabled", true);
                     $("[name='btnEliminar']").hide();
                     $("[name='btnEliminar']").prop("disabled", true);
+                } else if (rol === 2) {
+                    $("#titulo").show();
+                    $("#titulo").text("Para agregar un fungible debes ser administrador.");
+
+                    $("#filasFormulario #columnaNumFungible #txtNumFungible").val(ultimoNumFungible);
+                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
+                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
+                    $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
+                    $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", true);
+                    $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
+                    $("#filasFormulario #columnaEquipos #selectEquipos").val("");
+                    $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
+                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").attr("src", "");
+                    $("#filasFormulario #columnaFotoFungible #imgFungible").attr("src", "#");
+                    $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val("");
+
+                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
+                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
+                    $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
+                    $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
+                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                    $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
+                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", true);
+
+                    // Poner invisibles los campos
+                    $("#filasFormulario").hide();
+
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             }
 
@@ -449,6 +483,15 @@ $(document).ready(function () {
                         $("[name='btnEditar']").prop("disabled", true);
                         $("[name='btnEliminar']").show();
                         $("[name='btnEliminar']").prop("disabled", false);
+                    } else if (rol === 2) {
+                        $("#titulo").text("Para eliminar el fungible con id " + fila.data("idfungible") + " debes ser administrador.");
+
+                        $("[name='btnAgregar']").hide();
+                        $("[name='btnAgregar']").prop("disabled", true);
+                        $("[name='btnEditar']").hide();
+                        $("[name='btnEditar']").prop("disabled", true);
+                        $("[name='btnEliminar']").hide();
+                        $("[name='btnEliminar']").prop("disabled", true);
                     }
                 }
             }

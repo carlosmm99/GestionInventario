@@ -304,6 +304,39 @@ $(document).ready(function () {
                     $("[name='btnEditar']").prop("disabled", true);
                     $("[name='btnEliminar']").hide();
                     $("[name='btnEliminar']").prop("disabled", true);
+                } else if (rol === 2) {
+                    $("#titulo").show();
+                    $("#titulo").text("Para agregar una herramienta debes ser administrador.");
+
+                    $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(ultimoNumHerramienta);
+                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val("");
+                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").val("");
+                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").val("");
+                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
+                    $("#filasFormulario #columnaEquipos #selectEquipos").val("");
+                    $("#filasFormulario #columnaFungibles #selectFungibles").val("");
+                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").attr("src", "");
+                    $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").attr("src", "#");
+                    $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val("");
+
+                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
+                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
+                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
+                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
+                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                    $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", true);
+                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("required", true);
+
+                    // Poner visibles los campos
+                    $("#filasFormulario").hide();
+
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             }
         } else {
@@ -368,6 +401,27 @@ $(document).ready(function () {
                         $("[name='btnEditar']").prop("disabled", false);
                         $("[name='btnEliminar']").hide();
                         $("[name='btnEliminar']").prop("disabled", true);
+                    } else if (rol === 2) {
+                        $("#titulo").show();
+                        $("#titulo").text("Para editar la herramienta con id " + fila.data("idherramienta") + " debes ser administrador.");
+
+                        $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
+                        $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
+                        $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
+                        $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
+                        $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                        $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                        $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", true);
+
+                        // Poner invisibles los campos
+                        $("#filasFormulario").hide();
+
+                        $("[name='btnAgregar']").hide();
+                        $("[name='btnAgregar']").prop("disabled", true);
+                        $("[name='btnEditar']").hide();
+                        $("[name='btnEditar']").prop("disabled", true);
+                        $("[name='btnEliminar']").hide();
+                        $("[name='btnEliminar']").prop("disabled", true);
                     }
                 }
             } else if (accion === 'Eliminar') {
@@ -395,6 +449,14 @@ $(document).ready(function () {
                         $("[name='btnEditar']").prop("disabled", true);
                         $("[name='btnEliminar']").show();
                         $("[name='btnEliminar']").prop("disabled", false);
+                    } else if (rol === 2) {
+                        $("#titulo").text("Para eliminar la herramienta con id " + fila.data("idherramienta") + " debes ser administrador.");
+                        $("[name='btnAgregar']").hide();
+                        $("[name='btnAgregar']").prop("disabled", true);
+                        $("[name='btnEditar']").hide();
+                        $("[name='btnEditar']").prop("disabled", true);
+                        $("[name='btnEliminar']").hide();
+                        $("[name='btnEliminar']").prop("disabled", true);
                     }
                 }
             }
