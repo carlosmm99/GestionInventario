@@ -315,27 +315,6 @@ $(document).ready(function () {
                     $("[name='btnAgregar']").show();
                     $("[name='btnAgregar']").prop("disabled", false);
                     $("[name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
-                } else if (rol === 2) {
-                    $("#titulo").show();
-                    $("#titulo").text("Para agregar un equipo debes ser administrador");
-
-                    $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
-                    $("#filasFormulario input[id^='txt']:not(#txtNumEquipo), #filasFormulario select").val("");
-                    $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").attr("src", "");
-                    $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
-                    $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
-
-                    $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
-                        "readonly": true,
-                        "disabled": true
-                    });
-
-                    $("#filasFormulario #inputFotoEquipo").prop("required", false);
-
-                    // Poner invisibles los campos
-                    $("#filasFormulario").hide();
-
-                    $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                 }
             }
 
@@ -395,19 +374,6 @@ $(document).ready(function () {
 
                         $("[name='btnAgregar'], [name='btnEliminar']").hide().prop("disabled", true);
                         $("[name='btnEditar']").show().prop("disabled", false);
-                    } else {
-                        $("#titulo").show();
-                        $("#titulo").text("Para editar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
-
-                        $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
-                            "readonly": true,
-                            "disabled": true
-                        });
-
-                        // Poner invisibles los campos
-                        $("#filasFormulario").hide();
-
-                        $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                     }
                 }
             } else if (accion === 'Eliminar') {
@@ -428,9 +394,6 @@ $(document).ready(function () {
                         $("#titulo").text("¿Seguro que deseas eliminar este equipo?");
                         $("[name='btnAgregar'], [name='btnEditar']").hide().prop("disabled", true);
                         $("[name='btnEliminar']").show().prop("disabled", false);
-                    } else if (rol === 2) {
-                        $("#titulo").text("Para eliminar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
-                        $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                     }
                 }
             }
