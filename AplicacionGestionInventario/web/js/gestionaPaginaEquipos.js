@@ -39,28 +39,26 @@ $(document).mousedown(function (event) {
 });
 
 $(document).ready(function () {
-    if (usuario !== null) {
-        // Iniciar el temporizador al cargar la página
-        startInactivityTimer();
+    // Iniciar el temporizador al cargar la página
+    startInactivityTimer();
 
-        // Agregar un evento de click al cuerpo de la página para detectar la actividad del usuario
-        document.body.addEventListener("click", resetInactivityTimer);
+    // Agregar un evento de click al cuerpo de la página para detectar la actividad del usuario
+    document.body.addEventListener("click", resetInactivityTimer);
 
-        // Obtiene la URL actual
-        var url = window.location.pathname;
+    // Obtiene la URL actual
+    var url = window.location.pathname;
 
-        // Recorre cada enlace con clase "nav-link"
-        $(".nav-link").each(function () {
-            // Obtiene la URL del enlace
-            var linkUrl = $(this).attr("href");
+    // Recorre cada enlace con clase "nav-link"
+    $(".nav-link").each(function () {
+        // Obtiene la URL del enlace
+        var linkUrl = $(this).attr("href");
 
-            // Compara la URL actual con la URL del enlace
-            if (url === linkUrl) {
-                // Agrega la clase "active" al enlace correspondiente
-                $(this).addClass("active");
-            }
-        });
-    }
+        // Compara la URL actual con la URL del enlace
+        if (url === linkUrl) {
+            // Agrega la clase "active" al enlace correspondiente
+            $(this).addClass("active");
+        }
+    });
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaID = $("#tablaEquipos thead th#celdaEncabezadoIdEquipo").index();
     tablaEquipos = $("#tablaEquipos").DataTable({
@@ -339,27 +337,6 @@ $(document).ready(function () {
 
                     $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                 }
-            } else {
-                $("#titulo").show();
-                $("#titulo").text("Para agregar un equipo debes iniciar sesión");
-
-                $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
-                $("#filasFormulario input[id^='txt']:not(#txtNumEquipo), #filasFormulario select").val("");
-                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").attr("src", "");
-                $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
-                $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
-
-                $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
-                    "readonly": true,
-                    "disabled": true
-                });
-
-                $("#filasFormulario #inputFotoEquipo").prop("required", false);
-
-                // Poner invisibles los campos
-                $("#filasFormulario").show();
-
-                $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
             }
 
             // Limpiar el valor del input file cuando se cierre el modal o se cancele la acción de agregar un equipo
@@ -396,11 +373,6 @@ $(document).ready(function () {
                     $("#titulo").text("");
                     // Poner visibles los campos
                     $("#filasFormulario").show();
-                } else {
-                    $("#titulo").show();
-                    $("#titulo").text("Para ver la información del equipo debes iniciar sesión.");
-                    // Poner invisibles los campos
-                    $("#filasFormulario").hide();
                 }
 
                 $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
@@ -437,19 +409,6 @@ $(document).ready(function () {
 
                         $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                     }
-                } else {
-                    $("#titulo").show();
-                    $("#titulo").text("Para editar el equipo con id " + fila.data("idequipo") + " debes iniciar sesión.");
-
-                    $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
-                        "readonly": true,
-                        "disabled": true
-                    });
-
-                    // Poner invisibles los campos
-                    $("#filasFormulario").hide();
-
-                    $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                 }
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
@@ -473,9 +432,6 @@ $(document).ready(function () {
                         $("#titulo").text("Para eliminar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
                         $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                     }
-                } else {
-                    $("#titulo").text("Para eliminar el equipo con id " + fila.data("idequipo") + " debes iniciar sesión.");
-                    $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                 }
             }
         }

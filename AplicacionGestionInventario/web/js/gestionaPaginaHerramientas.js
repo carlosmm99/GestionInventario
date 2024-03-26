@@ -24,28 +24,26 @@ function resetInactivityTimer() {
 }
 
 $(document).ready(function () {
-    if (usuario !== null) {
-        // Iniciar el temporizador al cargar la página
-        startInactivityTimer();
+    // Iniciar el temporizador al cargar la página
+    startInactivityTimer();
 
-        // Agregar un evento de click al cuerpo de la página para detectar la actividad del usuario
-        document.body.addEventListener("click", resetInactivityTimer);
+    // Agregar un evento de click al cuerpo de la página para detectar la actividad del usuario
+    document.body.addEventListener("click", resetInactivityTimer);
 
-        // Obtiene la URL actual
-        var url = window.location.pathname;
+    // Obtiene la URL actual
+    var url = window.location.pathname;
 
-        // Recorre cada enlace con clase "nav-link"
-        $(".nav-link").each(function () {
-            // Obtiene la URL del enlace
-            var linkUrl = $(this).attr("href");
+    // Recorre cada enlace con clase "nav-link"
+    $(".nav-link").each(function () {
+        // Obtiene la URL del enlace
+        var linkUrl = $(this).attr("href");
 
-            // Compara la URL actual con la URL del enlace
-            if (url === linkUrl) {
-                // Agrega la clase "active" al enlace correspondiente
-                $(this).addClass("active");
-            }
-        });
-    }
+        // Compara la URL actual con la URL del enlace
+        if (url === linkUrl) {
+            // Agrega la clase "active" al enlace correspondiente
+            $(this).addClass("active");
+        }
+    });
     $.fn.DataTable.ext.classes.sPageButton = 'page-link'; // Change Pagination Button Class
     var indiceColumnaMarca = $("#tablaHerramientas thead th#celdaEncabezadoMarcaFungible").index();
     tablaHerramientas = $("#tablaHerramientas").DataTable({
@@ -340,39 +338,6 @@ $(document).ready(function () {
                     $("[name='btnEliminar']").hide();
                     $("[name='btnEliminar']").prop("disabled", true);
                 }
-            } else {
-                $("#titulo").show();
-                $("#titulo").text("Para agregar una herramienta debes iniciar sesión.");
-
-                $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(ultimoNumHerramienta);
-                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val("");
-                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").val("");
-                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").val("");
-                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
-                $("#filasFormulario #columnaEquipos #selectEquipos").val("");
-                $("#filasFormulario #columnaFungibles #selectFungibles").val("");
-                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").attr("src", "");
-                $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").attr("src", "#");
-                $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val("");
-
-                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
-                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
-                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
-                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
-                $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
-                $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
-                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", true);
-                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("required", true);
-
-                // Poner invisibles los campos
-                $("#filasFormulario").hide();
-
-                $("[name='btnAgregar']").hide();
-                $("[name='btnAgregar']").prop("disabled", true);
-                $("[name='btnEditar']").hide();
-                $("[name='btnEditar']").prop("disabled", true);
-                $("[name='btnEliminar']").hide();
-                $("[name='btnEliminar']").prop("disabled", true);
             }
         } else {
             $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(fila.data("idherramienta"));
@@ -403,11 +368,6 @@ $(document).ready(function () {
                     $("#titulo").text("");
                     // Poner visibles los campos
                     $("#filasFormulario").show();
-                } else {
-                    $("#titulo").show();
-                    $("#titulo").text("Para ver la información de la herramienta debes iniciar sesión.");
-                    // Poner invisibles los campos
-                    $("#filasFormulario").hide();
                 }
 
                 $("[name='btnAgregar']").hide();
@@ -463,27 +423,6 @@ $(document).ready(function () {
                         $("[name='btnEliminar']").hide();
                         $("[name='btnEliminar']").prop("disabled", true);
                     }
-                } else {
-                    $("#titulo").show();
-                    $("#titulo").text("Para editar la herramienta con id " + fila.data("idherramienta") + " debes iniciar sesión.");
-
-                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
-                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
-                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
-                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
-                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
-                    $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
-                    $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", true);
-
-                    // Poner invisibles los campos
-                    $("#filasFormulario").hide();
-
-                    $("[name='btnAgregar']").hide();
-                    $("[name='btnAgregar']").prop("disabled", true);
-                    $("[name='btnEditar']").hide();
-                    $("[name='btnEditar']").prop("disabled", true);
-                    $("[name='btnEliminar']").hide();
-                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
@@ -519,14 +458,6 @@ $(document).ready(function () {
                         $("[name='btnEliminar']").hide();
                         $("[name='btnEliminar']").prop("disabled", true);
                     }
-                } else {
-                    $("#titulo").text("Para eliminar la herramienta con id " + fila.data("idherramienta") + " debes iniciar sesión.");
-                    $("[name='btnAgregar']").hide();
-                    $("[name='btnAgregar']").prop("disabled", true);
-                    $("[name='btnEditar']").hide();
-                    $("[name='btnEditar']").prop("disabled", true);
-                    $("[name='btnEliminar']").hide();
-                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             }
         }
