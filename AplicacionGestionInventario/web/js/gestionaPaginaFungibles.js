@@ -155,23 +155,26 @@ $(document).ready(function () {
         tablaFungibles.columns.adjust().responsive.recalc();
     }
 
-    // Verificar si id no es nulo
-    if (id !== null) {
-        // Buscar la fila con el id correspondiente en la tabla
-        var filaEditar = $("#tablaFungibles tbody tr[data-idfungible='" + id + "']");
-        // Verificar si se encontró la fila
-        if (filaEditar.length > 0) {
-            // Configurar el modal para editar la fila encontrada
-            configurarModal(filaEditar, 'Editar');
-            // Mostrar el modal
-            $('#modalFungibles').modal('show');
-            $("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container").on("click", function (event) {
-                // Verificar si el clic proviene del botón izquierdo del ratón (event.which === 1)
-                // o si es un clic en cualquiera de los elementos seleccionados
-                if (event.which === 1 || $(event.target).is("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container")) {
-                    localStorage.removeItem('id');
-                }
-            });
+    // Verificar si el usuario no es nulo
+    if (usuario !== null) {
+        // Verificar si id no es nulo
+        if (id !== null) {
+            // Buscar la fila con el id correspondiente en la tabla
+            var filaEditar = $("#tablaFungibles tbody tr[data-idfungible='" + id + "']");
+            // Verificar si se encontró la fila
+            if (filaEditar.length > 0) {
+                // Configurar el modal para editar la fila encontrada
+                configurarModal(filaEditar, 'Editar');
+                // Mostrar el modal
+                $('#modalFungibles').modal('show');
+                $("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container").on("click", function (event) {
+                    // Verificar si el clic proviene del botón izquierdo del ratón (event.which === 1)
+                    // o si es un clic en cualquiera de los elementos seleccionados
+                    if (event.which === 1 || $(event.target).is("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container")) {
+                        localStorage.removeItem('id');
+                    }
+                });
+            }
         }
     }
 
@@ -254,26 +257,32 @@ $(document).ready(function () {
     });
 
     $("#tablaFungibles tbody").on("click", "tr td:not(:first-child)", function () {
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Consultar';
-        configurarModal(fila, accion);
-        $('#modalFungibles').modal('show');
+        if (usuario !== null) {
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Consultar';
+            configurarModal(fila, accion);
+            $('#modalFungibles').modal('show');
+        }
     });
 
     $("#tablaFungibles tbody").on("click", "tr td .btnEditar", function (e) {
-        e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Editar';
-        configurarModal(fila, accion);
-        $('#modalFungibles').modal('show');
+        if (usuario !== null) {
+            e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Editar';
+            configurarModal(fila, accion);
+            $('#modalFungibles').modal('show');
+        }
     });
 
     $("#tablaFungibles tbody").on("click", "tr td .btnEliminar", function (e) {
-        e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Eliminar';
-        configurarModal(fila, accion);
-        $('#modalFungibles').modal('show');
+        if (usuario !== null) {
+            e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Eliminar';
+            configurarModal(fila, accion);
+            $('#modalFungibles').modal('show');
+        }
     });
 
     $("[type='number']").keypress(function (evt) {
@@ -309,76 +318,74 @@ $(document).ready(function () {
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
             $(".modal-title").text("Agregar fungible");
-            if (usuario !== null) {
-                if (rol === 1) {
-                    $("#titulo").hide();
-                    $("#titulo").text("");
+            if (rol === 1) {
+                $("#titulo").hide();
+                $("#titulo").text("");
 
-                    $("#filasFormulario #columnaNumFungible #txtNumFungible").val(ultimoNumFungible);
-                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
-                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
-                    $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
-                    $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", false);
-                    $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
-                    $("#filasFormulario #columnaEquipos #selectEquipos").val("");
-                    $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
-                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").attr("src", "");
-                    $("#filasFormulario #columnaFotoFungible #imgFungible").attr("src", "#");
-                    $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val("");
+                $("#filasFormulario #columnaNumFungible #txtNumFungible").val(ultimoNumFungible);
+                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
+                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
+                $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
+                $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", false);
+                $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
+                $("#filasFormulario #columnaEquipos #selectEquipos").val("");
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").attr("src", "");
+                $("#filasFormulario #columnaFotoFungible #imgFungible").attr("src", "#");
+                $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val("");
 
-                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
-                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
-                    $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
-                    $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
-                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
-                    $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
-                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", false);
-                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", true);
+                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
+                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
+                $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
+                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", false);
+                $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", false);
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", true);
 
-                    // Poner visibles los campos
-                    $("#filasFormulario").show();
+                // Poner visibles los campos
+                $("#filasFormulario").show();
 
-                    $("[name='btnAgregar']").show();
-                    $("[name='btnAgregar']").prop("disabled", false);
-                    $("[name='btnEditar']").hide();
-                    $("[name='btnEditar']").prop("disabled", true);
-                    $("[name='btnEliminar']").hide();
-                    $("[name='btnEliminar']").prop("disabled", true);
-                } else if (rol === 2) {
-                    $("#titulo").show();
-                    $("#titulo").text("Para agregar un fungible debes ser administrador.");
+                $("[name='btnAgregar']").show();
+                $("[name='btnAgregar']").prop("disabled", false);
+                $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
+                $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
+            } else if (rol === 2) {
+                $("#titulo").show();
+                $("#titulo").text("Para agregar un fungible debes ser administrador.");
 
-                    $("#filasFormulario #columnaNumFungible #txtNumFungible").val(ultimoNumFungible);
-                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
-                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
-                    $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
-                    $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", true);
-                    $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
-                    $("#filasFormulario #columnaEquipos #selectEquipos").val("");
-                    $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
-                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").attr("src", "");
-                    $("#filasFormulario #columnaFotoFungible #imgFungible").attr("src", "#");
-                    $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val("");
+                $("#filasFormulario #columnaNumFungible #txtNumFungible").val(ultimoNumFungible);
+                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").val("");
+                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").val("");
+                $("#filasFormulario #columnaTamanyo #txtTamanyo").val("");
+                $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", true);
+                $("#filasFormulario #columnaCantidad #txtCantidad").val(0);
+                $("#filasFormulario #columnaEquipos #selectEquipos").val("");
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").val("");
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").attr("src", "");
+                $("#filasFormulario #columnaFotoFungible #imgFungible").attr("src", "#");
+                $("#filasFormulario #columnaFotoFungible #txtFotoFungible").val("");
 
-                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
-                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
-                    $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
-                    $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
-                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
-                    $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
-                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", true);
+                $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
+                $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
+                $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
+                $("#filasFormulario #columnaCantidad #txtCantidad").prop("disabled", true);
+                $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
+                $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("required", true);
 
-                    // Poner invisibles los campos
-                    $("#filasFormulario").hide();
+                // Poner invisibles los campos
+                $("#filasFormulario").hide();
 
-                    $("[name='btnAgregar']").hide();
-                    $("[name='btnAgregar']").prop("disabled", true);
-                    $("[name='btnEditar']").hide();
-                    $("[name='btnEditar']").prop("disabled", true);
-                    $("[name='btnEliminar']").hide();
-                    $("[name='btnEliminar']").prop("disabled", true);
-                }
+                $("[name='btnAgregar']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
+                $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
+                $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             }
 
             // Limpiar el valor del input file cuando se cierre el modal o se cancele la acción de agregar un equipo
@@ -409,12 +416,10 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
                 $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
 
-                if (usuario !== null) {
-                    $("#titulo").hide();
-                    $("#titulo").text("");
-                    // Poner visibles los campos
-                    $("#filasFormulario").show();
-                }
+                $("#titulo").hide();
+                $("#titulo").text("");
+                // Poner visibles los campos
+                $("#filasFormulario").show();
 
                 $("[name='btnAgregar']").hide();
                 $("[name='btnAgregar']").prop("disabled", true);
@@ -428,35 +433,33 @@ $(document).ready(function () {
                 $("#titulo").hide();
                 $("#titulo").text("");
 
-                if (usuario !== null) {
-                    if (rol === 1) {
-                        $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
-                        $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
-                        $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
-                        $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
-                        $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
-                        $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", false);
-                    } else if (rol === 2) {
-                        $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
-                        $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
-                        $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
-                        $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
-                        $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
-                        $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
-                    }
-
-                    $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", false);
-
-                    // Poner visibles los campos
-                    $("#filasFormulario").show();
-
-                    $("[name='btnAgregar']").hide();
-                    $("[name='btnAgregar']").prop("disabled", true);
-                    $("[name='btnEditar']").show();
-                    $("[name='btnEditar']").prop("disabled", false);
-                    $("[name='btnEliminar']").hide();
-                    $("[name='btnEliminar']").prop("disabled", true);
+                if (rol === 1) {
+                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", false);
+                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", false);
+                    $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", false);
+                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
+                    $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", false);
+                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", false);
+                } else if (rol === 2) {
+                    $("#filasFormulario #columnaMarcaFungible #txtMarcaFungible").prop("readonly", true);
+                    $("#filasFormulario #columnaModeloFungible #txtModeloFungible").prop("readonly", true);
+                    $("#filasFormulario #columnaTamanyo #txtTamanyo").prop("readonly", true);
+                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                    $("#filasFormulario #columnaHerramientas #selectHerramientas").prop("disabled", true);
+                    $("#filasFormulario #columnaFotoFungible #inputFotoFungible").prop("disabled", true);
                 }
+
+                $("#filasFormulario #columnaCantidad .input-group input").prop("disabled", false);
+
+                // Poner visibles los campos
+                $("#filasFormulario").show();
+
+                $("[name='btnAgregar']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
+                $("[name='btnEditar']").show();
+                $("[name='btnEditar']").prop("disabled", false);
+                $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Confirmar acción");
@@ -473,26 +476,24 @@ $(document).ready(function () {
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();
 
-                if (usuario !== null) {
-                    if (rol === 1) {
-                        $("#titulo").text("¿Seguro que deseas eliminar este fungible?");
+                if (rol === 1) {
+                    $("#titulo").text("¿Seguro que deseas eliminar este fungible?");
 
-                        $("[name='btnAgregar']").hide();
-                        $("[name='btnAgregar']").prop("disabled", true);
-                        $("[name='btnEditar']").hide();
-                        $("[name='btnEditar']").prop("disabled", true);
-                        $("[name='btnEliminar']").show();
-                        $("[name='btnEliminar']").prop("disabled", false);
-                    } else if (rol === 2) {
-                        $("#titulo").text("Para eliminar el fungible con id " + fila.data("idfungible") + " debes ser administrador.");
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").show();
+                    $("[name='btnEliminar']").prop("disabled", false);
+                } else if (rol === 2) {
+                    $("#titulo").text("Para eliminar el fungible con id " + fila.data("idfungible") + " debes ser administrador.");
 
-                        $("[name='btnAgregar']").hide();
-                        $("[name='btnAgregar']").prop("disabled", true);
-                        $("[name='btnEditar']").hide();
-                        $("[name='btnEditar']").prop("disabled", true);
-                        $("[name='btnEliminar']").hide();
-                        $("[name='btnEliminar']").prop("disabled", true);
-                    }
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             }
         }

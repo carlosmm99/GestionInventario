@@ -154,8 +154,10 @@ $(document).ready(function () {
     });
 
     $("#btnAgregarHerramienta").on("click", function () {
-        var accion = 'Agregar';
-        configurarModal(null, accion);
+        if (usuario !== null) {
+            var accion = 'Agregar';
+            configurarModal(null, accion);
+        }
     });
 
     $("#tablaHerramientas tbody").on("click", "tr td img[id^='fotoHerramienta']", function (e) {
@@ -219,26 +221,32 @@ $(document).ready(function () {
     });
 
     $("#tablaHerramientas tbody").on("click", "tr td:not(:first-child)", function () {
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Consultar';
-        configurarModal(fila, accion);
-        $('#modalHerramientas').modal('show');
+        if (usuario !== null) {
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Consultar';
+            configurarModal(fila, accion);
+            $('#modalHerramientas').modal('show');
+        }
     });
 
     $("#tablaHerramientas tbody").on("click", "tr td .btnEditar", function (e) {
-        e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Editar';
-        configurarModal(fila, accion);
-        $('#modalHerramientas').modal('show');
+        if (usuario !== null) {
+            e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Editar';
+            configurarModal(fila, accion);
+            $('#modalHerramientas').modal('show');
+        }
     });
 
     $("#tablaHerramientas tbody").on("click", "tr td .btnEliminar", function (e) {
-        e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Eliminar';
-        configurarModal(fila, accion);
-        $('#modalHerramientas').modal('show');
+        if (usuario !== null) {
+            e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Eliminar';
+            configurarModal(fila, accion);
+            $('#modalHerramientas').modal('show');
+        }
     });
 
     // Asociar la función al evento resize de la ventana
@@ -270,74 +278,72 @@ $(document).ready(function () {
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
             $(".modal-title").text("Agregar herramienta");
-            if (usuario !== null) {
-                if (rol === 1) {
-                    $("#titulo").hide();
-                    $("#titulo").text("");
+            if (rol === 1) {
+                $("#titulo").hide();
+                $("#titulo").text("");
 
-                    $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(ultimoNumHerramienta);
-                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val("");
-                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").val("");
-                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").val("");
-                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
-                    $("#filasFormulario #columnaEquipos #selectEquipos").val("");
-                    $("#filasFormulario #columnaFungibles #selectFungibles").val("");
-                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").attr("src", "");
-                    $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").attr("src", "#");
-                    $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val("");
+                $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(ultimoNumHerramienta);
+                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val("");
+                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").val("");
+                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").val("");
+                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
+                $("#filasFormulario #columnaEquipos #selectEquipos").val("");
+                $("#filasFormulario #columnaFungibles #selectFungibles").val("");
+                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").attr("src", "");
+                $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").attr("src", "#");
+                $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val("");
 
-                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", false);
-                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", false);
-                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", false);
-                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", false);
-                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
-                    $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
-                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", false);
-                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("required", true);
+                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", false);
+                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", false);
+                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", false);
+                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", false);
+                $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
+                $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
+                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", false);
+                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("required", true);
 
-                    // Poner visibles los campos
-                    $("#filasFormulario").show();
+                // Poner visibles los campos
+                $("#filasFormulario").show();
 
-                    $("[name='btnAgregar']").show();
-                    $("[name='btnAgregar']").prop("disabled", false);
-                    $("[name='btnEditar']").hide();
-                    $("[name='btnEditar']").prop("disabled", true);
-                    $("[name='btnEliminar']").hide();
-                    $("[name='btnEliminar']").prop("disabled", true);
-                } else if (rol === 2) {
-                    $("#titulo").show();
-                    $("#titulo").text("Para agregar una herramienta debes ser administrador.");
+                $("[name='btnAgregar']").show();
+                $("[name='btnAgregar']").prop("disabled", false);
+                $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
+                $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
+            } else if (rol === 2) {
+                $("#titulo").show();
+                $("#titulo").text("Para agregar una herramienta debes ser administrador.");
 
-                    $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(ultimoNumHerramienta);
-                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val("");
-                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").val("");
-                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").val("");
-                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
-                    $("#filasFormulario #columnaEquipos #selectEquipos").val("");
-                    $("#filasFormulario #columnaFungibles #selectFungibles").val("");
-                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").attr("src", "");
-                    $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").attr("src", "#");
-                    $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val("");
+                $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(ultimoNumHerramienta);
+                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").val("");
+                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").val("");
+                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").val("");
+                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").val("");
+                $("#filasFormulario #columnaEquipos #selectEquipos").val("");
+                $("#filasFormulario #columnaFungibles #selectFungibles").val("");
+                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").attr("src", "");
+                $("#filasFormulario #columnaFotoHerramienta #imgHerramienta").attr("src", "#");
+                $("#filasFormulario #columnaFotoHerramienta #txtFotoHerramienta").val("");
 
-                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
-                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
-                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
-                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
-                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
-                    $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
-                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", true);
-                    $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("required", true);
+                $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
+                $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", true);
+                $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("required", true);
 
-                    // Poner visibles los campos
-                    $("#filasFormulario").hide();
+                // Poner visibles los campos
+                $("#filasFormulario").hide();
 
-                    $("[name='btnAgregar']").hide();
-                    $("[name='btnAgregar']").prop("disabled", true);
-                    $("[name='btnEditar']").hide();
-                    $("[name='btnEditar']").prop("disabled", true);
-                    $("[name='btnEliminar']").hide();
-                    $("[name='btnEliminar']").prop("disabled", true);
-                }
+                $("[name='btnAgregar']").hide();
+                $("[name='btnAgregar']").prop("disabled", true);
+                $("[name='btnEditar']").hide();
+                $("[name='btnEditar']").prop("disabled", true);
+                $("[name='btnEliminar']").hide();
+                $("[name='btnEliminar']").prop("disabled", true);
             }
         } else {
             $("#filasFormulario #columnaNumHerramienta #txtNumHerramienta").val(fila.data("idherramienta"));
@@ -363,12 +369,10 @@ $(document).ready(function () {
                 $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
                 $("#filasFormulario #columnaFotoHerramienta #inputFotoHerramienta").prop("disabled", true);
 
-                if (usuario !== null) {
-                    $("#titulo").hide();
-                    $("#titulo").text("");
-                    // Poner visibles los campos
-                    $("#filasFormulario").show();
-                }
+                $("#titulo").hide();
+                $("#titulo").text("");
+                // Poner visibles los campos
+                $("#filasFormulario").show();
 
                 $("[name='btnAgregar']").hide();
                 $("[name='btnAgregar']").prop("disabled", true);
@@ -380,49 +384,47 @@ $(document).ready(function () {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Editar herramienta");
 
-                if (usuario !== null) {
-                    if (rol === 1) {
-                        $("#titulo").hide();
-                        $("#titulo").text("");
-                        $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", false);
-                        $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", false);
-                        $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", false);
-                        $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", false);
-                        $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
-                        $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
-                        $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", false);
+                if (rol === 1) {
+                    $("#titulo").hide();
+                    $("#titulo").text("");
+                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", false);
+                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", false);
+                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", false);
+                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", false);
+                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", false);
+                    $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", false);
+                    $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", false);
 
-                        // Poner visibles los campos
-                        $("#filasFormulario").show();
+                    // Poner visibles los campos
+                    $("#filasFormulario").show();
 
-                        $("[name='btnAgregar']").hide();
-                        $("[name='btnAgregar']").prop("disabled", true);
-                        $("[name='btnEditar']").show();
-                        $("[name='btnEditar']").prop("disabled", false);
-                        $("[name='btnEliminar']").hide();
-                        $("[name='btnEliminar']").prop("disabled", true);
-                    } else if (rol === 2) {
-                        $("#titulo").show();
-                        $("#titulo").text("Para editar la herramienta con id " + fila.data("idherramienta") + " debes ser administrador.");
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").show();
+                    $("[name='btnEditar']").prop("disabled", false);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
+                } else if (rol === 2) {
+                    $("#titulo").show();
+                    $("#titulo").text("Para editar la herramienta con id " + fila.data("idherramienta") + " debes ser administrador.");
 
-                        $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
-                        $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
-                        $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
-                        $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
-                        $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
-                        $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
-                        $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", true);
+                    $("#filasFormulario #columnaMarcaHerramienta #txtMarcaHerramienta").prop("readonly", true);
+                    $("#filasFormulario #columnaModeloHerramienta #txtModeloHerramienta").prop("readonly", true);
+                    $("#filasFormulario #columnaFabricanteHerramienta #txtFabricanteHerramienta").prop("readonly", true);
+                    $("#filasFormulario #columnaFechaCompraHerramienta #txtFechaCompraHerramienta").prop("readonly", true);
+                    $("#filasFormulario #columnaEquipos #selectEquipos").prop("disabled", true);
+                    $("#filasFormulario #columnaFungibles #selectFungibles").prop("disabled", true);
+                    $("#filasFormulario #columnaFotoHerramienta").find("#inputFotoHerramienta, #labelFotoHerramienta").prop("disabled", true);
 
-                        // Poner invisibles los campos
-                        $("#filasFormulario").hide();
+                    // Poner invisibles los campos
+                    $("#filasFormulario").hide();
 
-                        $("[name='btnAgregar']").hide();
-                        $("[name='btnAgregar']").prop("disabled", true);
-                        $("[name='btnEditar']").hide();
-                        $("[name='btnEditar']").prop("disabled", true);
-                        $("[name='btnEliminar']").hide();
-                        $("[name='btnEliminar']").prop("disabled", true);
-                    }
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
@@ -440,24 +442,22 @@ $(document).ready(function () {
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();
 
-                if (usuario !== null) {
-                    if (rol === 1) {
-                        $("#titulo").text("¿Seguro que deseas eliminar esta herramienta?");
-                        $("[name='btnAgregar']").hide();
-                        $("[name='btnAgregar']").prop("disabled", true);
-                        $("[name='btnEditar']").hide();
-                        $("[name='btnEditar']").prop("disabled", true);
-                        $("[name='btnEliminar']").show();
-                        $("[name='btnEliminar']").prop("disabled", false);
-                    } else if (rol === 2) {
-                        $("#titulo").text("Para eliminar la herramienta con id " + fila.data("idherramienta") + " debes ser administrador.");
-                        $("[name='btnAgregar']").hide();
-                        $("[name='btnAgregar']").prop("disabled", true);
-                        $("[name='btnEditar']").hide();
-                        $("[name='btnEditar']").prop("disabled", true);
-                        $("[name='btnEliminar']").hide();
-                        $("[name='btnEliminar']").prop("disabled", true);
-                    }
+                if (rol === 1) {
+                    $("#titulo").text("¿Seguro que deseas eliminar esta herramienta?");
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").show();
+                    $("[name='btnEliminar']").prop("disabled", false);
+                } else if (rol === 2) {
+                    $("#titulo").text("Para eliminar la herramienta con id " + fila.data("idherramienta") + " debes ser administrador.");
+                    $("[name='btnAgregar']").hide();
+                    $("[name='btnAgregar']").prop("disabled", true);
+                    $("[name='btnEditar']").hide();
+                    $("[name='btnEditar']").prop("disabled", true);
+                    $("[name='btnEliminar']").hide();
+                    $("[name='btnEliminar']").prop("disabled", true);
                 }
             }
         }

@@ -156,23 +156,26 @@ $(document).ready(function () {
         $("#tablaEquipos tbody tr td img[id^='fotoEquipo'], #filasFormulario #columnaFotoEquipo #imgEquipo").css({"width": "100px", "box-shadow": "none"});
     }
 
-    // Verificar si id no es nulo
-    if (id !== null) {
-        // Buscar la fila con el id correspondiente en la tabla
-        var filaEditar = $("#tablaEquipos tbody tr[data-idequipo='" + id + "']");
-        // Verificar si se encontró la fila
-        if (filaEditar.length > 0) {
-            // Configurar el modal para editar la fila encontrada
-            configurarModal(filaEditar, 'Editar');
-            // Mostrar el modal
-            $("#modalEquipos").modal('show');
-            $("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container").on("click", function (event) {
-                // Verificar si el clic proviene del botón izquierdo del ratón (event.which === 1)
-                // o si es un clic en cualquiera de los elementos seleccionados
-                if (event.which === 1 || $(event.target).is("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container")) {
-                    localStorage.removeItem('id');
-                }
-            });
+    // Verificar si el usuario no es nulo
+    if (usuario !== null) {
+        // Verificar si id no es nulo
+        if (id !== null) {
+            // Buscar la fila con el id correspondiente en la tabla
+            var filaEditar = $("#tablaEquipos tbody tr[data-idequipo='" + id + "']");
+            // Verificar si se encontró la fila
+            if (filaEditar.length > 0) {
+                // Configurar el modal para editar la fila encontrada
+                configurarModal(filaEditar, 'Editar');
+                // Mostrar el modal
+                $("#modalEquipos").modal('show');
+                $("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container").on("click", function (event) {
+                    // Verificar si el clic proviene del botón izquierdo del ratón (event.which === 1)
+                    // o si es un clic en cualquiera de los elementos seleccionados
+                    if (event.which === 1 || $(event.target).is("[name='btnEditar'], [name='btnCancelar'], .btn-close, body, .container")) {
+                        localStorage.removeItem('id');
+                    }
+                });
+            }
         }
     }
 
@@ -256,26 +259,32 @@ $(document).ready(function () {
     });
 
     $("#tablaEquipos tbody").on("click", "tr td:not(:first-child)", function () {
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Consultar';
-        configurarModal(fila, accion);
-        $('#modalEquipos').modal('show');
+        if (usuario !== null) {
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Consultar';
+            configurarModal(fila, accion);
+            $('#modalEquipos').modal('show');
+        }
     });
 
     $("#tablaEquipos tbody").on("click", "tr td .btnEditar", function (e) {
-        e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Editar';
-        configurarModal(fila, accion);
-        $('#modalEquipos').modal('show');
+        if (usuario !== null) {
+            e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Editar';
+            configurarModal(fila, accion);
+            $('#modalEquipos').modal('show');
+        }
     });
 
     $("#tablaEquipos tbody").on("click", "tr td .btnEliminar", function (e) {
-        e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
-        fila = obtenerFilaSeleccionada($(this).closest('tr'));
-        var accion = 'Eliminar';
-        configurarModal(fila, accion);
-        $('#modalEquipos').modal('show');
+        if (usuario !== null) {
+            e.stopPropagation(); // Detener la propagación para evitar que se active el evento de clic en la fila
+            fila = obtenerFilaSeleccionada($(this).closest('tr'));
+            var accion = 'Eliminar';
+            configurarModal(fila, accion);
+            $('#modalEquipos').modal('show');
+        }
     });
 
     // Función para obtener la fila seleccionada
@@ -291,52 +300,50 @@ $(document).ready(function () {
         if (accion === 'Agregar') {
             // Cambiar el texto del título del modal
             $(".modal-title").text("Agregar equipo");
-            if (usuario !== null) {
-                if (rol === 1) {
-                    $("#titulo").hide();
-                    $("#titulo").text("");
+            if (rol === 1) {
+                $("#titulo").hide();
+                $("#titulo").text("");
 
-                    $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
-                    $("#filasFormulario input[id^='txt']:not(#txtNumEquipo), #filasFormulario select").val("");
-                    $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").attr("src", "");
-                    $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
-                    $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
+                $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
+                $("#filasFormulario input[id^='txt']:not(#txtNumEquipo), #filasFormulario select").val("");
+                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").attr("src", "");
+                $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
+                $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
 
-                    $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
-                        "readonly": false,
-                        "disabled": false
-                    });
+                $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
+                    "readonly": false,
+                    "disabled": false
+                });
 
-                    $("#filasFormulario #inputFotoEquipo").prop("required", true);
+                $("#filasFormulario #inputFotoEquipo").prop("required", true);
 
-                    // Poner visibles los campos
-                    $("#filasFormulario").show();
+                // Poner visibles los campos
+                $("#filasFormulario").show();
 
-                    $("[name='btnAgregar']").show();
-                    $("[name='btnAgregar']").prop("disabled", false);
-                    $("[name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
-                } else if (rol === 2) {
-                    $("#titulo").show();
-                    $("#titulo").text("Para agregar un equipo debes ser administrador");
+                $("[name='btnAgregar']").show();
+                $("[name='btnAgregar']").prop("disabled", false);
+                $("[name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
+            } else if (rol === 2) {
+                $("#titulo").show();
+                $("#titulo").text("Para agregar un equipo debes ser administrador");
 
-                    $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
-                    $("#filasFormulario input[id^='txt']:not(#txtNumEquipo), #filasFormulario select").val("");
-                    $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").attr("src", "");
-                    $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
-                    $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
+                $("#filasFormulario #columnaNumEquipo #txtNumEquipo").val(ultimoNumEquipo);
+                $("#filasFormulario input[id^='txt']:not(#txtNumEquipo), #filasFormulario select").val("");
+                $("#filasFormulario #columnaFotoEquipo #inputFotoEquipo").attr("src", "");
+                $("#filasFormulario #columnaFotoEquipo #imgEquipo").attr("src", "#");
+                $("#filasFormulario #columnaFotoEquipo #txtFotoEquipo").val("");
 
-                    $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
-                        "readonly": true,
-                        "disabled": true
-                    });
+                $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
+                    "readonly": true,
+                    "disabled": true
+                });
 
-                    $("#filasFormulario #inputFotoEquipo").prop("required", false);
+                $("#filasFormulario #inputFotoEquipo").prop("required", false);
 
-                    // Poner invisibles los campos
-                    $("#filasFormulario").hide();
+                // Poner invisibles los campos
+                $("#filasFormulario").hide();
 
-                    $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
-                }
+                $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
             }
 
             // Limpiar el valor del input file cuando se cierre el modal o se cancele la acción de agregar un equipo
@@ -368,47 +375,43 @@ $(document).ready(function () {
                     "disabled": true
                 });
 
-                if (usuario !== null) {
-                    $("#titulo").hide();
-                    $("#titulo").text("");
-                    // Poner visibles los campos
-                    $("#filasFormulario").show();
-                }
+                $("#titulo").hide();
+                $("#titulo").text("");
+                // Poner visibles los campos
+                $("#filasFormulario").show();
 
                 $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
             } else if (accion === 'Editar') {
                 // Cambiar el texto del título del modal
                 $(".modal-title").text("Editar equipo");
 
-                if (usuario !== null) {
-                    if (rol === 1) {
-                        $("#titulo").hide();
-                        $("#titulo").text("");
+                if (rol === 1) {
+                    $("#titulo").hide();
+                    $("#titulo").text("");
 
-                        $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
-                            "readonly": false,
-                            "disabled": false
-                        });
+                    $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
+                        "readonly": false,
+                        "disabled": false
+                    });
 
-                        // Poner visibles los campos
-                        $("#filasFormulario").show();
+                    // Poner visibles los campos
+                    $("#filasFormulario").show();
 
-                        $("[name='btnAgregar'], [name='btnEliminar']").hide().prop("disabled", true);
-                        $("[name='btnEditar']").show().prop("disabled", false);
-                    } else {
-                        $("#titulo").show();
-                        $("#titulo").text("Para editar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
+                    $("[name='btnAgregar'], [name='btnEliminar']").hide().prop("disabled", true);
+                    $("[name='btnEditar']").show().prop("disabled", false);
+                } else if (rol === 2) {
+                    $("#titulo").show();
+                    $("#titulo").text("Para editar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
 
-                        $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
-                            "readonly": true,
-                            "disabled": true
-                        });
+                    $("#filasFormulario [id^='txt']:not(#txtNumEquipo), #filasFormulario select, #filasFormulario input[type='file']").prop({
+                        "readonly": true,
+                        "disabled": true
+                    });
 
-                        // Poner invisibles los campos
-                        $("#filasFormulario").hide();
+                    // Poner invisibles los campos
+                    $("#filasFormulario").hide();
 
-                        $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
-                    }
+                    $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                 }
             } else if (accion === 'Eliminar') {
                 // Cambiar el texto del título del modal
@@ -423,15 +426,13 @@ $(document).ready(function () {
                 // Poner invisibles los campos
                 $("#filasFormulario").hide();
 
-                if (usuario !== null) {
-                    if (rol === 1) {
-                        $("#titulo").text("¿Seguro que deseas eliminar este equipo?");
-                        $("[name='btnAgregar'], [name='btnEditar']").hide().prop("disabled", true);
-                        $("[name='btnEliminar']").show().prop("disabled", false);
-                    } else if (rol === 2) {
-                        $("#titulo").text("Para eliminar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
-                        $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
-                    }
+                if (rol === 1) {
+                    $("#titulo").text("¿Seguro que deseas eliminar este equipo?");
+                    $("[name='btnAgregar'], [name='btnEditar']").hide().prop("disabled", true);
+                    $("[name='btnEliminar']").show().prop("disabled", false);
+                } else if (rol === 2) {
+                    $("#titulo").text("Para eliminar el equipo con id " + fila.data("idequipo") + " debes ser administrador.");
+                    $("[name='btnAgregar'], [name='btnEditar'], [name='btnEliminar']").hide().prop("disabled", true);
                 }
             }
         }
